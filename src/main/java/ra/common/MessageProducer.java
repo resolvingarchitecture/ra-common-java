@@ -2,8 +2,6 @@ package ra.common;
 
 /**
  * Sends messages.
- *
- * @author objectorange
  */
 public interface MessageProducer {
     /**
