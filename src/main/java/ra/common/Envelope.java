@@ -34,8 +34,7 @@ public final class Envelope implements Persistable, JSONSerializable {
     public enum MessageType {DOCUMENT, TEXT, EVENT, COMMAND, NONE}
     public enum Action{POST, PUT, DELETE, GET}
 
-
-    private Long id;
+    private Integer id;
     private Boolean external = false;
     private DynamicRoutingSlip dynamicRoutingSlip;
     private Route route = null;
@@ -54,29 +53,30 @@ public final class Envelope implements Persistable, JSONSerializable {
     private ManCon manCon = ManConStatus.MIN_REQUIRED_MANCON;
     private Long minDelay = 0L;
     private Long maxDelay = 0L;
+    private ServiceLevel serviceLevel = ServiceLevel.AtLeastOnce;
 
     public static Envelope commandFactory() {
-        return new Envelope(RandomUtil.nextRandomLong(), new CommandMessage());
+        return new Envelope(RandomUtil.nextRandomInteger(), new CommandMessage());
     }
 
     public static Envelope documentFactory() {
-        return new Envelope(RandomUtil.nextRandomLong(), new DocumentMessage());
+        return new Envelope(RandomUtil.nextRandomInteger(), new DocumentMessage());
     }
 
-    public static Envelope documentFactory(Long id) {
+    public static Envelope documentFactory(Integer id) {
         return new Envelope(id, new DocumentMessage());
     }
 
     public static Envelope headersOnlyFactory() {
-        return new Envelope(RandomUtil.nextRandomLong(), null);
+        return new Envelope(RandomUtil.nextRandomInteger(), null);
     }
 
     public static Envelope eventFactory(EventMessage.Type type) {
-        return new Envelope(RandomUtil.nextRandomLong(), new EventMessage(type.name()));
+        return new Envelope(RandomUtil.nextRandomInteger(), new EventMessage(type.name()));
     }
 
     public static Envelope textFactory() {
-        return new Envelope(RandomUtil.nextRandomLong(), new TextMessage());
+        return new Envelope(RandomUtil.nextRandomInteger(), new TextMessage());
     }
 
     public static Envelope envelopeFactory(Envelope envelope){
@@ -94,28 +94,29 @@ public final class Envelope implements Persistable, JSONSerializable {
         e.setMultipart(envelope.getMultipart());
         e.setMessage(envelope.getMessage());
         e.setManCon(envelope.getManCon());
+        e.setServiceLevel(envelope.getServiceLevel());
         return e;
     }
 
     public Envelope() {}
 
-    public Envelope(Long id, Message message) {
+    public Envelope(Integer id, Message message) {
         this(id, message, new HashMap<>());
     }
 
-    public Envelope(Long id, Message message, Map<String, Object> headers) {
+    public Envelope(Integer id, Message message, Map<String, Object> headers) {
         this.id = id;
         this.message = message;
         this.headers = headers;
         this.dynamicRoutingSlip = new DynamicRoutingSlip();
     }
 
-    private Envelope(Long id, Map<String, Object> headers, Message message, DynamicRoutingSlip dynamicRoutingSlip) {
+    private Envelope(Integer id, Map<String, Object> headers, Message message, DynamicRoutingSlip dynamicRoutingSlip) {
         this(id, message, headers);
         this.dynamicRoutingSlip = dynamicRoutingSlip;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -177,6 +178,14 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     public void setDID(DID did) {
         this.did = did;
+    }
+
+    public ServiceLevel getServiceLevel() {
+        return serviceLevel;
+    }
+
+    public void setServiceLevel(ServiceLevel serviceLevel) {
+        this.serviceLevel = serviceLevel;
     }
 
     public Long getClient() {
@@ -287,12 +296,13 @@ public final class Envelope implements Persistable, JSONSerializable {
         if(manCon !=null) m.put("manCon", manCon.name());
         if(minDelay != null) m.put("minDelay", minDelay);
         if(maxDelay != null) m.put("maxDelay", maxDelay);
+        if(serviceLevel != null) m.put("serviceLevel", serviceLevel.name());
         return m;
     }
 
     @Override
     public void fromMap(Map<String, Object> m) {
-        if(m.get("id")!=null) id = Long.parseLong((String)m.get("id"));
+        if(m.get("id")!=null) id = Integer.parseInt((String)m.get("id"));
         if(m.get("external")!=null) external = Boolean.parseBoolean((String)m.get("external"));
         if(m.get(DynamicRoutingSlip.class.getSimpleName())!=null) {
             dynamicRoutingSlip = new DynamicRoutingSlip();
@@ -357,6 +367,7 @@ public final class Envelope implements Persistable, JSONSerializable {
         if(m.get("manCon")!=null) manCon = ManCon.valueOf((String)m.get("manCon"));
         if(m.get("minDelay")!=null) minDelay = (Long)m.get("minDelay");
         if(m.get("maxDelay")!=null) maxDelay = (Long)m.get("maxDelay");
+        if(m.get("serviceLevel")!=null) serviceLevel = ServiceLevel.valueOf((String)m.get("serviceLevel"));
     }
 
     @Override
@@ -372,5 +383,16 @@ public final class Envelope implements Persistable, JSONSerializable {
     @Override
     public String toString() {
         return toJSON();
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Envelope &&
+                ((Envelope)obj).getId().equals(id);
     }
 }

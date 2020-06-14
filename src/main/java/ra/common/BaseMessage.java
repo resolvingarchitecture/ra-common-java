@@ -15,18 +15,8 @@ import java.util.Map;
 public abstract class BaseMessage implements Message, Persistable {
 
     protected String clazz;
-    protected MessageServiceLevel serviceLevel = MessageServiceLevel.AtLeastOnce;
 
     private List<String> errorMessages = new ArrayList<>();
-
-    public void setServiceLevel(MessageServiceLevel serviceLevel) {
-        this.serviceLevel = serviceLevel;
-    }
-
-    @Override
-    public MessageServiceLevel getServiceLevel() {
-        return serviceLevel;
-    }
 
     public void addErrorMessage(String errorMessage) {
         errorMessages.add(errorMessage);
@@ -46,14 +36,12 @@ public abstract class BaseMessage implements Message, Persistable {
         Map<String, Object> m = new HashMap<>();
         m.put("clazz", this.getClass().getName());
         if(errorMessages!=null) m.put("errorMessages", errorMessages);
-        if(serviceLevel!=null) m.put("serviceLevel", serviceLevel.name());
         return m;
     }
 
     @Override
     public void fromMap(Map<String, Object> m) {
         if(m.get("errorMessages")!=null) errorMessages = (List<String>)m.get("errorMessages");
-        if(m.get("serviceLevel")!=null) serviceLevel = MessageServiceLevel.valueOf((String)m.get("serviceLevel"));
     }
 
     @Override

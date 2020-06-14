@@ -9,5 +9,4 @@ public interface Message extends JSONSerializable {
     void addErrorMessage(String errorMessage);
     List<String> getErrorMessages();
     void clearErrorMessages();
-    MessageServiceLevel getServiceLevel();
 }
