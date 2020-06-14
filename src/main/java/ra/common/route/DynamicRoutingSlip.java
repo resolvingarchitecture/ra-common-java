@@ -20,7 +20,8 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
 
     private Logger LOG = Logger.getLogger(DynamicRoutingSlip.class.getName());
 
-    protected Stack<Route> routes = new DequeStack<>();
+    private Stack<Route> routes = new DequeStack<>();
+    private Route currentRoute;
     private Boolean inProgress = false;
 
     public DynamicRoutingSlip() {}
@@ -44,9 +45,15 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
         inProgress = true;
     }
 
+    public Route getCurrentRoute() {
+        return currentRoute;
+    }
+
     @Override
     public Route nextRoute() {
-        return routes.pop();
+        Route next = routes.pop();
+        currentRoute = next;
+        return next;
     }
 
     @Override
