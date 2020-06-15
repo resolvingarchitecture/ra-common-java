@@ -142,30 +142,4 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
         return toJSON();
     }
 
-//    public static void main(String[] args) {
-//        NetworkPeer dest = new NetworkPeer(Network.I2P);
-//        dest.getDid().getPublicKey().setAddress("1234");
-//        NetworkPeer orig = new NetworkPeer(Network.I2P);
-//        orig.getDid().getPublicKey().setAddress("1111");
-//        DynamicRoutingSlip slip1 = new DynamicRoutingSlip();
-//        SimpleExternalRoute r3 = new SimpleExternalRoute();
-//        r3.setService("NetworkService3");
-//        r3.setOperation("NetOp3");
-//        r3.setDestination(dest);
-//        r3.setOrigination(orig);
-//        slip1.addRoute(r3);
-//        SimpleRoute r2 = new SimpleRoute();
-//        r2.setService("DIDService2");
-//        r2.setOperation("DIDOp2");
-//        slip1.addRoute(r2);
-//        SimpleRoute r1 = new SimpleRoute();
-//        r1.setService("KeyRingService1");
-//        r1.setOperation("KeyOp1");
-//        slip1.addRoute(r1);
-//        String json = slip1.toJSON();
-//        System.out.print(json);
-//        DynamicRoutingSlip slip2 = new DynamicRoutingSlip();
-//        slip2.fromJSON(json);
-//        System.out.print(slip2);
-//    }
 }
