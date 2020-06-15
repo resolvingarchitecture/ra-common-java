@@ -5,6 +5,8 @@ import java.util.List;
 public interface MessageChannel extends MessageProducer, LifeCycle {
     void registerAsyncConsumer(MessageConsumer consumer);
     void registerSubscriptionChannel(MessageChannel channel);
+    String getName();
+    boolean getPubSub();
     List<MessageChannel> getSubscriptionChannels();
     boolean send(Envelope e);
     Envelope receive();
