@@ -5,6 +5,7 @@ import ra.util.JSONParser;
 import ra.util.JSONPretty;
 import ra.util.Stack;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,6 +65,10 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
     public boolean addRoute(Route route) {
         route.setRouteId(getRouteId());
         routes.push(route);
+        if(currentRoute==null) {
+            // put first in the chamber
+            nextRoute();
+        }
         return true;
     }
 
@@ -71,6 +76,7 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
     public Map<String, Object> toMap() {
         Map<String, Object> m = super.toMap();
         if(inProgress!=null) m.put("inProgress",inProgress);
+        if(currentRoute!=null) m.put("currentRoute", currentRoute.toMap());
         if(routes!=null) {
             List<Map<String, Object>> rl = new ArrayList<>();
             StringBuffer sb = new StringBuffer();
@@ -89,6 +95,16 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
         if(m.get("inProgress")!=null) inProgress = (Boolean)m.get("inProgress");
+        if(m.get("currentRoute")!=null) {
+            Map<String,Object> rm = (Map<String,Object>)m.get("currentRoute");
+            String routeClass = (String)rm.get("type");
+            try {
+                currentRoute = (Route)Class.forName(routeClass).getConstructor().newInstance();
+                currentRoute.fromMap(rm);
+            } catch (Exception e) {
+                LOG.warning(e.getLocalizedMessage());
+            }
+        }
         if(m.get("routes")!=null) {
             // MUST iterate routes list backwards to ensure stack is built correctly
             routes = new DequeStack<>();
