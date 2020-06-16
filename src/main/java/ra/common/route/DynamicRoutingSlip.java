@@ -47,6 +47,9 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
     }
 
     public Route getCurrentRoute() {
+        if(currentRoute==null) {
+            nextRoute();
+        }
         return currentRoute;
     }
 
@@ -65,10 +68,6 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
     public boolean addRoute(Route route) {
         route.setRouteId(getRouteId());
         routes.push(route);
-        if(currentRoute==null) {
-            // put first in the chamber
-            nextRoute();
-        }
         return true;
     }
 
