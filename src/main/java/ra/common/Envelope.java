@@ -50,7 +50,7 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     private Map<String, Object> headers;
     private Message message;
-    private ManCon manCon = ManConStatus.MIN_REQUIRED_MANCON;
+    private Integer sensitivity = 1;
     private Long minDelay = 0L;
     private Long maxDelay = 0L;
     private ServiceLevel serviceLevel = ServiceLevel.AtLeastOnce;
@@ -93,7 +93,6 @@ public final class Envelope implements Persistable, JSONSerializable {
         e.setContentType(envelope.getContentType());
         e.setMultipart(envelope.getMultipart());
         e.setMessage(envelope.getMessage());
-        e.setManCon(envelope.getManCon());
         e.setServiceLevel(envelope.getServiceLevel());
         return e;
     }
@@ -252,14 +251,6 @@ public final class Envelope implements Persistable, JSONSerializable {
         headers.put(HEADER_CONTENT_TYPE, contentType);
     }
 
-    public ManCon getManCon() {
-        return manCon;
-    }
-
-    public void setManCon(ManCon manCon) {
-        this.manCon = manCon;
-    }
-
     public Long getMinDelay() {
         return minDelay;
     }
@@ -293,7 +284,6 @@ public final class Envelope implements Persistable, JSONSerializable {
         if(commandPath!=null) m.put("commandPath", commandPath);
         if(headers!=null) m.put("headers", headers);
         if(message!=null) m.put("message", message.toMap());
-        if(manCon !=null) m.put("manCon", manCon.name());
         if(minDelay != null) m.put("minDelay", minDelay);
         if(maxDelay != null) m.put("maxDelay", maxDelay);
         if(serviceLevel != null) m.put("serviceLevel", serviceLevel.name());
@@ -364,7 +354,6 @@ public final class Envelope implements Persistable, JSONSerializable {
                 LOG.warning(e.getLocalizedMessage());
             }
         }
-        if(m.get("manCon")!=null) manCon = ManCon.valueOf((String)m.get("manCon"));
         if(m.get("minDelay")!=null) minDelay = (Long)m.get("minDelay");
         if(m.get("maxDelay")!=null) maxDelay = (Long)m.get("maxDelay");
         if(m.get("serviceLevel")!=null) serviceLevel = ServiceLevel.valueOf((String)m.get("serviceLevel"));
