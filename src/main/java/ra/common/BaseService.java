@@ -2,6 +2,7 @@ package ra.common;
 
 import ra.common.route.Route;
 import ra.util.Config;
+import ra.util.SystemSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -191,6 +192,12 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
         }
         version = config.getProperty("ra.version");
         String baseStr = config.getProperty("ra.dir.base");
+        File home = SystemSettings.getUserHomeDir();
+        File raDir = new File(home,".ra");
+        if(!raDir.exists() && !raDir.mkdir()) {
+            LOG.severe("Unable to create .ra directory: " + home.getAbsolutePath() + "/.ra");
+            return false;
+        }
         File servicesFolder = new File(baseStr + "/services");
         if(!servicesFolder.exists() && !servicesFolder.mkdir()) {
             LOG.severe("Unable to create services directory: " + baseStr + "/services");
