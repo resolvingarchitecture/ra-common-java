@@ -1,6 +1,7 @@
 package ra.common;
 
 import ra.common.route.Route;
+import ra.util.Config;
 
 import java.io.File;
 import java.io.IOException;
@@ -186,25 +187,30 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
             LOG.severe("Properties for start are required.");
             return false;
         }
-        version = p.getProperty("1m5.version");
-        String baseStr = p.getProperty("1m5.dir.base");
+        try {
+            config = Config.loadFromClasspath("ra-common.config", p, false);
+        } catch (Exception e) {
+            LOG.severe(e.getLocalizedMessage());
+            return false;
+        }
+        version = config.getProperty("ra.version");
+        String baseStr = config.getProperty("ra.dir.base");
         File servicesFolder = new File(baseStr + "/services");
         if(!servicesFolder.exists() && !servicesFolder.mkdir()) {
             LOG.severe("Unable to create services directory: " + baseStr + "/services");
             return false;
         }
-        if(p.getProperty("1m5.dir.services")==null) {
-            try {
-                p.setProperty("1m5.dir.services", servicesFolder.getCanonicalPath());
-            } catch (IOException e) {
-                LOG.warning(e.getLocalizedMessage());
-            }
+        try {
+            config.setProperty("ra.dir.services", servicesFolder.getCanonicalPath());
+        } catch (IOException e) {
+            LOG.severe(e.getLocalizedMessage());
+            return false;
         }
         String serviceDirectoryPath = null;
         try {
             serviceDirectoryPath = servicesFolder.getCanonicalPath()+"/"+this.getClass().getName();
         } catch (IOException e) {
-            LOG.warning(e.getLocalizedMessage());
+            LOG.severe(e.getLocalizedMessage());
             return false;
         }
         serviceDirectory = new File(serviceDirectoryPath);
@@ -213,7 +219,7 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
             return false;
         } else {
             serviceDirectory.setWritable(true);
-            p.setProperty("1m5.dir.services."+this.getClass().getName(), serviceDirectoryPath);
+            config.setProperty("ra.dir.services."+this.getClass().getName(), serviceDirectoryPath);
         }
         return true;
     }
