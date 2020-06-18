@@ -183,10 +183,6 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
 
     @Override
     public boolean start(Properties p) {
-        if(p==null) {
-            LOG.severe("Properties for start are required.");
-            return false;
-        }
         try {
             config = Config.loadFromClasspath("ra-common.config", p, false);
         } catch (Exception e) {
