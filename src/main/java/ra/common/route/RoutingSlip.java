@@ -13,6 +13,8 @@ public interface RoutingSlip extends Route {
 
     void start();
 
+    Route getCurrentRoute();
+
     Route nextRoute();
 
     Route peekAtNextRoute();
