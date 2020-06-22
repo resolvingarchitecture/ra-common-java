@@ -32,20 +32,6 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
         return routes.numberRemainingRoutes();
     }
 
-    @Override
-    public Boolean inProgress() {
-        return inProgress;
-    }
-
-    public void setInProgress(Boolean inProgress) {
-        this.inProgress = inProgress;
-    }
-
-    @Override
-    public void start() {
-        inProgress = true;
-    }
-
     public Route getCurrentRoute() {
         if(currentRoute==null) {
             nextRoute();
@@ -55,9 +41,13 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
 
     @Override
     public Route nextRoute() {
-        Route next = routes.pop();
-        currentRoute = next;
-        return next;
+        if(routes!= null && routes.numberRemainingRoutes() > 0) {
+            Route next = routes.pop();
+            currentRoute = next;
+        } else {
+            currentRoute = null;
+        }
+        return currentRoute;
     }
 
     @Override
