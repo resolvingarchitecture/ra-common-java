@@ -164,7 +164,10 @@ public final class Envelope implements Persistable, JSONSerializable {
     }
 
     public Route getRoute() {
-        return route;
+        if(dynamicRoutingSlip==null)
+            return route;
+        else
+            return dynamicRoutingSlip.getCurrentRoute();
     }
 
     public void setRoute(Route route) {
