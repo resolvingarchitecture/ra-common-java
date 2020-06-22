@@ -23,7 +23,6 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
 
     private Stack<Route> routes = new DequeStack<>();
     private Route currentRoute;
-    private Boolean inProgress = false;
 
     public DynamicRoutingSlip() {}
 
@@ -64,7 +63,6 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = super.toMap();
-        if(inProgress!=null) m.put("inProgress",inProgress);
         if(currentRoute!=null) m.put("currentRoute", currentRoute.toMap());
         if(routes!=null) {
             List<Map<String, Object>> rl = new ArrayList<>();
@@ -83,7 +81,6 @@ public final class DynamicRoutingSlip extends BaseRoute implements RoutingSlip {
     @Override
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
-        if(m.get("inProgress")!=null) inProgress = (Boolean)m.get("inProgress");
         if(m.get("currentRoute")!=null) {
             Map<String,Object> rm = (Map<String,Object>)m.get("currentRoute");
             String routeClass = (String)rm.get("type");
