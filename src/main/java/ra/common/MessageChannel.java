@@ -2,7 +2,7 @@ package ra.common;
 
 import java.util.List;
 
-public interface MessageChannel extends MessageProducer, MessageConsumer, LifeCycle {
+public interface MessageChannel extends MessageProducer, LifeCycle {
     void registerAsyncConsumer(MessageConsumer consumer);
     void registerSubscriptionChannel(MessageChannel channel);
     int queued();
@@ -10,7 +10,6 @@ public interface MessageChannel extends MessageProducer, MessageConsumer, LifeCy
     boolean getPubSub();
     List<MessageChannel> getSubscriptionChannels();
     boolean send(Envelope e);
-    boolean receive(Envelope envelope);
     Envelope receive();
     Envelope receive(int timeout);
     Envelope poll();

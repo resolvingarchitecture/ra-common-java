@@ -5,5 +5,4 @@ package ra.common;
  */
 public interface MessageProducer {
     boolean send(Envelope envelope);
-    void ack(Envelope envelope);
 }
