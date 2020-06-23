@@ -6,4 +6,5 @@ public class InfoVault {
     public String location;
     public Content content;
     public Boolean storeExternal = false;
+    public Boolean autoCreate = true;
 }
