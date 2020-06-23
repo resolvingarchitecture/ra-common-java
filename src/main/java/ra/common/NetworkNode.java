@@ -10,18 +10,18 @@ import java.util.Map;
  */
 public final class NetworkNode {
 
-    private Map<Network, NetworkPeer> localPeers;
+    private Map<String, NetworkPeer> localPeers;
 
     public NetworkNode() {
         localPeers = new HashMap<>();
     }
 
-    public void addNetworkPeer(NetworkPeer networkPeer, Network network) {
+    public void addNetworkPeer(NetworkPeer networkPeer, String network) {
         networkPeer.setNetwork(network);
         localPeers.put(network, networkPeer);
     }
 
-    public NetworkPeer getNetworkPeer(Network network) {
+    public NetworkPeer getNetworkPeer(String network) {
         return localPeers.get(network);
     }
 

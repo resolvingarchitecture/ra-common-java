@@ -145,19 +145,19 @@ public abstract class NetworkPacket extends Packet {
         if(envelope != null) m.put("envelope", envelope.toMap());
         if(originationPeer != null) {
             m.put("originationPeer", originationPeer.toMap());
-            m.put("originationPeer.network", originationPeer.getNetwork().name());
+            m.put("originationPeer.network", originationPeer.getNetwork());
         }
         if(fromPeer != null) {
             m.put("fromPeer", fromPeer.toMap());
-            m.put("fromPeer.network", fromPeer.getNetwork().name());
+            m.put("fromPeer.network", fromPeer.getNetwork());
         }
         if(toPeer != null) {
             m.put("toPeer", toPeer.toMap());
-            m.put("toPeer.network", toPeer.getNetwork().name());
+            m.put("toPeer.network", toPeer.getNetwork());
         }
         if(destinationPeer != null) {
             m.put("destinationPeer", destinationPeer.toMap());
-            m.put("destinationPeer.network", destinationPeer.getNetwork().name());
+            m.put("destinationPeer.network", destinationPeer.getNetwork());
         }
         if(delayed != null) m.put("delayed", delayed);
         if(minDelay != null) m.put("minDelay", minDelay);
@@ -177,19 +177,19 @@ public abstract class NetworkPacket extends Packet {
             envelope = new Envelope();
         }
         if(m.get("originationPeer") != null) {
-            fromPeer = new NetworkPeer(Network.valueOf((String)m.get("originationPeer.network")));
+            fromPeer = new NetworkPeer((String)m.get("originationPeer.network"));
             fromPeer.fromMap((Map<String, Object>)m.get("originationPeer"));
         }
         if(m.get("fromPeer") != null) {
-            fromPeer = new NetworkPeer(Network.valueOf((String)m.get("fromPeer.network")));
+            fromPeer = new NetworkPeer((String)m.get("fromPeer.network"));
             fromPeer.fromMap((Map<String, Object>)m.get("fromPeer"));
         }
         if(m.get("toPeer") != null) {
-            toPeer = new NetworkPeer(Network.valueOf((String)m.get("toPeer.network")));
+            toPeer = new NetworkPeer((String)m.get("toPeer.network"));
             toPeer.fromMap(((Map<String, Object>)m.get("toPeer")));
         }
         if(m.get("destinationPeer") != null) {
-            fromPeer = new NetworkPeer(Network.valueOf((String)m.get("destinationPeer.network")));
+            fromPeer = new NetworkPeer((String)m.get("destinationPeer.network"));
             fromPeer.fromMap((Map<String, Object>)m.get("destinationPeer"));
         }
         if(m.get("delayed") != null) delayed = (Boolean)m.get("delayed");

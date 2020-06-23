@@ -1,6 +1,5 @@
 package ra.common.route;
 
-import ra.common.Network;
 import ra.common.NetworkPeer;
 import ra.util.JSONParser;
 import ra.util.JSONPretty;
@@ -49,11 +48,11 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
         Map<String, Object> m = super.toMap();
         if(origination!=null) {
             m.put("origination",origination.toMap());
-            m.put("network-orig",origination.getNetwork().name());
+            m.put("network-orig",origination.getNetwork());
         }
         if(destination!=null) {
             m.put("destination",destination.toMap());
-            m.put("network-dest",destination.getNetwork().name());
+            m.put("network-dest",destination.getNetwork());
         }
         return m;
     }
@@ -62,12 +61,12 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
         if(m.get("origination")!=null) {
-            Network network = Network.valueOf((String)m.get("network-orig"));
+            String network = (String)m.get("network-orig");
             origination = new NetworkPeer(network);
             origination.fromMap((Map<String, Object>)m.get("origination"));
         }
         if(m.get("destination")!=null) {
-            Network network = Network.valueOf((String)m.get("network-dest"));
+            String network = (String)m.get("network-dest");
             destination = new NetworkPeer(network);
             destination.fromMap((Map<String, Object>)m.get("destination"));
         }
