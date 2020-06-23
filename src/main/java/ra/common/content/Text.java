@@ -8,23 +8,25 @@ import java.util.Map;
 public class Text extends Content {
 
     public Text() {
-        super(null, "text/plain");
+        contentType = "text/plain";
     }
 
     public Text(byte[] body){
-        super(body, "text/plain");
+        super.body = body;
+        contentType = "text/plain";
     }
 
     protected Text(byte[] body, String contentType){
-        super(body, contentType);
+        super.body = body;
+        super.contentType = contentType;
     }
 
-    public Text(byte[] body, String name, boolean generateHash, boolean generateFingerprint) {
-        super(body, "text/plain", name, generateHash, generateFingerprint);
+    public Text(byte[] body, String label, String name, boolean generateHash, boolean generateFingerprint) {
+        super(body, "text/plain", label, name, generateHash, generateFingerprint);
     }
 
-    protected Text(byte[] body, String contentType, String name, boolean generateHash, boolean generateFingerprint) {
-        super(body, contentType, name, generateHash, generateFingerprint);
+    public Text(byte[] body, String contentType, String label, String name, boolean generateHash, boolean generateFingerprint) {
+        super(body, contentType, label, name, generateHash, generateFingerprint);
     }
 
     @Override

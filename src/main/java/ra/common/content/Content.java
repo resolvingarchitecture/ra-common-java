@@ -6,6 +6,7 @@ import ra.common.JSONSerializable;
 import ra.util.HashUtil;
 import ra.util.JSONParser;
 import ra.util.JSONPretty;
+import ra.util.RandomUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +26,8 @@ public abstract class Content implements JSONSerializable, Serializable {
     protected String type;
     protected String contentType;
     private Integer version = 0;
+    private String id;
+    private String label;
     private String name;
     private Long size = 0L;
     protected String authorAlias;
@@ -50,24 +53,22 @@ public abstract class Content implements JSONSerializable, Serializable {
     // Everyone is given write access (e.g. wiki)
     private Boolean writeable = false;
 
-    public static Content buildContent(byte[] body, String contentType) {
-        return buildContent(body, contentType, null, false, false);
+    public static Content buildContent(byte[] body, String contentType, String label, String name) {
+        return buildContent(body, contentType, label, name, false, false);
     }
 
-    public static Content buildContent(byte[] body, String contentType, String name) {
-        return buildContent(body, contentType, name, false, false);
-    }
-
-    public static Content buildContent(byte[] body, String contentType, String name, boolean generateHash, boolean generateFingerprint) {
+    public static Content buildContent(byte[] body, String contentType, String label, String name, boolean generateHash, boolean generateFingerprint) {
         Content c = null;
         if(contentType==null) return null;
-        else if(contentType.startsWith("text/plain")) c = new Text(body, name, generateHash, generateFingerprint);
-        else if(contentType.startsWith("text/html")) c = new HTML(body, name, generateHash, generateFingerprint);
-        else if(contentType.startsWith("image/")) c = new Image(body, contentType, name, generateHash, generateFingerprint);
-        else if(contentType.startsWith("audio/")) c = new Audio(body, contentType, name, generateHash, generateFingerprint);
-        else if(contentType.startsWith("video/")) c = new Video(body, contentType, name, generateHash, generateFingerprint);
-        else if(contentType.startsWith("application/json"))  c = new JSON(body, name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("text/plain")) c = new Text(body, label, name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("text/html")) c = new HTML(body, label, name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("image/")) c = new Image(body, contentType, label, name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("audio/")) c = new Audio(body, contentType, label, name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("video/")) c = new Video(body, contentType, label, name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("application/json"))  c = new JSON(body, label, name, generateHash, generateFingerprint);
         c.setCreatedAt(System.currentTimeMillis());
+        c.setId(RandomUtil.randomAlphanumeric(32));
+        c.setLabel(label);
         return c;
     }
 
@@ -79,16 +80,17 @@ public abstract class Content implements JSONSerializable, Serializable {
         setBody(body, false, false);
     }
 
-    public Content(byte[] body, String contentType) {
-        this(body, contentType, null, false, false);
+    public Content(byte[] body, String contentType, String label, String name) {
+        this(body, contentType, label, name, false, false);
     }
 
-    public Content(byte[] body, String contentType, String name, boolean generateHash, boolean generateFingerprint) {
+    public Content(byte[] body, String contentType, String label, String name, boolean generateHash, boolean generateFingerprint) {
         type = getClass().getName();
         if(body!=null) {
             setBody(body, generateHash, generateFingerprint);
         }
         this.contentType = contentType;
+        this.label = label;
         this.name = name;
         if(contentType!=null && contentType.contains("charset:")) {
             bodyEncoding = contentType.substring(contentType.indexOf("charset:")+1);
@@ -117,6 +119,22 @@ public abstract class Content implements JSONSerializable, Serializable {
 
     public Integer getVersion() {
         return version;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getName() {
