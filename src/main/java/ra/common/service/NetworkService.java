@@ -2,6 +2,7 @@ package ra.common.service;
 
 import ra.common.*;
 import ra.common.messaging.Message;
+import ra.common.messaging.MessageProducer;
 import ra.common.network.*;
 import ra.common.route.ExternalRoute;
 import ra.common.route.Route;
@@ -23,6 +24,13 @@ public abstract class NetworkService extends BaseService {
     protected List<NetworkPeer> seeds = new ArrayList<>();
     protected NetworkState networkState = new NetworkState();
     protected TaskRunner taskRunner;
+
+    public NetworkService() {
+    }
+
+    public NetworkService(MessageProducer producer, ServiceStatusListener listener) {
+        super(producer, listener);
+    }
 
     @Override
     public void handleDocument(Envelope e) {
