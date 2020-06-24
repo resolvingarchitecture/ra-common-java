@@ -18,6 +18,5 @@ public interface NetworkSession {
     boolean isConnected();
     boolean close();
     Boolean send(NetworkPacket packet);
-    void ack(NetworkPacket packet);
     Status getStatus();
 }
