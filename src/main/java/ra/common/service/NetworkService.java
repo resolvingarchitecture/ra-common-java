@@ -7,6 +7,8 @@ import ra.common.route.ExternalRoute;
 import ra.common.route.Route;
 import ra.util.tasks.TaskRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class NetworkService extends BaseService {
@@ -15,7 +17,9 @@ public abstract class NetworkService extends BaseService {
 
     public static final String OPERATION_SEND = "SEND";
     public static final String OPERATION_REPLY = "REPLY";
+    public static final String OPERATION_ADD_SEED = "ADD_SEED";
 
+    protected List<NetworkPeer> seeds = new ArrayList<>();
     protected NetworkState networkState = new NetworkState();
     protected TaskRunner taskRunner;
 
@@ -72,6 +76,11 @@ public abstract class NetworkService extends BaseService {
                         }
                     }
                 }
+                break;
+            }
+            case OPERATION_ADD_SEED: {
+                NetworkPeer seed = (NetworkPeer)DLC.getEntity(e);
+                seeds.add(seed);
                 break;
             }
             default: {
