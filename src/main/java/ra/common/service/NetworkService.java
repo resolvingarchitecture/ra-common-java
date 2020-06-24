@@ -32,6 +32,10 @@ public abstract class NetworkService extends BaseService {
         super(producer, listener);
     }
 
+    public NetworkState getNetworkState() {
+        return networkState;
+    }
+
     @Override
     public void handleDocument(Envelope e) {
         // Incoming from internal Service requesting local Service
