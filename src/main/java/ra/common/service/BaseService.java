@@ -30,6 +30,7 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
     private Boolean registered;
     private List<ServiceStatusListener> serviceStatusListeners = new ArrayList<>();
     private List<ServiceStatusObserver> serviceStatusObservers = new ArrayList<>();
+    private List<Class> servicesDependentUpon = new ArrayList<>();
 
     protected Properties config;
 
@@ -41,6 +42,14 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
         if(listener != null)
             serviceStatusListeners.add(listener);
         this.producer = producer;
+    }
+
+    public void addDependentService(Class dependentService) {
+        servicesDependentUpon.add(dependentService);
+    }
+
+    public List<Class> getServicesDependentUpon() {
+        return servicesDependentUpon;
     }
 
     public ServiceStatus getServiceStatus() {
