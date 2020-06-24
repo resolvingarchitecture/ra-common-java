@@ -191,38 +191,31 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
             return false;
         }
         version = config.getProperty("ra.version");
-        String baseStr = config.getProperty("ra.dir.base");
-        File home = SystemSettings.getUserHomeDir();
-        File raDir = new File(home,".ra");
-        if(!raDir.exists() && !raDir.mkdir()) {
-            LOG.severe("Unable to create .ra directory: " + home.getAbsolutePath() + "/.ra");
+
+        File servicesFolder = null;
+        try {
+            servicesFolder = SystemSettings.getUserAppHomeDir(".ra", "services", true);
+        } catch (IOException e) {
+            LOG.severe(e.getLocalizedMessage());
             return false;
         }
-        File servicesFolder = new File(baseStr + "/services");
         if(!servicesFolder.exists() && !servicesFolder.mkdir()) {
-            LOG.severe("Unable to create services directory: " + baseStr + "/services");
+            LOG.severe("Unable to create services directory: " + servicesFolder.getAbsolutePath());
             return false;
         }
-        try {
-            config.setProperty("ra.dir.services", servicesFolder.getCanonicalPath());
-        } catch (IOException e) {
-            LOG.severe(e.getLocalizedMessage());
-            return false;
-        }
-        String serviceDirectoryPath = null;
-        try {
-            serviceDirectoryPath = servicesFolder.getCanonicalPath()+"/"+this.getClass().getName();
-        } catch (IOException e) {
-            LOG.severe(e.getLocalizedMessage());
-            return false;
-        }
-        serviceDirectory = new File(serviceDirectoryPath);
+
+        config.setProperty("ra.dir.services", servicesFolder.getAbsolutePath());
+
+        serviceDirectory = new File(servicesFolder, this.getClass().getName());
         if(!serviceDirectory.exists() && !serviceDirectory.mkdir()) {
-            LOG.severe("Unable to create service directory: " + serviceDirectoryPath);
+            LOG.severe("Unable to create service directory: " + serviceDirectory.getAbsolutePath());
             return false;
         } else {
-            serviceDirectory.setWritable(true);
-            config.setProperty("ra.dir.services."+this.getClass().getName(), serviceDirectoryPath);
+            if(!serviceDirectory.setWritable(true)) {
+                LOG.severe("Unable to set service directory writable: "+serviceDirectory.getAbsolutePath());
+                return false;
+            }
+            config.setProperty("ra.dir.services."+this.getClass().getName(), serviceDirectory.getAbsolutePath());
         }
         return true;
     }
