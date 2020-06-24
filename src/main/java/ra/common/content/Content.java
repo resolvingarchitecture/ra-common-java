@@ -1,7 +1,7 @@
 package ra.common.content;
 
-import ra.common.EncryptionAlgorithm;
-import ra.common.Hash;
+import ra.common.crypto.EncryptionAlgorithm;
+import ra.common.crypto.Hash;
 import ra.common.JSONSerializable;
 import ra.util.HashUtil;
 import ra.util.JSONParser;

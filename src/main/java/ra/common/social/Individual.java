@@ -1,6 +1,6 @@
 package ra.common.social;
 
-import ra.common.DID;
+import ra.common.identity.DID;
 
 import java.util.Map;
 

@@ -1,6 +1,6 @@
 package ra.common.route;
 
-import ra.common.NetworkPeer;
+import ra.common.network.NetworkPeer;
 import ra.util.JSONParser;
 import ra.util.JSONPretty;
 

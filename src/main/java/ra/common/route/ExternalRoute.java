@@ -1,6 +1,6 @@
 package ra.common.route;
 
-import ra.common.NetworkPeer;
+import ra.common.network.NetworkPeer;
 
 public interface ExternalRoute extends Route {
     NetworkPeer getOrigination();
