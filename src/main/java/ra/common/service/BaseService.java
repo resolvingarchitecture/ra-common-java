@@ -21,7 +21,6 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
 
     private static final Logger LOG = Logger.getLogger(BaseService.class.getName());
 
-    protected boolean orchestrator = false;
     protected MessageProducer producer;
     private File serviceDirectory;
     private String version;
@@ -129,11 +128,8 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
             runCommand(envelope);
         else
             handleHeaders(envelope);
-        // If not orchestrator, always return a reply.
-        // If orchestrator, it will determine if a reply should be sent.
-        if(!orchestrator) {
-            reply(envelope);
-        }
+        // Always return a reply.
+        reply(envelope);
         return true;
     }
 
@@ -180,11 +176,8 @@ public abstract class BaseService implements MessageConsumer, Service, LifeCycle
         int attempts = 0;
         // Create new Envelope instance with same ID, Headers, and Message so that Message Channel sees it as a different envelope.
         Envelope newEnvelope = Envelope.envelopeFactory(envelope);
-        // Don't set if the orchestration service
-        if(!orchestrator) {
-            Route route = envelope.getRoute();
-            if(route != null) route.setRouted(true);
-        }
+        Route route = envelope.getRoute();
+        if(route != null) route.setRouted(true);
         while(!producer.send(newEnvelope) && ++attempts <= maxAttempts) {
             synchronized (this) {
                 try {

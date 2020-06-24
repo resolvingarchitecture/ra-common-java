@@ -106,10 +106,6 @@ public abstract class NetworkService extends BaseService {
                 DLC.addEntity(networkState, e);
                 break;
             }
-            default: {
-                LOG.warning("Operation ("+r.getOperation()+") not supported. Sending to Dead Letter queue.");
-                deadLetter(e);
-            }
         }
     }
 
