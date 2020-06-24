@@ -9,10 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-;
-
 /**
- * A Peer on the 1M5 peer-to-peer network identified by DID and Network and
+ * A Peer in a peer-to-peer network identified by DID and Network and
  * whether or not it is local.
  */
 public final class NetworkPeer implements JSONSerializable {
@@ -35,7 +33,7 @@ public final class NetworkPeer implements JSONSerializable {
 
     private String id;
     private String network;
-    private ra.common.identity.DID did;
+    private DID did;
     private Integer port;
 
     public NetworkPeer(String network) {
