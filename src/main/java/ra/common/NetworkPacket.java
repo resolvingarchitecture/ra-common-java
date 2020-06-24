@@ -35,6 +35,8 @@ public abstract class NetworkPacket extends Packet {
 
     protected Boolean sendContentOnly = false;
 
+    protected Integer sensitivity = 0;
+
     public NetworkPacket() {
         super();
     }
@@ -139,6 +141,14 @@ public abstract class NetworkPacket extends Packet {
         this.sendContentOnly = sendContentOnly;
     }
 
+    public Integer getSensitivity() {
+        return sensitivity;
+    }
+
+    public void setSensitivity(Integer sensitivity) {
+        this.sensitivity = sensitivity;
+    }
+
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = super.toMap();
@@ -166,6 +176,7 @@ public abstract class NetworkPacket extends Packet {
         if(minCopies != null) m.put("minCopies", minCopies);
         if(maxCopies != null) m.put("maxCopies", maxCopies);
         if(sendContentOnly != null) m.put("sendContentOnly", sendContentOnly);
+        if(sensitivity != null) m.put("sensitivity", sensitivity);
         return m;
     }
 
@@ -199,5 +210,6 @@ public abstract class NetworkPacket extends Packet {
         if(m.get("minCopies") != null) minCopies = (Integer)m.get("minCopies");
         if(m.get("maxCopies") != null) maxCopies = (Integer)m.get("maxCopies");
         if(m.get("sendContentOnly") != null) sendContentOnly = (Boolean)m.get("sendContentOnly");
+        if(m.get("sensitivity") != null) sensitivity = (Integer)m.get("sensitivity");
     }
 }
