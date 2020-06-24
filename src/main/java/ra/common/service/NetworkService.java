@@ -109,6 +109,10 @@ public abstract class NetworkService extends BaseService {
         }
     }
 
+    protected void updateNetworkStatus(NetworkStatus networkStatus) {
+        networkState.networkStatus = networkStatus;
+    }
+
     protected abstract Request buildRequest(NetworkPeer origination, NetworkPeer destination);
     protected abstract boolean send(NetworkPacket networkPacket);
 
