@@ -18,6 +18,7 @@ public abstract class NetworkService extends BaseService {
     public static final String OPERATION_SEND = "SEND";
     public static final String OPERATION_REPLY = "REPLY";
     public static final String OPERATION_ADD_SEED = "ADD_SEED";
+    public static final String OPERATION_NETWORK_STATE = "NETWORK_STATE";
 
     protected List<NetworkPeer> seeds = new ArrayList<>();
     protected NetworkState networkState = new NetworkState();
@@ -81,6 +82,10 @@ public abstract class NetworkService extends BaseService {
             case OPERATION_ADD_SEED: {
                 NetworkPeer seed = (NetworkPeer)DLC.getEntity(e);
                 seeds.add(seed);
+                break;
+            }
+            case OPERATION_NETWORK_STATE: {
+                DLC.addEntity(networkState, e);
                 break;
             }
             default: {
