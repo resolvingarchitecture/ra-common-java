@@ -10,7 +10,7 @@ public class NetworkState {
 
     public String network;
     public NetworkPeer localPeer;
-    public NetworkStatus networkStatus;
+    public NetworkStatus networkStatus = NetworkStatus.SHUTDOWN;
     public Integer virtualPort;
     public Integer targetPort;
 

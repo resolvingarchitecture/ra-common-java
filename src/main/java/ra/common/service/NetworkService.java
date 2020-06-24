@@ -22,14 +22,20 @@ public abstract class NetworkService extends BaseService {
     public static final String OPERATION_NETWORK_STATE = "NETWORK_STATE";
 
     protected List<NetworkPeer> seeds = new ArrayList<>();
-    protected NetworkState networkState = new NetworkState();
+    protected NetworkState networkState;
     protected TaskRunner taskRunner;
 
     public NetworkService() {
+        networkState = new NetworkState();
+        networkState.network = this.getClass().getName();
+        networkState.localPeer = new NetworkPeer(networkState.network);
     }
 
     public NetworkService(MessageProducer producer, ServiceStatusListener listener) {
         super(producer, listener);
+        networkState = new NetworkState();
+        networkState.network = this.getClass().getName();
+        networkState.localPeer = new NetworkPeer(networkState.network);
     }
 
     public NetworkState getNetworkState() {
