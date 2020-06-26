@@ -53,6 +53,10 @@ public abstract class Content implements JSONSerializable, Serializable {
     // Everyone is given write access (e.g. wiki)
     private Boolean writeable = false;
 
+    public static Content buildContent(byte[] body, String contentType, String name) {
+        return buildContent(body, contentType, name, false, false);
+    }
+
     public static Content buildContent(byte[] body, String contentType, String label, String name) {
         return buildContent(body, contentType, label, name, false, false);
     }
