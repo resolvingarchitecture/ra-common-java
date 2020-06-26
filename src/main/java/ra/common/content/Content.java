@@ -57,6 +57,20 @@ public abstract class Content implements JSONSerializable, Serializable {
         return buildContent(body, contentType, label, name, false, false);
     }
 
+    public static Content buildContent(byte[] body, String contentType, String name, boolean generateHash, boolean generateFingerprint) {
+        Content c = null;
+        if(contentType==null) return null;
+        else if(contentType.startsWith("text/plain")) c = new Text(body, "Text", name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("text/html")) c = new HTML(body, "HTML", name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("image/")) c = new Image(body, contentType, "Image", name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("audio/")) c = new Audio(body, contentType, "Audio", name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("video/")) c = new Video(body, contentType, "Video", name, generateHash, generateFingerprint);
+        else if(contentType.startsWith("application/json"))  c = new JSON(body, "JSON", name, generateHash, generateFingerprint);
+        c.setCreatedAt(System.currentTimeMillis());
+        c.setId(RandomUtil.randomAlphanumeric(32));
+        return c;
+    }
+
     public static Content buildContent(byte[] body, String contentType, String label, String name, boolean generateHash, boolean generateFingerprint) {
         Content c = null;
         if(contentType==null) return null;
@@ -68,7 +82,6 @@ public abstract class Content implements JSONSerializable, Serializable {
         else if(contentType.startsWith("application/json"))  c = new JSON(body, label, name, generateHash, generateFingerprint);
         c.setCreatedAt(System.currentTimeMillis());
         c.setId(RandomUtil.randomAlphanumeric(32));
-        c.setLabel(label);
         return c;
     }
 
