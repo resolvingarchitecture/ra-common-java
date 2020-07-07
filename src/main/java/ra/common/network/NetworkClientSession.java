@@ -5,7 +5,7 @@ import java.util.Properties;
 /**
  * Define the means of sending and receiving messages.
  */
-public interface NetworkSession {
+public interface NetworkClientSession {
 
     enum Status {CONNECTING, CONNECTED, DISCONNECTED, STOPPING, STOPPED, ERRORED}
 

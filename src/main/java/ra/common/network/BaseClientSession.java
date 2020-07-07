@@ -4,15 +4,15 @@ import ra.util.RandomUtil;
 
 import java.util.*;
 
-public abstract class BaseSession implements NetworkSession {
+public abstract class BaseClientSession implements NetworkClientSession {
 
     private final Integer id;
     protected Properties properties;
-    protected NetworkSession.Status status = NetworkSession.Status.STOPPED;
-    private List<NetworkSessionListener> listeners = new ArrayList<>();
+    protected NetworkClientSession.Status status = NetworkClientSession.Status.STOPPED;
+    private List<NetworkClientSessionListener> listeners = new ArrayList<>();
     protected String address;
 
-    public BaseSession() {
+    public BaseClientSession() {
         id = RandomUtil.nextRandomInteger();
     }
 
@@ -32,13 +32,15 @@ public abstract class BaseSession implements NetworkSession {
         return true;
     }
 
-    public void addSessionListener(NetworkSessionListener listener) {
+    public void addSessionListener(NetworkClientSessionListener listener) {
         listeners.add(listener);
     }
 
-    public void removeSessionListener(NetworkSessionListener listener) {
+    public void removeSessionListener(NetworkClientSessionListener listener) {
         listeners.remove(listener);
     }
+
+
 
     @Override
     public Status getStatus() {
