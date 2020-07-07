@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * A base for all Services to provide a common framework for them.
  *
  */
-public abstract class BaseService implements MessageConsumer, Service, LifeCycle {
+public abstract class BaseService implements Service {
 
     private static final Logger LOG = Logger.getLogger(BaseService.class.getName());
 
