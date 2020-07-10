@@ -39,7 +39,7 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     private Integer id;
     private Boolean external = false;
-    private DynamicRoutingSlip dynamicRoutingSlip;
+    private DynamicRoutingSlip dynamicRoutingSlip = new DynamicRoutingSlip();
     private Route route = null;
     private DID did = new DID();
     private Long client = 0L;
