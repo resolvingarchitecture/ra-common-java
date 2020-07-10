@@ -51,7 +51,7 @@ public final class Envelope implements Persistable, JSONSerializable {
     private Action action = null;
     private String commandPath = null;
 
-    private Map<String, Object> headers;
+    private Map<String, Object> headers = new HashMap<>();
     private Message message;
     private Integer sensitivity = 1;
     private Long minDelay = 0L;
