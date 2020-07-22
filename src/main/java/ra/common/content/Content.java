@@ -29,6 +29,7 @@ public abstract class Content implements JSONSerializable, Serializable {
     private String id;
     private String label;
     private String name;
+    private String location;
     private Long size = 0L;
     protected String authorAlias;
     protected String authorAddress;
@@ -160,6 +161,14 @@ public abstract class Content implements JSONSerializable, Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Long getSize() {
@@ -401,6 +410,7 @@ public abstract class Content implements JSONSerializable, Serializable {
         if(contentType!=null) m.put("contentType",contentType);
         if(version!=null) m.put("version", String.valueOf(version));
         if(name!=null) m.put("name",name);
+        if(location!=null) m.put("location",location);
         if(size!=null) m.put("size", String.valueOf(size));
         if(body != null) {
             if(this instanceof Text)
@@ -441,6 +451,7 @@ public abstract class Content implements JSONSerializable, Serializable {
         if(m.get("contentType")!=null) contentType = (String)m.get("contentType");
         if(m.get("version")!=null) version = Integer.parseInt((String)m.get("version"));
         if(m.get("name")!=null) name = (String)m.get("name");
+        if(m.get("location")!=null) location = (String)m.get("location");
         if(m.get("size")!=null) size = Long.parseLong((String)m.get("size"));
         if(m.get("body")!=null) {
             if(this instanceof Text)

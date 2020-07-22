@@ -27,9 +27,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git@github.com/resolvingarchitecture/bitcoin-client-java</connection>
-		<developerConnection>scm:git@github.com/resolvingarchitecture/bitcoin-client-java</developerConnection>
-		<url>git@github.com/resolvingarchitecture/bitcoin-client-java</url>
+		<connection>scm:git@github.com/resolvingarchitecture/ra-common-java</connection>
+		<developerConnection>scm:git@github.com/resolvingarchitecture/ra-common-java</developerConnection>
+		<url>git@github.com/resolvingarchitecture/ra-common-java</url>
 	</scm>
 
 	<repositories>
