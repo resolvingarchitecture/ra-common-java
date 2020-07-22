@@ -1,5 +1,6 @@
-package ra.common.file;
+package ra.common;
 
+import ra.common.InfoVault;
 import ra.common.LifeCycle;
 
 public interface InfoVaultDB extends LifeCycle {

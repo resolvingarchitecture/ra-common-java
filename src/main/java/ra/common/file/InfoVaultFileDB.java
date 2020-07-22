@@ -1,5 +1,7 @@
 package ra.common.file;
 
+import ra.common.InfoVault;
+import ra.common.InfoVaultDB;
 import ra.util.FileUtil;
 
 import java.io.IOException;

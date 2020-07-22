@@ -1,4 +1,4 @@
-package ra.common.file;
+package ra.common;
 
 import ra.common.content.Content;
 
