@@ -2,9 +2,12 @@ package ra.common.file;
 
 import ra.common.InfoVault;
 import ra.common.InfoVaultDB;
+import ra.common.content.Content;
 import ra.util.FileUtil;
+import ra.util.JSONParser;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -23,9 +26,8 @@ public class InfoVaultFileDB implements InfoVaultDB {
             byte[] fileBytes = FileUtil.readFile(infoVault.content.getLocation());
             if(fileBytes==null)
                 return false;
-            String jsonStr = new String(fileBytes);
-            infoVault.content.fromJSON(jsonStr);
-        } catch (IOException e) {
+            infoVault.content = Content.newInstance((Map<String,Object>)JSONParser.parse(new String(fileBytes)));
+        } catch (Exception e) {
             LOG.warning(e.getLocalizedMessage());
             return false;
         }
