@@ -302,22 +302,15 @@ public final class Envelope implements Persistable, JSONSerializable {
             dynamicRoutingSlip.fromMap((Map<String, Object>)m.get(DynamicRoutingSlip.class.getSimpleName()));
         }
         if(m.get("route")!=null) {
-            String type = (String)m.get("type");
+            Map<String,Object> rm = (Map<String,Object>)m.get("route");
+            String type = (String)rm.get("type");
             if(type==null) {
                 LOG.warning("type must not be null. unable to reconstruct route.");
             }
             try {
                 route = (Route) Class.forName(type).getConstructor().newInstance();
-                route.fromMap((Map<String, Object>)m.get("route"));
-            } catch (InstantiationException e) {
-                LOG.warning(e.getLocalizedMessage());
-            } catch (IllegalAccessException e) {
-                LOG.warning(e.getLocalizedMessage());
-            } catch (InvocationTargetException e) {
-                LOG.warning(e.getLocalizedMessage());
-            } catch (NoSuchMethodException e) {
-                LOG.warning(e.getLocalizedMessage());
-            } catch (ClassNotFoundException e) {
+                route.fromMap(rm);
+            } catch (Exception e) {
                 LOG.warning(e.getLocalizedMessage());
             }
         }
