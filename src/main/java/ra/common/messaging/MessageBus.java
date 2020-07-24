@@ -1,5 +1,6 @@
 package ra.common.messaging;
 
+import ra.common.Client;
 import ra.common.Envelope;
 import ra.common.LifeCycle;
 import ra.common.service.ServiceLevel;
@@ -14,6 +15,8 @@ public interface MessageBus extends LifeCycle {
     MessageChannel registerSubscriberChannel(String channelName, String subscriberChannelName, int maxSize, ServiceLevel serviceLevel, Class dataTypeFilter, boolean pubSub);
     boolean registerAsynchConsumer(String channelName, MessageConsumer consumer);
     boolean publish(Envelope envelope);
+    boolean publish(Envelope envelope, Client callback);
+    boolean completed(Envelope envelope);
     boolean clearUnprocessed();
     boolean resumeUnprocessed();
 }

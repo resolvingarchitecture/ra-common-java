@@ -117,6 +117,11 @@ public abstract class BaseService implements Service {
         return producer.send(envelope);
     }
 
+    public boolean send(Envelope envelope, Client callback) {
+        LOG.info("Sending Envelope to Producer with callback...");
+        return producer.send(envelope, callback);
+    }
+
     @Override
     public final boolean receive(Envelope envelope) {
         LOG.finer("Envelope received by service. Handling...");
@@ -171,20 +176,9 @@ public abstract class BaseService implements Service {
     }
 
     protected final void reply(Envelope envelope) {
-        LOG.finest("Sending reply to service bus...");
-        int maxAttempts = 30;
-        int attempts = 0;
-        // Create new Envelope instance with same ID, Headers, and Message so that Message Channel sees it as a different envelope.
-        Envelope newEnvelope = Envelope.envelopeFactory(envelope);
+        LOG.finest("Set Route status replied...");
         Route route = envelope.getRoute();
         if(route != null) route.setRouted(true);
-        while(!producer.send(newEnvelope) && ++attempts <= maxAttempts) {
-            synchronized (this) {
-                try {
-                    this.wait(100);
-                } catch (InterruptedException e) {}
-            }
-        }
     }
 
     public final File getServiceDirectory() {
