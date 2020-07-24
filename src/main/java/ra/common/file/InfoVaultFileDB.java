@@ -26,12 +26,14 @@ public class InfoVaultFileDB implements InfoVaultDB {
             byte[] fileBytes = FileUtil.readFile(infoVault.content.getLocation());
             if(fileBytes==null)
                 return false;
-            infoVault.content = Content.newInstance((Map<String,Object>)JSONParser.parse(new String(fileBytes)));
+            if(fileBytes.length > 0) {
+                infoVault.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
+                return true;
+            }
         } catch (Exception e) {
             LOG.warning(e.getLocalizedMessage());
-            return false;
         }
-        return true;
+        return false;
     }
 
     @Override
