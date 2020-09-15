@@ -6,7 +6,6 @@ import ra.common.content.Content;
 import ra.util.FileUtil;
 import ra.util.JSONParser;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
