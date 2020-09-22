@@ -9,6 +9,7 @@ import ra.common.route.SimpleRoute;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data Location Constants
@@ -127,6 +128,14 @@ public final class DLC {
         return ((DocumentMessage)m).data.get(0).get(clazz.getName());
     }
 
+    public static List<Map<String,Object>> getAllData(Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)m).data;
+    }
+
     public static boolean addNVP(String name, Object object, Envelope envelope){
         Message m = envelope.getMessage();
         if(!(m instanceof DocumentMessage)) {
@@ -143,6 +152,14 @@ public final class DLC {
             return null;
         }
         return ((DocumentMessage)m).data.get(0).get(name);
+    }
+
+    public static Map<String,Object> getValues(Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)m).data.get(0);
     }
 
     public static EventMessage getEventMessage(Envelope e) {
