@@ -16,7 +16,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+		<java.version>1.15</java.version>
 	</properties>
 
 	<developers>
@@ -27,7 +27,7 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git@github.com/resolvingarchitecture/ra-common-java</connection>
+		<connection>scm:git@github.com/c/ra-common-java</connection>
 		<developerConnection>scm:git@github.com/resolvingarchitecture/ra-common-java</developerConnection>
 		<url>git@github.com/resolvingarchitecture/ra-common-java</url>
 	</scm>
@@ -108,7 +108,7 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.0</version>
                     <configuration>
-                        <release>8</release>
+                        <release>15</release>
                     </configuration>
 				</plugin>
 			</plugins>
