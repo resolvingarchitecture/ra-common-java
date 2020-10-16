@@ -9,7 +9,7 @@ public class NetworkState extends JSON {
 
     public String network;
     public NetworkPeer localPeer;
-    public NetworkStatus networkStatus = NetworkStatus.SHUTDOWN;
+    public NetworkStatus networkStatus = NetworkStatus.UNINITIALIZED;
     public Integer virtualPort;
     public Integer targetPort;
 
