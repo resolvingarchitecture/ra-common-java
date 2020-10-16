@@ -1,5 +1,6 @@
 package ra.common.network;
 
+import ra.common.Envelope;
 import ra.common.route.RelayedExternalRoute;
 
 import java.util.Properties;
@@ -19,6 +20,6 @@ public interface NetworkClientSession {
     boolean disconnect();
     boolean isConnected();
     boolean close();
-    Boolean send(RelayedExternalRoute packet);
+    Boolean send(Envelope envelope);
     Status getStatus();
 }
