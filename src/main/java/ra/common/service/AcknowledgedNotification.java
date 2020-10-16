@@ -1,8 +1,8 @@
 package ra.common.service;
 
-import ra.common.network.Ack;
-import ra.common.network.NetworkPacket;
+import ra.common.network.NetworkAck;
+import ra.common.route.RelayedExternalRoute;
 
 public interface AcknowledgedNotification extends Operation {
-    Ack operate(NetworkPacket packet);
+    NetworkAck operate(RelayedExternalRoute packet);
 }

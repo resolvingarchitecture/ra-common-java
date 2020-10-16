@@ -1,14 +1,14 @@
 package ra.common.network;
 
-import ra.common.network.NetworkPacket;
+import ra.common.service.Packet;
 
 import java.util.Map;
 
-public class Response extends NetworkPacket {
+public class NetworkResponse extends Packet {
 
     public String requestId;
 
-    public Response(String requestId) {
+    public NetworkResponse(String requestId) {
         this.requestId = requestId;
     }
 

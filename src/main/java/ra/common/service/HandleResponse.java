@@ -1,7 +1,7 @@
 package ra.common.service;
 
-import ra.common.network.Response;
+import ra.common.network.NetworkResponse;
 
 public interface HandleResponse extends Operation {
-    Boolean operate(Response response);
+    Boolean operate(NetworkResponse networkResponse);
 }

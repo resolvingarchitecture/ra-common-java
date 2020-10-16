@@ -3,6 +3,7 @@ package ra.common;
 import ra.common.file.Multipart;
 import ra.common.identity.DID;
 import ra.common.messaging.*;
+import ra.common.route.RelayedExternalRoute;
 import ra.common.route.DynamicRoutingSlip;
 import ra.common.route.Route;
 import ra.common.service.ServiceLevel;
@@ -38,7 +39,7 @@ public final class Envelope implements Persistable, JSONSerializable {
     public enum Action{POST, PUT, DELETE, GET}
 
     private Integer id;
-    private Boolean external = false;
+    private RelayedExternalRoute relayedExternalRoute;
     private DynamicRoutingSlip dynamicRoutingSlip = new DynamicRoutingSlip();
     private Route route = null;
     private DID did = new DID();
@@ -84,7 +85,7 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     public static Envelope envelopeFactory(Envelope envelope){
         Envelope e = new Envelope(envelope.getId(), envelope.getHeaders(), envelope.getMessage(), envelope.getDynamicRoutingSlip());
-        e.setExternal(envelope.getExternal());
+        e.setNetworkExchange(envelope.getNetworkExchange());
         e.setClient(envelope.getClient());
         e.setClientReplyAction(envelope.getClientReplyAction());
         e.setDID(envelope.getDID());
@@ -122,12 +123,12 @@ public final class Envelope implements Persistable, JSONSerializable {
         return id;
     }
 
-    public Boolean getExternal() {
-        return external;
+    public RelayedExternalRoute getNetworkExchange() {
+        return relayedExternalRoute;
     }
 
-    public void setExternal(Boolean external) {
-        this.external = external;
+    public void setNetworkExchange(RelayedExternalRoute relayedExternalRoute) {
+        this.relayedExternalRoute = relayedExternalRoute;
     }
 
     public void setHeader(String name, Object value) {
@@ -274,7 +275,6 @@ public final class Envelope implements Persistable, JSONSerializable {
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
         if(id!=null) m.put("id", id);
-        if(external!=null) m.put("external",external);
         if(dynamicRoutingSlip!=null) m.put("dynamicRoutingSlip", dynamicRoutingSlip.toMap());
         if(route!=null) m.put("route", route.toMap());
         if(did!=null) m.put("did", did.toMap());
@@ -296,7 +296,6 @@ public final class Envelope implements Persistable, JSONSerializable {
     @Override
     public void fromMap(Map<String, Object> m) {
         if(m.get("id")!=null) id = Integer.parseInt((String)m.get("id"));
-        if(m.get("external")!=null) external = Boolean.parseBoolean((String)m.get("external"));
         if(m.get(DynamicRoutingSlip.class.getSimpleName())!=null) {
             dynamicRoutingSlip = new DynamicRoutingSlip();
             dynamicRoutingSlip.fromMap((Map<String, Object>)m.get(DynamicRoutingSlip.class.getSimpleName()));
