@@ -2,11 +2,10 @@ package ra.common.route;
 
 import ra.common.network.NetworkPeer;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class RelayedExternalRoute extends SimpleExternalRoute {
+public final class RelayedExternalRoute extends SimpleExternalRoute {
 
     private Logger LOG = Logger.getLogger(RelayedExternalRoute.class.getName());
 
@@ -29,8 +28,6 @@ public class RelayedExternalRoute extends SimpleExternalRoute {
     protected Boolean copy = false;
     protected Integer minCopies = 0;
     protected Integer maxCopies = 0;
-
-    protected Boolean sendContentOnly = false;
 
     protected Integer sensitivity = 0;
 
@@ -104,14 +101,6 @@ public class RelayedExternalRoute extends SimpleExternalRoute {
         this.maxCopies = maxCopies;
     }
 
-    public Boolean getSendContentOnly() {
-        return sendContentOnly;
-    }
-
-    public void setSendContentOnly(Boolean sendContentOnly) {
-        this.sendContentOnly = sendContentOnly;
-    }
-
     public Integer getSensitivity() {
         return sensitivity;
     }
@@ -137,7 +126,6 @@ public class RelayedExternalRoute extends SimpleExternalRoute {
         if(copy != null) m.put("copy", copy);
         if(minCopies != null) m.put("minCopies", minCopies);
         if(maxCopies != null) m.put("maxCopies", maxCopies);
-        if(sendContentOnly != null) m.put("sendContentOnly", sendContentOnly);
         if(sensitivity != null) m.put("sensitivity", sensitivity);
         return m;
     }
@@ -159,7 +147,6 @@ public class RelayedExternalRoute extends SimpleExternalRoute {
         if(m.get("copy") != null) copy = (Boolean)m.get("copy");
         if(m.get("minCopies") != null) minCopies = (Integer)m.get("minCopies");
         if(m.get("maxCopies") != null) maxCopies = (Integer)m.get("maxCopies");
-        if(m.get("sendContentOnly") != null) sendContentOnly = (Boolean)m.get("sendContentOnly");
         if(m.get("sensitivity") != null) sensitivity = (Integer)m.get("sensitivity");
     }
 }

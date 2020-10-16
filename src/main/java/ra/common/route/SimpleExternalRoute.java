@@ -1,15 +1,14 @@
 package ra.common.route;
 
 import ra.common.network.NetworkPeer;
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
 
 import java.util.Map;
 
 public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
 
-    private NetworkPeer origination;
-    private NetworkPeer destination;
+    protected NetworkPeer origination;
+    protected NetworkPeer destination;
+    protected Boolean sendContentOnly = false;
 
     public SimpleExternalRoute() {}
 
@@ -44,6 +43,15 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
     }
 
     @Override
+    public Boolean getSendContentOnly() {
+        return sendContentOnly;
+    }
+
+    public void setSendContentOnly(Boolean sendContentOnly) {
+        this.sendContentOnly = sendContentOnly;
+    }
+
+    @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = super.toMap();
         if(origination!=null) {
@@ -54,6 +62,7 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
             m.put("destination",destination.toMap());
             m.put("network-dest",destination.getNetwork());
         }
+        if(sendContentOnly!=null) m.put("sendContentOnly", sendContentOnly ? "true" : "false");
         return m;
     }
 
@@ -70,20 +79,7 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
             destination = new NetworkPeer(network);
             destination.fromMap((Map<String, Object>)m.get("destination"));
         }
+        if(m.get("sendContentOnly")!=null) Boolean.parseBoolean((String)m.get("sendContentOnly"));
     }
 
-    @Override
-    public String toJSON() {
-        return JSONPretty.toPretty(JSONParser.toString(toMap()), 4);
-    }
-
-    @Override
-    public void fromJSON(String json) {
-        fromMap((Map<String, Object>)JSONParser.parse(json));
-    }
-
-    @Override
-    public String toString() {
-        return toJSON();
-    }
 }

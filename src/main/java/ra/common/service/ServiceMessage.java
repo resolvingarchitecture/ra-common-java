@@ -1,13 +1,11 @@
 package ra.common.service;
 
-import ra.common.JSONSerializable;
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
+import ra.common.content.JSON;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ServiceMessage implements JSONSerializable {
+public abstract class ServiceMessage extends JSON {
     public static int NO_ERROR = -1;
     public static int REQUEST_REQUIRED = 0;
 
@@ -34,18 +32,4 @@ public abstract class ServiceMessage implements JSONSerializable {
         if(m.get("type")!=null) type = (String)m.get("type");
     }
 
-    @Override
-    public String toJSON() {
-        return JSONPretty.toPretty(JSONParser.toString(toMap()), 4);
-    }
-
-    @Override
-    public void fromJSON(String json) {
-        fromMap((Map<String, Object>)JSONParser.parse(json));
-    }
-
-    @Override
-    public String toString() {
-        return toJSON();
-    }
 }

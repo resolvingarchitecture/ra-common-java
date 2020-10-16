@@ -1,8 +1,5 @@
 package ra.common.service;
 
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
-
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -26,9 +23,8 @@ public abstract class Packet extends ServiceMessage {
         return id;
     }
 
-    public Packet setId(String id) {
+    public void setId(String id) {
         this.id = id;
-        return this;
     }
 
     @Override
@@ -46,18 +42,4 @@ public abstract class Packet extends ServiceMessage {
         if(m.get(TYPE)!=null) type = (String)m.get(TYPE);
     }
 
-    @Override
-    public String toJSON() {
-        return JSONPretty.toPretty(JSONParser.toString(toMap()), 4);
-    }
-
-    @Override
-    public void fromJSON(String json) {
-        fromMap((Map<String, Object>)JSONParser.parse(json));
-    }
-
-    @Override
-    public String toString() {
-        return toJSON();
-    }
 }

@@ -1,5 +1,7 @@
 package ra.common.route;
 
+import ra.common.content.JSON;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -9,7 +11,7 @@ import java.util.Random;
  *
  * @author objectorange
  */
-public abstract class BaseRoute implements Route {
+public abstract class BaseRoute extends JSON implements Route {
 
     protected String service;
     protected String operation;
