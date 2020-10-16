@@ -1,5 +1,7 @@
 package ra.common.network;
 
+import ra.common.DLC;
+import ra.common.Envelope;
 import ra.common.messaging.MessageProducer;
 import ra.common.service.BaseService;
 import ra.common.service.ServiceStatusListener;
@@ -14,16 +16,16 @@ public abstract class NetworkService extends BaseService {
 
     private static final Logger LOG = Logger.getLogger(NetworkService.class.getName());
 
-    private NetworkState networkState = new NetworkState();
+    private final NetworkState networkState = new NetworkState();
+    protected final NetworkPeerManager peerManager;
+
     protected Map<String,NetworkClientSession> sessions = new HashMap<>();
     protected List<NetworkClientSessionListener> sessionListeners = new ArrayList<>();
     protected List<NetworkStateListener> stateChangeListeners = new ArrayList<>();
 
-    public NetworkService() {
-    }
-
-    public NetworkService(MessageProducer producer, ServiceStatusListener listener) {
+    public NetworkService(MessageProducer producer, ServiceStatusListener listener, NetworkBuilderStrategy strategy) {
         super(producer, listener);
+        this.peerManager = new NetworkPeerManager(this, networkState, strategy);
     }
 
     public void registerStatusListener(NetworkStateListener listener) {
@@ -60,6 +62,14 @@ public abstract class NetworkService extends BaseService {
 
     public NetworkState getNetworkState() {
         return networkState;
+    }
+
+    public abstract Boolean sendOut(Envelope envelope);
+
+    public Boolean receiveIn(Envelope envelope) {
+        if(DLC.markerPresent("netop", envelope))
+            peerManager.receive(envelope);
+        return true;
     }
 
 }

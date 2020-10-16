@@ -1,5 +1,6 @@
 package ra.common;
 
+import ra.common.content.JSON;
 import ra.common.file.Multipart;
 import ra.common.identity.DID;
 import ra.common.messaging.*;
@@ -14,15 +15,14 @@ import ra.util.RandomUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
  * Wraps all data passed around in application to ensure a space for header type information.
  *
  */
-public final class Envelope implements Persistable, JSONSerializable {
+public final class Envelope extends JSON {
 
     private static final Logger LOG = Logger.getLogger(Envelope.class.getName());
 
@@ -38,10 +38,11 @@ public final class Envelope implements Persistable, JSONSerializable {
     public enum MessageType {DOCUMENT, TEXT, EVENT, COMMAND, NONE}
     public enum Action{POST, PUT, DELETE, GET}
 
-    private Integer id;
+    private String id;
     private RelayedExternalRoute relayedExternalRoute;
     private DynamicRoutingSlip dynamicRoutingSlip = new DynamicRoutingSlip();
     private Route route = null;
+    private List<String> markers = new ArrayList<>();
     private DID did = new DID();
     private Long client = 0L;
     private Boolean replyToClient = false;
@@ -60,27 +61,27 @@ public final class Envelope implements Persistable, JSONSerializable {
     private ServiceLevel serviceLevel = ServiceLevel.AtLeastOnce;
 
     public static Envelope commandFactory() {
-        return new Envelope(RandomUtil.nextRandomInteger(), new CommandMessage());
+        return new Envelope(UUID.randomUUID().toString(), new CommandMessage());
     }
 
     public static Envelope documentFactory() {
-        return new Envelope(RandomUtil.nextRandomInteger(), new DocumentMessage());
+        return new Envelope(UUID.randomUUID().toString(), new DocumentMessage());
     }
 
-    public static Envelope documentFactory(Integer id) {
+    public static Envelope documentFactory(String id) {
         return new Envelope(id, new DocumentMessage());
     }
 
     public static Envelope headersOnlyFactory() {
-        return new Envelope(RandomUtil.nextRandomInteger(), null);
+        return new Envelope(UUID.randomUUID().toString(), null);
     }
 
     public static Envelope eventFactory(EventMessage.Type type) {
-        return new Envelope(RandomUtil.nextRandomInteger(), new EventMessage(type.name()));
+        return new Envelope(UUID.randomUUID().toString(), new EventMessage(type.name()));
     }
 
     public static Envelope textFactory() {
-        return new Envelope(RandomUtil.nextRandomInteger(), new TextMessage());
+        return new Envelope(UUID.randomUUID().toString(), new TextMessage());
     }
 
     public static Envelope envelopeFactory(Envelope envelope){
@@ -91,6 +92,7 @@ public final class Envelope implements Persistable, JSONSerializable {
         e.setDID(envelope.getDID());
         e.setReplyToClient(envelope.replyToClient());
         e.setRoute(envelope.getRoute());
+        e.setMarkers(envelope.getMarkers());
         e.setURL(envelope.getURL());
         e.setAction(envelope.getAction());
         e.setCommandPath(envelope.getCommandPath());
@@ -103,23 +105,23 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     public Envelope() {}
 
-    public Envelope(Integer id, Message message) {
+    public Envelope(String id, Message message) {
         this(id, message, new HashMap<>());
     }
 
-    public Envelope(Integer id, Message message, Map<String, Object> headers) {
+    public Envelope(String id, Message message, Map<String, Object> headers) {
         this.id = id;
         this.message = message;
         this.headers = headers;
         this.dynamicRoutingSlip = new DynamicRoutingSlip();
     }
 
-    private Envelope(Integer id, Map<String, Object> headers, Message message, DynamicRoutingSlip dynamicRoutingSlip) {
+    private Envelope(String id, Map<String, Object> headers, Message message, DynamicRoutingSlip dynamicRoutingSlip) {
         this(id, message, headers);
         this.dynamicRoutingSlip = dynamicRoutingSlip;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -173,6 +175,14 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     public void setRoute(Route route) {
         this.route = route;
+    }
+
+    public List<String> getMarkers() {
+        return markers;
+    }
+
+    public void setMarkers(List<String> markers) {
+        this.markers = markers;
     }
 
     public DID getDID() {
@@ -282,6 +292,7 @@ public final class Envelope implements Persistable, JSONSerializable {
         if(replyToClient!=null) m.put("replyToClient",replyToClient);
         if(clientReplyAction!=null) m.put("clientReplyAction",clientReplyAction);
         if(url!=null) m.put("url", url.toString());
+        if(markers!=null) m.put("markers", markers);
         if(multipart!=null) m.put("multipart", multipart.toMap());
         if(action!=null) m.put("action", action.name());
         if(commandPath!=null) m.put("commandPath", commandPath);
@@ -295,7 +306,7 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     @Override
     public void fromMap(Map<String, Object> m) {
-        if(m.get("id")!=null) id = Integer.parseInt((String)m.get("id"));
+        if(m.get("id")!=null) id = (String)m.get("id");
         if(m.get(DynamicRoutingSlip.class.getSimpleName())!=null) {
             dynamicRoutingSlip = new DynamicRoutingSlip();
             dynamicRoutingSlip.fromMap((Map<String, Object>)m.get(DynamicRoutingSlip.class.getSimpleName()));
@@ -325,6 +336,7 @@ public final class Envelope implements Persistable, JSONSerializable {
         } catch (MalformedURLException e) {
             LOG.warning(e.getLocalizedMessage());
         }
+        if(m.get("markers")!=null) markers = (List<String>)m.get("markers");
         if(m.get("multipart")!=null) {
             multipart = new Multipart();
             multipart.fromMap((Map<String, Object>)m.get("multipart"));
@@ -371,7 +383,7 @@ public final class Envelope implements Persistable, JSONSerializable {
 
     @Override
     public int hashCode() {
-        return id;
+        return id.hashCode();
     }
 
     @Override

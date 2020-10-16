@@ -136,6 +136,14 @@ public final class DLC {
         return ((DocumentMessage)m).data;
     }
 
+    public static boolean markerPresent(String marker, Envelope envelope) {
+        return envelope.getMarkers()!=null && envelope.getMarkers().contains(marker);
+    }
+
+    public static boolean mark(String mark, Envelope envelope) {
+        return envelope.getMarkers().add(mark);
+    }
+
     public static boolean addNVP(String name, Object object, Envelope envelope){
         Message m = envelope.getMessage();
         if(!(m instanceof DocumentMessage)) {
