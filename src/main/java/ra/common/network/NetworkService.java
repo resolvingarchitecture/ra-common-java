@@ -1,6 +1,8 @@
 package ra.common.network;
 
+import ra.common.messaging.MessageProducer;
 import ra.common.service.BaseService;
+import ra.common.service.ServiceStatusListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +15,13 @@ public abstract class NetworkService extends BaseService {
     protected Map<String,NetworkClientSession> sessions = new HashMap<>();
     protected List<NetworkClientSessionListener> sessionListeners = new ArrayList<>();
     protected List<NetworkStateListener> statusListeners = new ArrayList<>();
+
+    public NetworkService() {
+    }
+
+    public NetworkService(MessageProducer producer, ServiceStatusListener listener) {
+        super(producer, listener);
+    }
 
     public void registerStatusListener(NetworkStateListener listener) {
         statusListeners.add(listener);
