@@ -9,15 +9,6 @@ public final class RelayedExternalRoute extends SimpleExternalRoute {
 
     private Logger LOG = Logger.getLogger(RelayedExternalRoute.class.getName());
 
-    public static int DESTINATION_PEER_REQUIRED = 2;
-    public static int DESTINATION_PEER_WRONG_NETWORK = 3;
-    public static int DESTINATION_PEER_NOT_FOUND = 4;
-    public static int NO_SERVICE = 7;
-    public static int NO_OPERATION = 8;
-    public static int NO_ADDRESS = 9;
-    public static int NO_FINGERPRINT = 10;
-    public static int NO_PORT = 11;
-
     protected NetworkPeer fromPeer;
     protected NetworkPeer toPeer;
 
