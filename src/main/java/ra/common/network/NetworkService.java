@@ -46,4 +46,12 @@ public abstract class NetworkService extends BaseService {
         }
     }
 
+    protected void connectionReport(NetworkConnectionReport report) {
+        networkState.connectionReports.add(report);
+    }
+
+    public NetworkState getNetworkState() {
+        return networkState;
+    }
+
 }
