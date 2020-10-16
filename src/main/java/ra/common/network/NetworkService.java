@@ -11,10 +11,10 @@ import java.util.Map;
 
 public abstract class NetworkService extends BaseService {
 
-    protected NetworkState networkState = new NetworkState();
+    private NetworkState networkState = new NetworkState();
     protected Map<String,NetworkClientSession> sessions = new HashMap<>();
     protected List<NetworkClientSessionListener> sessionListeners = new ArrayList<>();
-    protected List<NetworkStateListener> statusListeners = new ArrayList<>();
+    protected List<NetworkStateListener> stateChangeListeners = new ArrayList<>();
 
     public NetworkService() {
     }
@@ -24,11 +24,11 @@ public abstract class NetworkService extends BaseService {
     }
 
     public void registerStatusListener(NetworkStateListener listener) {
-        statusListeners.add(listener);
+        stateChangeListeners.add(listener);
     }
 
     public void unregisterStatusListener(NetworkStateListener listener) {
-        statusListeners.remove(listener);
+        stateChangeListeners.remove(listener);
     }
 
     public void registerSessionListener(NetworkClientSessionListener listener) {
@@ -37,6 +37,13 @@ public abstract class NetworkService extends BaseService {
 
     public void unregisterSessionListener(NetworkClientSessionListener listener) {
         sessionListeners.remove(listener);
+    }
+
+    protected void updateNetworkStatus(NetworkStatus networkStatus) {
+        networkState.networkStatus = networkStatus;
+        for(NetworkStateListener l : stateChangeListeners) {
+            l.stateChanged(networkState);
+        }
     }
 
 }
