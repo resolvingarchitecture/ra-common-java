@@ -2,7 +2,9 @@ package ra.common.network;
 
 import ra.common.content.JSON;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NetworkState extends JSON {
@@ -12,6 +14,7 @@ public class NetworkState extends JSON {
     public NetworkStatus networkStatus = NetworkStatus.DISCONNECTED;
     public Integer virtualPort;
     public Integer targetPort;
+    public List<NetworkConnectionReport> connectionReports = new ArrayList<>();
 
     public Map<String, Object> params = new HashMap<>();
 
@@ -25,6 +28,7 @@ public class NetworkState extends JSON {
         if(localPeer!=null && localPeer.getDid().getUsername()!=null) m.put("username", localPeer.getDid().getUsername());
         if(localPeer!=null) m.put("fingerprint", localPeer.getDid().getPublicKey().getFingerprint());
         if(localPeer!=null) m.put("address", localPeer.getDid().getPublicKey().getAddress());
+        if(connectionReports!=null) m.put("connectionReports",connectionReports);
         if(params!=null) m.put("params", params);
         return m;
     }
