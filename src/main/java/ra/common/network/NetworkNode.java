@@ -5,42 +5,42 @@ import java.util.Map;
 
 /**
  * A node on the Network. It represents the local physical
- * machine on a network and the local peers representing
- * that machine for each network supported.
+ * machine on a network and the local networks supported.
  */
 public final class NetworkNode {
 
-    private Map<String, NetworkPeer> localPeers;
+    private Map<String, NetworkState> networks = new HashMap<>();
 
-    public NetworkNode() {
-        localPeers = new HashMap<>();
-    }
+    public NetworkNode() {}
 
-    public void addNetworkPeer(NetworkPeer networkPeer, String network) {
-        networkPeer.setNetwork(network);
-        localPeers.put(network, networkPeer);
+    public void addNetwork(NetworkState networkState) {
+        networks.put(networkState.network, networkState);
     }
 
     public NetworkPeer getNetworkPeer(String network) {
-        return localPeers.get(network);
+        if(networks.get(network)==null) {
+            return null;
+        } else {
+            return networks.get(network).localPeer;
+        }
     }
 
-    public void removeNetworkPeer(NetworkPeer networkPeer) {
-        localPeers.remove(networkPeer.getNetwork());
+    public void removeNetwork(String networkName) {
+        networks.remove(networkName);
     }
 
-    public int numberOfNetworkPeers() {
-        return localPeers.size();
+    public int numberOfNetworks() {
+        return networks.size();
     }
 
     @Override
     public String toString() {
-        String json = "{peers:[";
+        String json = "{networks:[";
         boolean first = true;
-        for(NetworkPeer p : localPeers.values()) {
+        for(NetworkState ns : networks.values()) {
             if(!first)
                 json+=", ";
-            json+=p.toJSON();
+            json+=ns.toJSON();
             first = false;
         }
         return json+"]}";
