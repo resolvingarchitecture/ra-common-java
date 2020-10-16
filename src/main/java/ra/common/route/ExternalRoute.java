@@ -16,4 +16,6 @@ public interface ExternalRoute extends Route {
     NetworkPeer getOrigination();
     NetworkPeer getDestination();
     Boolean getSendContentOnly();
+    void setStatusCode(Integer code);
+    Integer getStatusCode();
 }

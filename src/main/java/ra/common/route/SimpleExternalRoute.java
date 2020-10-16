@@ -9,6 +9,7 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
     protected NetworkPeer origination;
     protected NetworkPeer destination;
     protected Boolean sendContentOnly = false;
+    protected Integer statusCode = 0;
 
     public SimpleExternalRoute() {}
 
@@ -52,6 +53,16 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
     }
 
     @Override
+    public Integer getStatusCode() {
+        return statusCode;
+    }
+
+    @Override
+    public void setStatusCode(Integer statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = super.toMap();
         if(origination!=null) {
@@ -63,6 +74,7 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
             m.put("network-dest",destination.getNetwork());
         }
         if(sendContentOnly!=null) m.put("sendContentOnly", sendContentOnly ? "true" : "false");
+        if(statusCode!=null) m.put("statusCode", statusCode);
         return m;
     }
 
@@ -79,7 +91,8 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
             destination = new NetworkPeer(network);
             destination.fromMap((Map<String, Object>)m.get("destination"));
         }
-        if(m.get("sendContentOnly")!=null) Boolean.parseBoolean((String)m.get("sendContentOnly"));
+        if(m.get("sendContentOnly")!=null) sendContentOnly = Boolean.parseBoolean((String)m.get("sendContentOnly"));
+        if(m.get("statusCode")!=null) statusCode = Integer.parseInt((String)m.get("statusCode"));
     }
 
 }
