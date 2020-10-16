@@ -86,7 +86,6 @@ public final class Envelope extends JSON {
 
     public static Envelope envelopeFactory(Envelope envelope){
         Envelope e = new Envelope(envelope.getId(), envelope.getHeaders(), envelope.getMessage(), envelope.getDynamicRoutingSlip());
-        e.setNetworkExchange(envelope.getNetworkExchange());
         e.setClient(envelope.getClient());
         e.setClientReplyAction(envelope.getClientReplyAction());
         e.setDID(envelope.getDID());
@@ -123,14 +122,6 @@ public final class Envelope extends JSON {
 
     public String getId() {
         return id;
-    }
-
-    public RelayedExternalRoute getNetworkExchange() {
-        return relayedExternalRoute;
-    }
-
-    public void setNetworkExchange(RelayedExternalRoute relayedExternalRoute) {
-        this.relayedExternalRoute = relayedExternalRoute;
     }
 
     public void setHeader(String name, Object value) {

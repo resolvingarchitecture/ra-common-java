@@ -29,7 +29,8 @@ public class NetworkPeerDiscovery implements Runnable {
         peerManager.send(e);
     }
 
-    void receive(Envelope envelope) {
+    boolean receive(Envelope envelope) {
 
+        return true;
     }
 }

@@ -66,10 +66,10 @@ public abstract class NetworkService extends BaseService {
 
     public abstract Boolean sendOut(Envelope envelope);
 
-    public Boolean receiveIn(Envelope envelope) {
+    protected Boolean receiveIn(Envelope envelope) {
         if(DLC.markerPresent("netop", envelope))
-            peerManager.receive(envelope);
-        return true;
+            return peerManager.receive(envelope);
+        return false;
     }
 
 }

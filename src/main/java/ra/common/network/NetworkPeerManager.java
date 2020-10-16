@@ -37,8 +37,8 @@ public class NetworkPeerManager implements NetworkStateListener {
         service.sendOut(e);
     }
 
-    void receive(Envelope e) {
-        peerDiscovery.receive(e);
+    boolean receive(Envelope e) {
+        return peerDiscovery.receive(e);
     }
 
 //    NetworkPeer randomPeer() {
