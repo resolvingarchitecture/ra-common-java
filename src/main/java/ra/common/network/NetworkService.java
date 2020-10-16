@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public abstract class NetworkService extends BaseService {
+
+    private static final Logger LOG = Logger.getLogger(NetworkService.class.getName());
 
     private NetworkState networkState = new NetworkState();
     protected Map<String,NetworkClientSession> sessions = new HashMap<>();
@@ -40,6 +43,7 @@ public abstract class NetworkService extends BaseService {
     }
 
     protected void updateNetworkStatus(NetworkStatus networkStatus) {
+        LOG.info("Network Status for Network: "+networkState.network +" - " + networkStatus.name());
         networkState.networkStatus = networkStatus;
         for(NetworkStateListener l : stateChangeListeners) {
             l.stateChanged(networkState);
@@ -47,6 +51,7 @@ public abstract class NetworkService extends BaseService {
     }
 
     protected void connectionReport(NetworkConnectionReport report) {
+        LOG.info("Network Connection Report for Network: "+networkState.network+"\n\t"+report.toJSON());
         networkState.connectionReports.add(report);
         for(NetworkStateListener l : stateChangeListeners) {
             l.stateChanged(networkState);
