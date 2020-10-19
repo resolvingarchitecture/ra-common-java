@@ -5,7 +5,6 @@ import ra.util.JSONParser;
 import ra.util.JSONPretty;
 import ra.util.Stack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * TODO: Add Description
+ * Routing Slip implemented as a dynamic stack using a Dequeu.
  *
  * @author objectorange
  */
