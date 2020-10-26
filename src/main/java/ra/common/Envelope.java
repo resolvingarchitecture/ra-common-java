@@ -256,6 +256,14 @@ public final class Envelope extends JSON {
         headers.put(HEADER_CONTENT_TYPE, contentType);
     }
 
+    public Integer getSensitivity() {
+        return sensitivity;
+    }
+
+    public void setSensitivity(Integer sensitivity) {
+        this.sensitivity = sensitivity;
+    }
+
     public Long getMinDelay() {
         return minDelay;
     }
@@ -289,6 +297,7 @@ public final class Envelope extends JSON {
         if(commandPath!=null) m.put("commandPath", commandPath);
         if(headers!=null) m.put("headers", headers);
         if(message!=null) m.put("message", message.toMap());
+        if(sensitivity!=null) m.put("sensitivity", sensitivity);
         if(minDelay != null) m.put("minDelay", minDelay);
         if(maxDelay != null) m.put("maxDelay", maxDelay);
         if(serviceLevel != null) m.put("serviceLevel", serviceLevel.name());
@@ -352,6 +361,7 @@ public final class Envelope extends JSON {
                 LOG.warning(e.getLocalizedMessage());
             }
         }
+        if(m.get("sensitivity")!=null) sensitivity = (Integer)m.get("sensitivity");
         if(m.get("minDelay")!=null) minDelay = (Long)m.get("minDelay");
         if(m.get("maxDelay")!=null) maxDelay = (Long)m.get("maxDelay");
         if(m.get("serviceLevel")!=null) serviceLevel = ServiceLevel.valueOf((String)m.get("serviceLevel"));
