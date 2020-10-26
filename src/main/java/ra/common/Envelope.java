@@ -59,6 +59,9 @@ public final class Envelope extends JSON {
     private Boolean delayed = false;
     private Long minDelay = 0L;
     private Long maxDelay = 0L;
+    private Boolean copy = false;
+    private Integer maxCopies = 0;
+    private Integer minCopies = 0;
     private ServiceLevel serviceLevel = ServiceLevel.AtLeastOnce;
 
     public static Envelope commandFactory() {
@@ -289,6 +292,30 @@ public final class Envelope extends JSON {
         this.maxDelay = maxDelay;
     }
 
+    public Boolean getCopy() {
+        return copy;
+    }
+
+    public void setCopy(Boolean copy) {
+        this.copy = copy;
+    }
+
+    public Integer getMaxCopies() {
+        return maxCopies;
+    }
+
+    public void setMaxCopies(Integer maxCopies) {
+        this.maxCopies = maxCopies;
+    }
+
+    public Integer getMinCopies() {
+        return minCopies;
+    }
+
+    public void setMinCopies(Integer minCopies) {
+        this.minCopies = minCopies;
+    }
+
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
@@ -310,6 +337,9 @@ public final class Envelope extends JSON {
         if(delayed!=null) m.put("delayed", delayed ? "true":"false");
         if(minDelay != null) m.put("minDelay", minDelay);
         if(maxDelay != null) m.put("maxDelay", maxDelay);
+        if(copy!=null) m.put("copy", copy ? "true":"false");
+        if(minCopies!=null) m.put("minCopies", minCopies);
+        if(maxCopies!=null) m.put("maxCopies", maxCopies);
         if(serviceLevel != null) m.put("serviceLevel", serviceLevel.name());
         return m;
     }
@@ -375,6 +405,9 @@ public final class Envelope extends JSON {
         if(m.get("delayed")!=null) delayed = m.get("delayed").equals("true");
         if(m.get("minDelay")!=null) minDelay = (Long)m.get("minDelay");
         if(m.get("maxDelay")!=null) maxDelay = (Long)m.get("maxDelay");
+        if(m.get("copy")!=null) copy = m.get("copy").equals("true");
+        if(m.get("minCopies")!=null) minCopies = (Integer)m.get("minCopies");
+        if(m.get("maxCopies")!=null) maxCopies = (Integer)m.get("maxCopies");
         if(m.get("serviceLevel")!=null) serviceLevel = ServiceLevel.valueOf((String)m.get("serviceLevel"));
     }
 
