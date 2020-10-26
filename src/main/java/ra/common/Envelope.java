@@ -56,6 +56,7 @@ public final class Envelope extends JSON {
     private Map<String, Object> headers = new HashMap<>();
     private Message message;
     private Integer sensitivity = 1;
+    private Boolean delayed = false;
     private Long minDelay = 0L;
     private Long maxDelay = 0L;
     private ServiceLevel serviceLevel = ServiceLevel.AtLeastOnce;
@@ -264,6 +265,14 @@ public final class Envelope extends JSON {
         this.sensitivity = sensitivity;
     }
 
+    public Boolean getDelayed() {
+        return delayed;
+    }
+
+    public void setDelayed(Boolean delayed) {
+        this.delayed = delayed;
+    }
+
     public Long getMinDelay() {
         return minDelay;
     }
@@ -298,6 +307,7 @@ public final class Envelope extends JSON {
         if(headers!=null) m.put("headers", headers);
         if(message!=null) m.put("message", message.toMap());
         if(sensitivity!=null) m.put("sensitivity", sensitivity);
+        if(delayed!=null) m.put("delayed", delayed ? "true":"false");
         if(minDelay != null) m.put("minDelay", minDelay);
         if(maxDelay != null) m.put("maxDelay", maxDelay);
         if(serviceLevel != null) m.put("serviceLevel", serviceLevel.name());
@@ -362,6 +372,7 @@ public final class Envelope extends JSON {
             }
         }
         if(m.get("sensitivity")!=null) sensitivity = (Integer)m.get("sensitivity");
+        if(m.get("delayed")!=null) delayed = m.get("delayed").equals("true");
         if(m.get("minDelay")!=null) minDelay = (Long)m.get("minDelay");
         if(m.get("maxDelay")!=null) maxDelay = (Long)m.get("maxDelay");
         if(m.get("serviceLevel")!=null) serviceLevel = ServiceLevel.valueOf((String)m.get("serviceLevel"));
