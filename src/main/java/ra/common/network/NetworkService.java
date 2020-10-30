@@ -2,6 +2,7 @@ package ra.common.network;
 
 import ra.common.DLC;
 import ra.common.Envelope;
+import ra.common.Tuple2;
 import ra.common.messaging.MessageProducer;
 import ra.common.service.BaseService;
 import ra.common.service.ServiceStatusListener;
@@ -17,22 +18,22 @@ public abstract class NetworkService extends BaseService {
     private static final Logger LOG = Logger.getLogger(NetworkService.class.getName());
 
     private final NetworkState networkState = new NetworkState();
-    protected final NetworkPeerManager peerManager;
 
     protected Map<String,NetworkClientSession> sessions = new HashMap<>();
     protected List<NetworkClientSessionListener> sessionListeners = new ArrayList<>();
-    protected List<NetworkStateListener> stateChangeListeners = new ArrayList<>();
+    protected List<Tuple2<String,String>> stateChangeListeners = new ArrayList<>();
 
-    public NetworkService(MessageProducer producer, ServiceStatusListener listener, NetworkBuilderStrategy strategy) {
+    protected NetworkService(String network, MessageProducer producer, ServiceStatusListener listener) {
         super(producer, listener);
-        this.peerManager = new NetworkPeerManager(this, networkState, strategy);
+        this.networkState.network = network;
+        this.networkState.localPeer = new NetworkPeer(network);
     }
 
-    public void registerStatusListener(NetworkStateListener listener) {
+    public void registerStatusListener(Tuple2<String,String> listener) {
         stateChangeListeners.add(listener);
     }
 
-    public void unregisterStatusListener(NetworkStateListener listener) {
+    public void unregisterStatusListener(Tuple2<String,String> listener) {
         stateChangeListeners.remove(listener);
     }
 
@@ -47,16 +48,24 @@ public abstract class NetworkService extends BaseService {
     protected void updateNetworkStatus(NetworkStatus networkStatus) {
         LOG.info("Network Status for Network: "+networkState.network +" - " + networkStatus.name());
         networkState.networkStatus = networkStatus;
-        for(NetworkStateListener l : stateChangeListeners) {
-            l.stateChanged(networkState);
+        for(Tuple2<String,String> l : stateChangeListeners) {
+            // Send to Service, Operation
+            Envelope e = Envelope.documentFactory();
+            DLC.addContent(networkStatus, e);
+            DLC.addRoute(l.first, l.second, e);
+            send(e);
         }
     }
 
     protected void connectionReport(NetworkConnectionReport report) {
         LOG.info("Network Connection Report for Network: "+networkState.network+"\n\t"+report.toJSON());
         networkState.connectionReports.add(report);
-        for(NetworkStateListener l : stateChangeListeners) {
-            l.stateChanged(networkState);
+        for(Tuple2<String,String> l : stateChangeListeners) {
+            // Send to Service, Operation
+            Envelope e = Envelope.documentFactory();
+            DLC.addContent(report, e);
+            DLC.addRoute(l.first, l.second, e);
+            send(e);
         }
     }
 
@@ -67,8 +76,6 @@ public abstract class NetworkService extends BaseService {
     public abstract Boolean sendOut(Envelope envelope);
 
     protected Boolean receiveIn(Envelope envelope) {
-        if(DLC.markerPresent("netop", envelope))
-            return peerManager.receive(envelope);
         return false;
     }
 
