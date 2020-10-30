@@ -23,10 +23,7 @@ public class NetworkPeerDiscovery implements Runnable {
     }
 
     protected void send(String service, String operation, NetworkPeer destPeer) {
-        Envelope e = Envelope.documentFactory();
-        DLC.mark("netop", e);
-        DLC.addExternalRoute(service, operation, e, peerManager.getLocalPeer(), destPeer);
-        peerManager.send(e);
+
     }
 
     boolean receive(Envelope envelope) {
