@@ -5,7 +5,7 @@ import ra.common.Envelope;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NetworkPeerManager {
+public class NetworkPeerManager implements Runnable {
 
     private NetworkService service;
     private NetworkState networkState;
@@ -18,6 +18,11 @@ public class NetworkPeerManager {
         this.networkState = networkState;
         this.networkDiscovererable = strategy!=null;
         if(networkDiscovererable) peerDiscovery = new NetworkPeerDiscovery(this, strategy);
+    }
+
+    @Override
+    public void run() {
+
     }
 
     NetworkPeer getLocalPeer() {
