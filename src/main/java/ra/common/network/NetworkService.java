@@ -7,10 +7,7 @@ import ra.common.messaging.MessageProducer;
 import ra.common.service.BaseService;
 import ra.common.service.ServiceStatusListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public abstract class NetworkService extends BaseService {
@@ -85,6 +82,10 @@ public abstract class NetworkService extends BaseService {
 
     public Integer getNumberKnownPeers() {
         return knownPeers.size();
+    }
+
+    public Collection<NetworkPeer> getKnownPeers() {
+        return knownPeers.values();
     }
 
     public void addToKnownPeers(List<NetworkPeer> peers) {
