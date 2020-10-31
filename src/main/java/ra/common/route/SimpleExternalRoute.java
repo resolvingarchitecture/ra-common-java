@@ -83,12 +83,12 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
         if(m.get("origination")!=null) {
-            Network network = Network.valueOf((String)m.get("network-orig"));
+            String network = (String)m.get("network-orig");
             origination = new NetworkPeer(network);
             origination.fromMap((Map<String, Object>)m.get("origination"));
         }
         if(m.get("destination")!=null) {
-            Network network = Network.valueOf((String)m.get("network-dest"));
+            String network = (String)m.get("network-dest");
             destination = new NetworkPeer(network);
             destination.fromMap((Map<String, Object>)m.get("destination"));
         }

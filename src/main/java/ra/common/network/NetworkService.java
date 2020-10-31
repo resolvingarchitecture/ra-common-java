@@ -27,7 +27,7 @@ public abstract class NetworkService extends BaseService {
     protected Map<String,NetworkPeer> knownPeers = new HashMap<>();
     protected Map<String,NetworkPeer> activePeers = new HashMap<>();
 
-    protected NetworkService(Network network, MessageProducer producer, ServiceStatusListener listener) {
+    protected NetworkService(String network, MessageProducer producer, ServiceStatusListener listener) {
         super(producer, listener);
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);
