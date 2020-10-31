@@ -316,6 +316,12 @@ public final class Envelope extends JSON {
         this.minCopies = minCopies;
     }
 
+    public void ratchet() {
+        if(dynamicRoutingSlip!=null) {
+            route = dynamicRoutingSlip.nextRoute();
+        }
+    }
+
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
