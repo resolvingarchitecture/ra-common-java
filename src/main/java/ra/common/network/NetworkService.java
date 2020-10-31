@@ -23,6 +23,9 @@ public abstract class NetworkService extends BaseService {
     protected List<NetworkClientSessionListener> sessionListeners = new ArrayList<>();
     protected List<Tuple2<String,String>> stateChangeListeners = new ArrayList<>();
 
+    protected Map<String,NetworkPeer> knownPeers = new HashMap<>();
+    protected Map<String,NetworkPeer> activePeers = new HashMap<>();
+
     protected NetworkService(String network, MessageProducer producer, ServiceStatusListener listener) {
         super(producer, listener);
         this.networkState.network = network;
