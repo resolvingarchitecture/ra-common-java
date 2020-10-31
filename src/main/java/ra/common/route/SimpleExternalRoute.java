@@ -93,7 +93,7 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
             destination.fromMap((Map<String, Object>)m.get("destination"));
         }
         if(m.get("sendContentOnly")!=null) sendContentOnly = Boolean.parseBoolean((String)m.get("sendContentOnly"));
-        if(m.get("statusCode")!=null) statusCode = Integer.parseInt((String)m.get("statusCode"));
+        if(m.get("statusCode")!=null) statusCode = (Integer)m.get("statusCode");
     }
 
 }
