@@ -387,7 +387,7 @@ public final class Envelope extends JSON {
         if(m.get("message")!=null) {
             Map<String, Object> msgM = (Map<String, Object>)m.get("message");
             try {
-                message = (Message) Class.forName((String)msgM.get("type")).getConstructor().newInstance();
+                message = (Message) Class.forName((String)msgM.get("clazz")).getConstructor().newInstance();
                 message.fromMap(msgM);
             } catch (InstantiationException e) {
                 LOG.warning(e.getLocalizedMessage());
