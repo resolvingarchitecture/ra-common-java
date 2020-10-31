@@ -44,7 +44,7 @@ public final class Envelope extends JSON {
     private Route route = null;
     private List<String> markers = new ArrayList<>();
     private DID did = new DID();
-    private Long client = 0L;
+    private Integer client = 0;
     private Boolean replyToClient = false;
     private String clientReplyAction = null;
     private URL url = null;
@@ -196,11 +196,11 @@ public final class Envelope extends JSON {
         this.serviceLevel = serviceLevel;
     }
 
-    public Long getClient() {
+    public Integer getClient() {
         return client;
     }
 
-    public void setClient(Long client) {
+    public void setClient(Integer client) {
         this.client = client;
     }
 
@@ -368,7 +368,7 @@ public final class Envelope extends JSON {
             did = new DID();
             did.fromMap(m);
         }
-        if(m.get("client")!=null) client = (Long)m.get("client");
+        if(m.get("client")!=null) client = (Integer)m.get("client");
         if(m.get("replyToClient")!=null) replyToClient = (Boolean)m.get("replyToClient");
         if(m.get("clientReplyAction")!=null) clientReplyAction = (String)m.get("clientReplyAction");
         try {
