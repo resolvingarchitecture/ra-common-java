@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class NetworkState extends JSON {
 
-    public String network;
+    public Network network;
     public NetworkPeer localPeer;
     public NetworkStatus networkStatus = NetworkStatus.DISCONNECTED;
     public Integer virtualPort;
@@ -21,7 +21,7 @@ public class NetworkState extends JSON {
     @Override
     public Map<String,Object> toMap() {
         Map<String, Object> m = super.toMap();
-        if(network!=null) m.put("network", network);
+        if(network!=null) m.put("network", network.name());
         if(networkStatus!=null) m.put("networkStatus", networkStatus.name());
         if(virtualPort!=null) m.put("virtualPort", virtualPort);
         if(targetPort!=null) m.put("targetPort", targetPort);
@@ -37,7 +37,7 @@ public class NetworkState extends JSON {
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
         if(m.get("network")!=null) {
-            network = (String)m.get("network");
+            network = Network.valueOf((String)m.get("network"));
             localPeer = new NetworkPeer(network);
         };
         if(m.get("networkStatus")!=null) networkStatus = NetworkStatus.valueOf((String)m.get("networkStatus"));

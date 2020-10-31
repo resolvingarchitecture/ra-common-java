@@ -14,7 +14,7 @@ public final class NetworkNode {
     public NetworkNode() {}
 
     public void addNetwork(NetworkState networkState) {
-        networks.put(networkState.network, networkState);
+        networks.put(networkState.network.name(), networkState);
     }
 
     public NetworkPeer getNetworkPeer(String network) {

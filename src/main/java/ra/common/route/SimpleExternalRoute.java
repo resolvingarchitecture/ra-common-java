@@ -1,5 +1,6 @@
 package ra.common.route;
 
+import ra.common.network.Network;
 import ra.common.network.NetworkPeer;
 
 import java.util.Map;
@@ -82,12 +83,12 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
         if(m.get("origination")!=null) {
-            String network = (String)m.get("network-orig");
+            Network network = Network.valueOf((String)m.get("network-orig"));
             origination = new NetworkPeer(network);
             origination.fromMap((Map<String, Object>)m.get("origination"));
         }
         if(m.get("destination")!=null) {
-            String network = (String)m.get("network-dest");
+            Network network = Network.valueOf((String)m.get("network-dest"));
             destination = new NetworkPeer(network);
             destination.fromMap((Map<String, Object>)m.get("destination"));
         }

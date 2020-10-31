@@ -32,15 +32,15 @@ public final class NetworkPeer implements JSONSerializable {
     public static final String PORT = "port";
 
     private String id;
-    private String network;
+    private Network network;
     private DID did;
     private Integer port;
 
-    public NetworkPeer(String network) {
+    public NetworkPeer(Network network) {
         this(network, null, null);
     }
 
-    public NetworkPeer(String network, String username, String passphrase) {
+    public NetworkPeer(Network network, String username, String passphrase) {
         this.network = network;
         did = new DID();
         did.setUsername(username);
@@ -55,11 +55,11 @@ public final class NetworkPeer implements JSONSerializable {
         this.id = id;
     }
 
-    public String getNetwork() {
+    public Network getNetwork() {
         return network;
     }
 
-    public void setNetwork(String network) {
+    public void setNetwork(Network network) {
         this.network = network;
     }
 
@@ -85,7 +85,7 @@ public final class NetworkPeer implements JSONSerializable {
         if(id!=null)
             m.put(ID, id);
         if(network!=null)
-            m.put(NETWORK, network);
+            m.put(NETWORK, network.name());
         if(did!=null)
             m.put(DID,did.toMap());
         if(port!=null)
@@ -96,7 +96,7 @@ public final class NetworkPeer implements JSONSerializable {
     @Override
     public void fromMap(Map<String, Object> m) {
         if(m.get(ID)!=null) id = (String)m.get(ID);
-        if(m.get(NETWORK)!=null) network = (String)m.get(NETWORK);
+        if(m.get(NETWORK)!=null) network = Network.valueOf((String)m.get(NETWORK));
         if(m.get(DID)!=null) {
             did = new DID();
             if(m.get(DID) instanceof String)
