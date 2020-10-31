@@ -33,9 +33,7 @@ public abstract class BaseService implements Service {
 
     protected Properties config;
 
-    public BaseService() {
-
-    }
+    public BaseService() {}
 
     public BaseService(MessageProducer producer, ServiceStatusListener listener) {
         if(listener != null)
