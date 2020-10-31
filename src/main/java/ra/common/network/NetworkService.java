@@ -103,4 +103,8 @@ public abstract class NetworkService extends BaseService {
         }
     }
 
+    public void addSeedPeer(NetworkPeer networkPeer) {
+        seedPeers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
+    }
+
 }
