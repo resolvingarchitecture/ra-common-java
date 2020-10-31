@@ -87,4 +87,10 @@ public abstract class NetworkService extends BaseService {
         return knownPeers.size();
     }
 
+    public void addToKnownPeers(List<NetworkPeer> peers) {
+        for(NetworkPeer np : peers) {
+            knownPeers.put(np.getDid().getPublicKey().getFingerprint(), np);
+        }
+    }
+
 }
