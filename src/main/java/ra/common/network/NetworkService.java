@@ -83,4 +83,8 @@ public abstract class NetworkService extends BaseService {
         return false;
     }
 
+    public Integer getNumberKnownPeers() {
+        return knownPeers.size();
+    }
+
 }
