@@ -57,8 +57,8 @@ public final class Envelope extends JSON {
     private Message message;
     private Integer sensitivity = 1;
     private Boolean delayed = false;
-    private Long minDelay = 0L;
-    private Long maxDelay = 0L;
+    private Integer minDelay = 0; // Seconds
+    private Integer maxDelay = 0; // Seconds
     private Boolean copy = false;
     private Integer maxCopies = 0;
     private Integer minCopies = 0;
@@ -276,19 +276,19 @@ public final class Envelope extends JSON {
         this.delayed = delayed;
     }
 
-    public Long getMinDelay() {
+    public Integer getMinDelay() {
         return minDelay;
     }
 
-    public void setMinDelay(Long minDelay) {
+    public void setMinDelay(Integer minDelay) {
         this.minDelay = minDelay;
     }
 
-    public Long getMaxDelay() {
+    public Integer getMaxDelay() {
         return maxDelay;
     }
 
-    public void setMaxDelay(Long maxDelay) {
+    public void setMaxDelay(Integer maxDelay) {
         this.maxDelay = maxDelay;
     }
 
@@ -403,8 +403,8 @@ public final class Envelope extends JSON {
         }
         if(m.get("sensitivity")!=null) sensitivity = (Integer)m.get("sensitivity");
         if(m.get("delayed")!=null) delayed = m.get("delayed").equals("true");
-        if(m.get("minDelay")!=null) minDelay = (Long)m.get("minDelay");
-        if(m.get("maxDelay")!=null) maxDelay = (Long)m.get("maxDelay");
+        if(m.get("minDelay")!=null) minDelay = (Integer)m.get("minDelay");
+        if(m.get("maxDelay")!=null) maxDelay = (Integer)m.get("maxDelay");
         if(m.get("copy")!=null) copy = m.get("copy").equals("true");
         if(m.get("minCopies")!=null) minCopies = (Integer)m.get("minCopies");
         if(m.get("maxCopies")!=null) maxCopies = (Integer)m.get("maxCopies");
