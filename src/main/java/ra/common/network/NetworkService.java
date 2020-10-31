@@ -23,6 +23,7 @@ public abstract class NetworkService extends BaseService {
     protected List<NetworkClientSessionListener> sessionListeners = new ArrayList<>();
     protected List<Tuple2<String,String>> stateChangeListeners = new ArrayList<>();
 
+    protected Map<String,NetworkPeer> seedPeers = new HashMap<>();
     protected Map<String,NetworkPeer> knownPeers = new HashMap<>();
     protected Map<String,NetworkPeer> activePeers = new HashMap<>();
 
