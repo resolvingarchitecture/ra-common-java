@@ -89,6 +89,18 @@ public abstract class NetworkService extends BaseService {
         return false;
     }
 
+    public Integer getMaxSeedPeers() {
+        return maxSeedPeers;
+    }
+
+    public Integer getMaxKnownPeers() {
+        return maxKnownPeers;
+    }
+
+    public Integer getMaxActivePeers() {
+        return maxActivePeers;
+    }
+
     public Integer getNumberKnownPeers() {
         return knownPeers.size();
     }
