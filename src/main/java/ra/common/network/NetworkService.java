@@ -24,6 +24,10 @@ public abstract class NetworkService extends BaseService {
     protected Map<String,NetworkPeer> knownPeers = new HashMap<>();
     protected Map<String,NetworkPeer> activePeers = new HashMap<>();
 
+    protected Integer maxSeedPeers = 20;
+    protected Integer maxKnownPeers = 500;
+    protected Integer maxActivePeers = 100;
+
     protected NetworkService(String network) {
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);
@@ -94,17 +98,24 @@ public abstract class NetworkService extends BaseService {
     }
 
     public void addKnownPeer(NetworkPeer networkPeer) {
-        knownPeers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
+        if(seedPeers.get(networkPeer.getDid().getPublicKey().getFingerprint())==null && knownPeers.size() <= maxKnownPeers) {
+            // Not a seed peer so add to known
+            knownPeers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
+        }
     }
 
     public void addToKnownPeers(List<NetworkPeer> peers) {
         for(NetworkPeer np : peers) {
-            knownPeers.put(np.getDid().getPublicKey().getFingerprint(), np);
+            if(seedPeers.get(np.getDid().getPublicKey().getFingerprint())==null && knownPeers.size() <= maxKnownPeers) {
+                knownPeers.put(np.getDid().getPublicKey().getFingerprint(), np);
+            }
         }
     }
 
     public void addSeedPeer(NetworkPeer networkPeer) {
-        seedPeers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
+        if(seedPeers.size() <= maxSeedPeers) {
+            seedPeers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
+        }
     }
 
 }
