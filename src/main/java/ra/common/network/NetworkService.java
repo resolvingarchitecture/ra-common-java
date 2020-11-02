@@ -6,6 +6,7 @@ import ra.common.Tuple2;
 import ra.common.messaging.MessageProducer;
 import ra.common.service.BaseService;
 import ra.common.service.ServiceStatusListener;
+import ra.util.RandomUtil;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -107,6 +108,14 @@ public abstract class NetworkService extends BaseService {
 
     public Collection<NetworkPeer> getKnownPeers() {
         return knownPeers.values();
+    }
+
+    public NetworkPeer getRandomKnownPeer() {
+        if(knownPeers==null || knownPeers.size()==0) {
+            return null;
+        }
+        int randomPeer = RandomUtil.nextRandomInteger(1, knownPeers.size());
+        return (NetworkPeer) new ArrayList(knownPeers.values()).get(randomPeer);
     }
 
     public void addKnownPeer(NetworkPeer networkPeer) {
