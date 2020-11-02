@@ -114,7 +114,10 @@ public abstract class NetworkService extends BaseService {
         if(knownPeers==null || knownPeers.size()==0) {
             return null;
         }
-        int randomPeer = RandomUtil.nextRandomInteger(1, knownPeers.size());
+        if(knownPeers.size()==1) {
+            return (NetworkPeer) new ArrayList(knownPeers.values()).get(1);
+        }
+        int randomPeer = RandomUtil.nextRandomInteger(0, knownPeers.size()-1);
         return (NetworkPeer) new ArrayList(knownPeers.values()).get(randomPeer);
     }
 
