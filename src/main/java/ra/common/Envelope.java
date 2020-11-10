@@ -4,9 +4,8 @@ import ra.common.content.JSON;
 import ra.common.file.Multipart;
 import ra.common.identity.DID;
 import ra.common.messaging.*;
-import ra.common.route.RelayedExternalRoute;
-import ra.common.route.DynamicRoutingSlip;
-import ra.common.route.Route;
+import ra.common.network.NetworkPeer;
+import ra.common.route.*;
 import ra.common.service.ServiceLevel;
 import ra.util.JSONParser;
 import ra.util.JSONPretty;
@@ -25,6 +24,10 @@ import java.util.logging.Logger;
 public final class Envelope extends JSON {
 
     private static final Logger LOG = Logger.getLogger(Envelope.class.getName());
+
+    public static final String CONTENT = "CONTENT";
+    public static final String ENTITY = "ENTITY";
+    public static final String EXCEPTIONS = "EXCEPTIONS";
 
     public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
@@ -316,10 +319,160 @@ public final class Envelope extends JSON {
         this.minCopies = minCopies;
     }
 
+    // Helpers
     public void ratchet() {
         if(dynamicRoutingSlip!=null) {
             route = dynamicRoutingSlip.nextRoute();
         }
+    }
+
+    public static boolean addRoute(Class service, String operation, Envelope envelope) {
+        envelope.getDynamicRoutingSlip().addRoute(new SimpleRoute(service.getName(),operation));
+        return true;
+    }
+
+    public static boolean addRoute(String service, String operation, Envelope envelope) {
+        envelope.getDynamicRoutingSlip().addRoute(new SimpleRoute(service,operation));
+        return true;
+    }
+
+    public static boolean addExternalRoute(Class service, String operation, Envelope envelope, NetworkPeer origination, NetworkPeer destination) {
+        envelope.getDynamicRoutingSlip().addRoute(new SimpleExternalRoute(service.getName(), operation, origination, destination));
+        return true;
+    }
+
+    public static boolean addExternalRoute(String service, String operation, Envelope envelope, NetworkPeer origination, NetworkPeer destination) {
+        envelope.getDynamicRoutingSlip().addRoute(new SimpleExternalRoute(service, operation, origination, destination));
+        return true;
+    }
+
+    public static boolean addContent(Object content, Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return false;
+        }
+        ((DocumentMessage)m).data.get(0).put(CONTENT, content);
+        return true;
+    }
+
+    public static Object getContent(Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)m).data.get(0).get(CONTENT);
+    }
+
+    public static boolean addEntity(Object entity, Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return false;
+        }
+        ((DocumentMessage)m).data.get(0).put(ENTITY, entity);
+        return true;
+    }
+
+    public static Object getEntity(Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)m).data.get(0).get(ENTITY);
+    }
+
+    public static boolean addException(Exception e, Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return false;
+        }
+        List<Exception> exceptions = (List<Exception>)((DocumentMessage)m).data.get(0).get(EXCEPTIONS);
+        if(exceptions == null) {
+            exceptions = new ArrayList<>();
+            ((DocumentMessage)m).data.get(0).put(EXCEPTIONS, exceptions);
+        }
+        exceptions.add(e);
+        return true;
+    }
+
+    public static List<Exception> getExceptions(Envelope envelope) {
+        Message m = envelope.getMessage();
+        if(!(m instanceof DocumentMessage)) {
+            return null;
+        }
+        List<Exception> exceptions = (List<Exception>)((DocumentMessage)m).data.get(0).get(EXCEPTIONS);
+        if(exceptions == null) {
+            exceptions = new ArrayList<>();
+            ((DocumentMessage)m).data.get(0).put(EXCEPTIONS, exceptions);
+        }
+        return exceptions;
+    }
+
+    public static void addErrorMessage(String errorMessage, Envelope envelope) {
+        envelope.getMessage().addErrorMessage(errorMessage);
+    }
+
+    public static List<String> getErrorMessages(Envelope envelope) {
+        return envelope.getMessage().getErrorMessages();
+    }
+
+    public boolean addData(Class clazz, Object object) {
+        if(!(message instanceof DocumentMessage)) {
+            return false;
+        }
+        DocumentMessage dm = (DocumentMessage)message;
+        dm.data.get(0).put(clazz.getName(), object);
+        return true;
+    }
+
+    public Object getData(Class clazz) {
+        if(!(message instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)message).data.get(0).get(clazz.getName());
+    }
+
+    public List<Map<String,Object>> getAllData() {
+        if(!(message instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)message).data;
+    }
+
+    public boolean markerPresent(String marker) {
+        return markers!=null && markers.contains(marker);
+    }
+
+    public boolean mark(String mark) {
+        return markers.add(mark);
+    }
+
+    public boolean addNVP(String name, Object object){
+        if(!(message instanceof DocumentMessage)) {
+            return false;
+        }
+        DocumentMessage dm = (DocumentMessage)message;
+        dm.data.get(0).put(name, object);
+        return true;
+    }
+
+    public Object getValue(String name) {
+        if(!(message instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)message).data.get(0).get(name);
+    }
+
+    public Map<String,Object> getValues() {
+        if(!(message instanceof DocumentMessage)) {
+            return null;
+        }
+        return ((DocumentMessage)message).data.get(0);
+    }
+
+    public EventMessage getEventMessage() {
+        if(!(message instanceof EventMessage))
+            return null;
+        return (EventMessage)message;
     }
 
     @Override
