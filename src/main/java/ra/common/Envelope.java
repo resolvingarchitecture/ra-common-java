@@ -9,7 +9,6 @@ import ra.common.route.*;
 import ra.common.service.ServiceLevel;
 import ra.util.JSONParser;
 import ra.util.JSONPretty;
-import ra.util.RandomUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -326,89 +325,83 @@ public final class Envelope extends JSON {
         }
     }
 
-    public static boolean addRoute(Class service, String operation, Envelope envelope) {
-        envelope.getDynamicRoutingSlip().addRoute(new SimpleRoute(service.getName(),operation));
+    public boolean addRoute(Class service, String operation) {
+        dynamicRoutingSlip.addRoute(new SimpleRoute(service.getName(),operation));
         return true;
     }
 
-    public static boolean addRoute(String service, String operation, Envelope envelope) {
-        envelope.getDynamicRoutingSlip().addRoute(new SimpleRoute(service,operation));
+    public boolean addRoute(String service, String operation) {
+        dynamicRoutingSlip.addRoute(new SimpleRoute(service,operation));
         return true;
     }
 
-    public static boolean addExternalRoute(Class service, String operation, Envelope envelope, NetworkPeer origination, NetworkPeer destination) {
-        envelope.getDynamicRoutingSlip().addRoute(new SimpleExternalRoute(service.getName(), operation, origination, destination));
+    public boolean addExternalRoute(Class service, String operation, NetworkPeer origination, NetworkPeer destination) {
+        dynamicRoutingSlip.addRoute(new SimpleExternalRoute(service.getName(), operation, origination, destination));
         return true;
     }
 
-    public static boolean addExternalRoute(String service, String operation, Envelope envelope, NetworkPeer origination, NetworkPeer destination) {
-        envelope.getDynamicRoutingSlip().addRoute(new SimpleExternalRoute(service, operation, origination, destination));
+    public boolean addExternalRoute(String service, String operation, NetworkPeer origination, NetworkPeer destination) {
+        dynamicRoutingSlip.addRoute(new SimpleExternalRoute(service, operation, origination, destination));
         return true;
     }
 
-    public static boolean addContent(Object content, Envelope envelope) {
-        Message m = envelope.getMessage();
-        if(!(m instanceof DocumentMessage)) {
+    public boolean addContent(Object content) {
+        if(!(message instanceof DocumentMessage)) {
             return false;
         }
-        ((DocumentMessage)m).data.get(0).put(CONTENT, content);
+        ((DocumentMessage)message).data.get(0).put(CONTENT, content);
         return true;
     }
 
-    public static Object getContent(Envelope envelope) {
-        Message m = envelope.getMessage();
-        if(!(m instanceof DocumentMessage)) {
+    public Object getContent() {
+        if(!(message instanceof DocumentMessage)) {
             return null;
         }
-        return ((DocumentMessage)m).data.get(0).get(CONTENT);
+        return ((DocumentMessage)message).data.get(0).get(CONTENT);
     }
 
-    public static boolean addEntity(Object entity, Envelope envelope) {
-        Message m = envelope.getMessage();
-        if(!(m instanceof DocumentMessage)) {
+    public boolean addEntity(Object entity) {
+        if(!(message instanceof DocumentMessage)) {
             return false;
         }
-        ((DocumentMessage)m).data.get(0).put(ENTITY, entity);
+        ((DocumentMessage)message).data.get(0).put(ENTITY, entity);
         return true;
     }
 
-    public static Object getEntity(Envelope envelope) {
-        Message m = envelope.getMessage();
-        if(!(m instanceof DocumentMessage)) {
+    public Object getEntity() {
+        if(!(message instanceof DocumentMessage)) {
             return null;
         }
-        return ((DocumentMessage)m).data.get(0).get(ENTITY);
+        return ((DocumentMessage)message).data.get(0).get(ENTITY);
     }
 
-    public static boolean addException(Exception e, Envelope envelope) {
-        Message m = envelope.getMessage();
-        if(!(m instanceof DocumentMessage)) {
+    public boolean addException(Exception e) {
+        if(!(message instanceof DocumentMessage)) {
             return false;
         }
-        List<Exception> exceptions = (List<Exception>)((DocumentMessage)m).data.get(0).get(EXCEPTIONS);
+        List<Exception> exceptions = (List<Exception>)((DocumentMessage)message).data.get(0).get(EXCEPTIONS);
         if(exceptions == null) {
             exceptions = new ArrayList<>();
-            ((DocumentMessage)m).data.get(0).put(EXCEPTIONS, exceptions);
+            ((DocumentMessage)message).data.get(0).put(EXCEPTIONS, exceptions);
         }
         exceptions.add(e);
         return true;
     }
 
-    public static List<Exception> getExceptions(Envelope envelope) {
-        Message m = envelope.getMessage();
-        if(!(m instanceof DocumentMessage)) {
+    public List<Exception> getExceptions() {
+        if(!(message instanceof DocumentMessage)) {
             return null;
         }
-        List<Exception> exceptions = (List<Exception>)((DocumentMessage)m).data.get(0).get(EXCEPTIONS);
+        List<Exception> exceptions = (List<Exception>)((DocumentMessage)message).data.get(0).get(EXCEPTIONS);
         if(exceptions == null) {
             exceptions = new ArrayList<>();
-            ((DocumentMessage)m).data.get(0).put(EXCEPTIONS, exceptions);
+            ((DocumentMessage)message).data.get(0).put(EXCEPTIONS, exceptions);
         }
         return exceptions;
     }
 
-    public static void addErrorMessage(String errorMessage, Envelope envelope) {
-        envelope.getMessage().addErrorMessage(errorMessage);
+    public void addErrorMessage(String errorMessage) {
+        message.addErrorMessage(errorMessage);
     }
 
     public static List<String> getErrorMessages(Envelope envelope) {
