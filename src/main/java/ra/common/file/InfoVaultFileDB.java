@@ -6,6 +6,8 @@ import ra.common.content.Content;
 import ra.util.FileUtil;
 import ra.util.JSONParser;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -23,16 +25,40 @@ public class InfoVaultFileDB implements InfoVaultDB {
     public boolean load(InfoVault infoVault) {
         try {
             byte[] fileBytes = FileUtil.readFile(infoVault.content.getLocation());
-            if(fileBytes==null)
-                return false;
-            if(fileBytes.length > 0) {
+            if(fileBytes!=null && fileBytes.length > 0) {
                 infoVault.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
-                return true;
             }
         } catch (Exception e) {
             LOG.warning(e.getLocalizedMessage());
+            return false;
         }
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean loadRange(String locationDirectory, Integer start, Integer count, List<InfoVault> infoVaults) {
+        File dir = new File(locationDirectory);
+        if(!dir.exists()) {
+            return false;
+        }
+        File[] files = dir.listFiles();
+        InfoVault iv;
+        for(File f : files) {
+            try {
+                iv = new InfoVault();
+                byte[] fileBytes = FileUtil.readFile(locationDirectory + "/" + f.getName());
+                if (fileBytes!=null && fileBytes.length > 0) {
+                    iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
+                    iv.storeExternal = false;
+                    iv.autoCreate = true;
+                    infoVaults.add(iv);
+                }
+            } catch (Exception e) {
+                LOG.warning(e.getLocalizedMessage());
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
