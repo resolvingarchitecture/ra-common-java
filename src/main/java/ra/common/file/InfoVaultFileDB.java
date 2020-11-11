@@ -45,12 +45,10 @@ public class InfoVaultFileDB implements InfoVaultDB {
         InfoVault iv;
         for(File f : files) {
             try {
-                iv = new InfoVault();
-                byte[] fileBytes = FileUtil.readFile(locationDirectory + "/" + f.getName());
+                byte[] fileBytes = FileUtil.readFile(locationDirectory + f.getName());
                 if (fileBytes!=null && fileBytes.length > 0) {
+                    iv = new InfoVault();
                     iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
-                    iv.storeExternal = false;
-                    iv.autoCreate = true;
                     infoVaults.add(iv);
                 }
             } catch (Exception e) {
