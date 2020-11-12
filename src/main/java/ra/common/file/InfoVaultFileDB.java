@@ -16,13 +16,56 @@ public class InfoVaultFileDB implements InfoVaultDB {
 
     private static final Logger LOG = Logger.getLogger(InfoVaultFileDB.class.getName());
 
+    private File baseDirectory;
+
+    @Override
+    public void setBaseURL(String baseURL) {
+        baseDirectory = new File(baseURL);
+    }
+
     @Override
     public boolean save(InfoVault infoVault) {
+        if(infoVault.content==null) {
+            LOG.warning("Content must be provided in InfoVault to save content.");
+            return false;
+        }
+        if(infoVault.content.getLocation()==null || infoVault.content.getLocation().isEmpty()) {
+            LOG.warning("Content location must be provided when saving InfoVault.");
+            return false;
+        }
         return FileUtil.writeFile(infoVault.content.toJSON().getBytes(), infoVault.content.getLocation());
     }
 
     @Override
-    public boolean load(InfoVault infoVault) {
+    public InfoVault load(String location, String id) {
+        InfoVault iv = null;
+        if(location==null || location.isEmpty()) {
+            LOG.warning("Content location must be provided when reloading InfoVault.");
+            return null;
+        } else {
+            try {
+                byte[] fileBytes = FileUtil.readFile(location+id);
+                if (fileBytes != null && fileBytes.length > 0) {
+                    iv = new InfoVault();
+                    iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
+                }
+            } catch (Exception e) {
+                LOG.warning(e.getLocalizedMessage());
+            }
+        }
+        return iv;
+    }
+
+    @Override
+    public boolean reload(InfoVault infoVault) {
+        if(infoVault.content==null) {
+            LOG.warning("Content object must be provided in InfoVault to reload it.");
+            return false;
+        }
+        if(infoVault.content.getLocation()==null || infoVault.content.getLocation().isEmpty()) {
+            LOG.warning("Content location must be provided when reloading InfoVault.");
+            return false;
+        }
         try {
             byte[] fileBytes = FileUtil.readFile(infoVault.content.getLocation());
             if(fileBytes!=null && fileBytes.length > 0) {
