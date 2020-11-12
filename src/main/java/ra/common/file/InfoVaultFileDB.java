@@ -37,21 +37,16 @@ public class InfoVaultFileDB implements InfoVaultDB {
     }
 
     @Override
-    public InfoVault load(String location, String id) {
+    public InfoVault load(String id) {
         InfoVault iv = null;
-        if(location==null || location.isEmpty()) {
-            LOG.warning("Content location must be provided when reloading InfoVault.");
-            return null;
-        } else {
-            try {
-                byte[] fileBytes = FileUtil.readFile(location+id);
-                if (fileBytes != null && fileBytes.length > 0) {
-                    iv = new InfoVault();
-                    iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
-                }
-            } catch (Exception e) {
-                LOG.warning(e.getLocalizedMessage());
+        try {
+            byte[] fileBytes = FileUtil.readFile(baseDirectory+id);
+            if (fileBytes != null && fileBytes.length > 0) {
+                iv = new InfoVault();
+                iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
             }
+        } catch (Exception e) {
+            LOG.warning(e.getLocalizedMessage());
         }
         return iv;
     }
@@ -79,16 +74,12 @@ public class InfoVaultFileDB implements InfoVaultDB {
     }
 
     @Override
-    public boolean loadRange(String locationDirectory, Integer start, Integer count, List<InfoVault> infoVaults) {
-        File dir = new File(locationDirectory);
-        if(!dir.exists()) {
-            return false;
-        }
-        File[] files = dir.listFiles();
+    public boolean loadRange(Integer start, Integer count, List<InfoVault> infoVaults) {
+        File[] files = baseDirectory.listFiles();
         InfoVault iv;
         for(File f : files) {
             try {
-                byte[] fileBytes = FileUtil.readFile(locationDirectory + f.getName());
+                byte[] fileBytes = FileUtil.readFile(baseDirectory + f.getName());
                 if (fileBytes!=null && fileBytes.length > 0) {
                     iv = new InfoVault();
                     iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
@@ -103,8 +94,8 @@ public class InfoVaultFileDB implements InfoVaultDB {
     }
 
     @Override
-    public boolean delete(String location, String id) {
-        File fileLocation = new File(location+id);
+    public boolean delete(String id) {
+        File fileLocation = new File(baseDirectory, id);
         if(fileLocation.exists()) {
             if(!fileLocation.delete()) {
                 LOG.warning("Unable to delete file.");
