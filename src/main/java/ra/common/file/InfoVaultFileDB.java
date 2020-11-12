@@ -103,6 +103,18 @@ public class InfoVaultFileDB implements InfoVaultDB {
     }
 
     @Override
+    public boolean delete(String location, String id) {
+        File fileLocation = new File(location+id);
+        if(fileLocation.exists()) {
+            if(!fileLocation.delete()) {
+                LOG.warning("Unable to delete file.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean find(InfoVault infoVault) {
         return false;
     }

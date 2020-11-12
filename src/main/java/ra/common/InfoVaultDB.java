@@ -10,4 +10,5 @@ public interface InfoVaultDB extends LifeCycle {
     boolean reload(InfoVault infoVault);
     boolean loadRange(String locationDirectory, Integer start, Integer count, List<InfoVault> infoVaultList);
     boolean find(InfoVault infoVault);
+    boolean delete(String location, String id);
 }
