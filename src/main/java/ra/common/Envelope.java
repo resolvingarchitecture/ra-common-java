@@ -41,7 +41,6 @@ public final class Envelope extends JSON {
     public enum Action{POST, PUT, DELETE, GET}
 
     private String id;
-    private RelayedExternalRoute relayedExternalRoute;
     private DynamicRoutingSlip dynamicRoutingSlip = new DynamicRoutingSlip();
     private Route route = null;
     private List<String> markers = new ArrayList<>();
