@@ -15,6 +15,8 @@ public class NetworkState extends JSON {
     public Integer virtualPort;
     public Integer targetPort;
     public List<NetworkConnectionReport> connectionReports = new ArrayList<>();
+    public Integer updateIntervalSeconds = 20 * 60; // 20 minutes
+    public Integer updateIntervalHyperSeconds = 60; // Every minute
 
     public Map<String, Object> params = new HashMap<>();
 
@@ -29,6 +31,8 @@ public class NetworkState extends JSON {
         if(localPeer!=null) m.put("fingerprint", localPeer.getDid().getPublicKey().getFingerprint());
         if(localPeer!=null) m.put("address", localPeer.getDid().getPublicKey().getAddress());
         if(connectionReports!=null) m.put("connectionReports",connectionReports);
+        if(updateIntervalSeconds!=null) m.put("updateIntervalSeconds",updateIntervalSeconds);
+        if(updateIntervalHyperSeconds!=null) m.put("updateIntervalHyperSeconds",updateIntervalHyperSeconds);
         if(params!=null) m.put("params", params);
         return m;
     }
@@ -41,13 +45,15 @@ public class NetworkState extends JSON {
             localPeer = new NetworkPeer(network);
         };
         if(m.get("networkStatus")!=null) networkStatus = NetworkStatus.valueOf((String)m.get("networkStatus"));
-        if(m.get("virtualPort")!=null) virtualPort = Integer.parseInt((String)m.get("virtualPort"));
-        if(m.get("targetPort")!=null) targetPort = Integer.parseInt((String)m.get("targetPort"));
+        if(m.get("virtualPort")!=null) virtualPort = (Integer)m.get("virtualPort");
+        if(m.get("targetPort")!=null) targetPort = (Integer)m.get("targetPort");
         if(localPeer!=null) {
             if(m.get("username")!=null) localPeer.getDid().setUsername((String)m.get("username"));
             if(m.get("fingerprint")!=null) localPeer.getDid().getPublicKey().setFingerprint((String)m.get("fingerprint"));
             if(m.get("address")!=null) localPeer.getDid().getPublicKey().setAddress((String)m.get("address"));
         }
+        if(m.get("updateIntervalSeconds")!=null) updateIntervalSeconds = (Integer)m.get("updateIntervalSeconds");
+        if(m.get("updateIntervalHyperSeconds")!=null) updateIntervalHyperSeconds = (Integer)m.get("updateIntervalHyperSeconds");
         if(m.get("params")!=null) params = (Map<String,Object>)m.get("params");
     }
 
