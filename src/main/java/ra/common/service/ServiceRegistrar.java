@@ -5,7 +5,7 @@ import java.util.Properties;
 /**
  * The responsibility to register and unregister a service along with its observers.
  */
-public interface ServiceRegistrar {
+public interface ServiceRegistrar extends ServiceStatusObserver {
 
     boolean registerService(String serviceClass, Properties properties)
             throws ServiceNotAccessibleException, ServiceNotSupportedException, ServiceRegisteredException;

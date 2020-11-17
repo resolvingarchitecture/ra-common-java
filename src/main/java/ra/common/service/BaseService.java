@@ -30,13 +30,15 @@ public abstract class BaseService implements Service {
     private Boolean registered;
     private final List<Tuple2<String,String>> serviceStatusListeners = new ArrayList<>();
     private final List<String> servicesDependentUpon = new ArrayList<>();
+    private ServiceStatusObserver observer;
 
     protected Properties config;
 
     public BaseService() {}
 
-    public BaseService(MessageProducer producer) {
+    public BaseService(MessageProducer producer, ServiceStatusObserver observer) {
         this.producer = producer;
+        this.observer = observer;
     }
 
     public void addDependentService(String dependentService) {
@@ -67,7 +69,7 @@ public abstract class BaseService implements Service {
         if(this.serviceStatus != serviceStatus) {
             // status has changed
             this.serviceStatus = serviceStatus;
-            if (serviceStatusListeners != null) {
+            if (serviceStatusListeners.size() > 0) {
                 for (Tuple2<String,String> l : serviceStatusListeners) {
                     Envelope lEnv = Envelope.eventFactory(SERVICE_STATUS);
                     EventMessage em = (EventMessage)lEnv.getMessage();
@@ -76,6 +78,9 @@ public abstract class BaseService implements Service {
                     lEnv.addRoute(l.first, l.second);
                     send(lEnv);
                 }
+            }
+            if(observer!=null) {
+                observer.serviceStatusChanged(this.getClass().getName(), serviceStatus);
             }
         }
     }
@@ -86,6 +91,14 @@ public abstract class BaseService implements Service {
 
     public void setProducer(MessageProducer producer) {
         this.producer = producer;
+    }
+
+    public ServiceStatusObserver getObserver() {
+        return observer;
+    }
+
+    public void setObserver(ServiceStatusObserver observer) {
+        this.observer = observer;
     }
 
     @Override

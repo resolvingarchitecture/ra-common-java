@@ -6,6 +6,7 @@ import ra.common.Tuple2;
 import ra.common.messaging.CommandMessage;
 import ra.common.messaging.MessageProducer;
 import ra.common.service.BaseService;
+import ra.common.service.ServiceStatusObserver;
 import ra.util.RandomUtil;
 
 import java.util.*;
@@ -34,8 +35,8 @@ public abstract class NetworkService extends BaseService {
         this.networkState.localPeer = new NetworkPeer(network);
     }
 
-    protected NetworkService(String network, MessageProducer producer) {
-        super(producer);
+    protected NetworkService(String network, MessageProducer producer, ServiceStatusObserver observer) {
+        super(producer, observer);
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);
     }
