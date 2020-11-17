@@ -1,6 +1,5 @@
 package ra.common.service;
 
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -8,8 +7,8 @@ import java.util.Properties;
  */
 public interface ServiceRegistrar {
 
-    boolean registerService(Class serviceClass, Properties properties, List<ServiceStatusObserver> observers)
+    boolean registerService(String serviceClass, Properties properties)
             throws ServiceNotAccessibleException, ServiceNotSupportedException, ServiceRegisteredException;
 
-    boolean unregisterService(Class serviceClass);
+    boolean unregisterService(String serviceClass);
 }

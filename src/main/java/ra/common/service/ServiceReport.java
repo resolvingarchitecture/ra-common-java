@@ -5,6 +5,7 @@ import ra.util.JSONParser;
 import ra.util.JSONPretty;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServiceReport implements JSONSerializable {
@@ -14,6 +15,7 @@ public class ServiceReport implements JSONSerializable {
     public Boolean registered = false;
     public Boolean running = false;
     public String version;
+    public List<String> servicesDependentUpon;
 
     @Override
     public Map<String, Object> toMap() {
@@ -23,6 +25,7 @@ public class ServiceReport implements JSONSerializable {
         if(registered!=null) m.put("registered", registered);
         if(running!=null) m.put("running", running);
         if(version!=null) m.put("version", version);
+        if(servicesDependentUpon!=null) m.put("servicesDependentUpon", servicesDependentUpon);
         return m;
     }
 
@@ -34,6 +37,7 @@ public class ServiceReport implements JSONSerializable {
             if(m.get("registered")!=null) registered = Boolean.parseBoolean((String)m.get("registered"));
             if(m.get("running")!=null) running = Boolean.parseBoolean((String)m.get("running"));
             if(m.get("version")!=null) version = (String)m.get("version");
+            if(m.get("servicesDependentUpon")!=null) servicesDependentUpon =  (List<String>)m.get("servicesDependentUpon");
         }
     }
 

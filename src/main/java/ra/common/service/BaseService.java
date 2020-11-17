@@ -13,9 +13,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import static ra.common.messaging.EventMessage.Type.SERVICE_STATUS;
+
 /**
  * A base for all Services to provide a common framework for them.
- *
  */
 public abstract class BaseService implements Service {
 
@@ -27,25 +28,22 @@ public abstract class BaseService implements Service {
 
     private ServiceStatus serviceStatus;
     private Boolean registered;
-    private List<ServiceStatusListener> serviceStatusListeners = new ArrayList<>();
-    private List<ServiceStatusObserver> serviceStatusObservers = new ArrayList<>();
-    private List<Class> servicesDependentUpon = new ArrayList<>();
+    private final List<Tuple2<String,String>> serviceStatusListeners = new ArrayList<>();
+    private final List<String> servicesDependentUpon = new ArrayList<>();
 
     protected Properties config;
 
     public BaseService() {}
 
-    public BaseService(MessageProducer producer, ServiceStatusListener listener) {
-        if(listener != null)
-            serviceStatusListeners.add(listener);
+    public BaseService(MessageProducer producer) {
         this.producer = producer;
     }
 
-    public void addDependentService(Class dependentService) {
+    public void addDependentService(String dependentService) {
         servicesDependentUpon.add(dependentService);
     }
 
-    public List<Class> getServicesDependentUpon() {
+    public List<String> getServicesDependentUpon() {
         return servicesDependentUpon;
     }
 
@@ -53,20 +51,12 @@ public abstract class BaseService implements Service {
         return serviceStatus;
     }
 
-    public void registerServiceStatusListener(ServiceStatusListener listener) {
-        serviceStatusListeners.add(listener);
+    public boolean registerServiceStatusListener(Tuple2<String,String> listener) {
+        return serviceStatusListeners.add(listener);
     }
 
-    public void unregisterServiceStatusListener(ServiceStatusListener listener) {
-        serviceStatusListeners.remove(listener);
-    }
-
-    public void registerServiceStatusObservers(List<ServiceStatusObserver> observers) {
-        serviceStatusObservers.addAll(observers);
-    }
-
-    public void unregisterServiceStatusObserver(ServiceStatusObserver observer) {
-        serviceStatusObservers.remove(observer);
+    public boolean unregisterServiceStatusListener(Tuple2<String,String> listener) {
+        return serviceStatusListeners.remove(listener);
     }
 
     public void setRegistered(boolean registered) {
@@ -78,14 +68,13 @@ public abstract class BaseService implements Service {
             // status has changed
             this.serviceStatus = serviceStatus;
             if (serviceStatusListeners != null) {
-                for (ServiceStatusListener l : serviceStatusListeners) {
-                    l.serviceStatusChanged(this.getClass().getName(), serviceStatus);
-                }
-            }
-            if (serviceStatusObservers != null) {
-                for (ServiceStatusObserver o : serviceStatusObservers) {
-                    LOG.info("ServiceStatusObserver updating service: " + this.getClass().getName() + " with status: " + serviceStatus.name());
-                    o.statusUpdated(serviceStatus);
+                for (Tuple2<String,String> l : serviceStatusListeners) {
+                    Envelope lEnv = Envelope.eventFactory(SERVICE_STATUS);
+                    EventMessage em = (EventMessage)lEnv.getMessage();
+                    em.setMessage(report());
+                    em.setName(this.getClass().getName());
+                    lEnv.addRoute(l.first, l.second);
+                    send(lEnv);
                 }
             }
         }
@@ -107,6 +96,7 @@ public abstract class BaseService implements Service {
         report.registered = registered;
         report.serviceClassName = this.getClass().getName();
         report.serviceStatus = serviceStatus;
+        report.servicesDependentUpon = servicesDependentUpon;
         return report;
     }
 
@@ -128,7 +118,7 @@ public abstract class BaseService implements Service {
         else if(envelope.getMessage() instanceof EventMessage)
             handleEvent(envelope);
         else if(envelope.getMessage() instanceof CommandMessage)
-            runCommand(envelope);
+            handleCommand(envelope);
         else
             handleHeaders(envelope);
         // Always return a reply.
@@ -138,6 +128,7 @@ public abstract class BaseService implements Service {
 
     protected final void deadLetter(Envelope envelope) {
         LOG.warning("Can't route envelope:"+envelope);
+        // TODO: Register a dead letter service
     }
 
     protected final void endRoute(Envelope envelope) {
@@ -145,32 +136,77 @@ public abstract class BaseService implements Service {
     }
 
     @Override
-    public void handleDocument(Envelope envelope) {LOG.warning(this.getClass().getName()+" has not implemented handleDocument().");}
+    public void handleDocument(Envelope envelope) {
+        LOG.warning(this.getClass().getName()+" has not implemented handleDocument().");
+    }
 
     @Override
-    public void handleEvent(Envelope envelope) {LOG.warning(this.getClass().getName()+" has not implemented handleEvent().");}
+    public void handleEvent(Envelope envelope) {
+        LOG.fine(this.getClass().getName()+" has not implemented handleEvent().");
+    }
 
     @Override
-    public void handleCommand(Envelope envelope) {LOG.warning(this.getClass().getName()+" has not implemented handleCommand().");}
-
-    @Override
-    public void handleHeaders(Envelope envelope) {LOG.warning(this.getClass().getName()+" has not implemented handleHeaders().");}
-
-    /**
-     * Supports synchronous high-priority calls from ServiceBus and asynchronous low-priority calls from receive()
-     * @param envelope
-     */
-    final void runCommand(Envelope envelope) {
-        LOG.finer("Running command by service...");
-        CommandMessage m = (CommandMessage)envelope.getMessage();
-        switch(m.getCommand()) {
-            case Shutdown: {shutdown();break;}
-            case Restart: {restart();break;}
+    public void handleCommand(Envelope envelope) {
+        CommandMessage msg = (CommandMessage)envelope.getMessage();
+        switch(msg.getCommand()) {
             case Start: {
-                Properties p = (Properties)envelope.getHeader(Properties.class.getName());
-                start(p);
+                Properties p = null;
+                if(envelope.getValues()!=null && envelope.getValues().size()>0) {
+                    p = new Properties();
+                    p.putAll(envelope.getValues());
+                }
+                if(config!=null) {
+                    if(p!=null) {
+                        // Allow Properties to overwrite Config
+                        config.putAll(p);
+                    }
+                }
+                envelope.addNVP("result", start(config));
+                break;
+            }
+            case Restart: {
+                envelope.addNVP("result", restart());
+                break;
+            }
+            case Pause: {
+                envelope.addNVP("result", pause());
+                break;
+            }
+            case Unpause: {
+                envelope.addNVP("result", unpause());
+                break;
+            }
+            case Shutdown: {
+                envelope.addNVP("result", shutdown());
+                break;
+            }
+            case GracefullyShutdown: {
+                envelope.addNVP("result", gracefulShutdown());
+                break;
+            }
+            case RegisterStatusListener: {
+                if(envelope.getValue("listener")!=null) {
+                    Tuple2<String,String> listener = (Tuple2<String, String>)envelope.getValue("listener");
+                    envelope.addNVP("result", registerServiceStatusListener(listener));
+                } else {
+                    envelope.addErrorMessage("No Listener provided in 'listener' nvp.");
+                }
+                break;
+            }
+            case UnregisterStatusListener: {
+                if(envelope.getValue("listener")!=null) {
+                    Tuple2<String,String> listener = (Tuple2<String, String>)envelope.getValue("listener");
+                    envelope.addNVP("result", unregisterServiceStatusListener(listener));
+                } else {
+                    envelope.addErrorMessage("No Listener provided in 'listener' nvp.");
+                }
             }
         }
+    }
+
+    @Override
+    public void handleHeaders(Envelope envelope) {
+        LOG.warning(this.getClass().getName()+" has not implemented handleHeaders().");
     }
 
     protected final void reply(Envelope envelope) {

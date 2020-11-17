@@ -3,9 +3,9 @@ package ra.common.network;
 import ra.common.DLC;
 import ra.common.Envelope;
 import ra.common.Tuple2;
+import ra.common.messaging.CommandMessage;
 import ra.common.messaging.MessageProducer;
 import ra.common.service.BaseService;
-import ra.common.service.ServiceStatusListener;
 import ra.util.RandomUtil;
 
 import java.util.*;
@@ -34,17 +34,43 @@ public abstract class NetworkService extends BaseService {
         this.networkState.localPeer = new NetworkPeer(network);
     }
 
-    protected NetworkService(String network, MessageProducer producer, ServiceStatusListener listener) {
-        super(producer, listener);
+    protected NetworkService(String network, MessageProducer producer) {
+        super(producer);
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);
     }
 
-    public void registerStatusListener(Tuple2<String,String> listener) {
+    @Override
+    public void handleCommand(Envelope envelope) {
+        super.handleCommand(envelope);
+        CommandMessage msg = (CommandMessage)envelope.getMessage();
+        switch(msg.getCommand()) {
+            case NetState: {
+                envelope.addNVP("result", networkState);
+                break;
+            }
+            case RegisterStateChangeListener: {
+                if(envelope.getValue("listener")!=null) {
+                    Tuple2<String,String> listener = (Tuple2<String, String>)envelope.getValue("listener");
+                    registerStateChangeListener(listener);
+                }
+                break;
+            }
+            case UnregisterStateChangeListener: {
+                if(envelope.getValue("listener")!=null) {
+                    Tuple2<String,String> listener = (Tuple2<String, String>)envelope.getValue("listener");
+                    unregisterStateChangeListener(listener);
+                }
+                break;
+            }
+        }
+    }
+
+    public void registerStateChangeListener(Tuple2<String,String> listener) {
         stateChangeListeners.add(listener);
     }
 
-    public void unregisterStatusListener(Tuple2<String,String> listener) {
+    public void unregisterStateChangeListener(Tuple2<String,String> listener) {
         stateChangeListeners.remove(listener);
     }
 
