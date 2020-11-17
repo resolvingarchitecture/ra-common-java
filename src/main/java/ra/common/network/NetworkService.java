@@ -103,6 +103,17 @@ public abstract class NetworkService extends BaseService {
         }
     }
 
+    public NetworkPeer lookupRemotePeer(String id) {
+        if(activePeers.get(id)!=null)
+            return activePeers.get(id);
+        if(knownPeers.get(id)!=null)
+            return knownPeers.get(id);
+        if(seedPeers.get(id)!=null)
+            return seedPeers.get(id);
+        else
+            return null;
+    }
+
     public void registerStateChangeListener(Tuple2<String,String> listener) {
         stateChangeListeners.add(listener);
     }
