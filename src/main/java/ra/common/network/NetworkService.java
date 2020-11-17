@@ -5,16 +5,21 @@ import ra.common.Envelope;
 import ra.common.Tuple2;
 import ra.common.messaging.CommandMessage;
 import ra.common.messaging.MessageProducer;
+import ra.common.route.ExternalRoute;
 import ra.common.service.BaseService;
 import ra.common.service.ServiceStatusObserver;
 import ra.util.RandomUtil;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 public abstract class NetworkService extends BaseService {
 
     private static final Logger LOG = Logger.getLogger(NetworkService.class.getName());
+
+    public static final String OPERATION_PEER_STATUS = "PEER_STATUS";
+    public static final String OPERATION_PEER_STATUS_REPLY = "PEER_STATUS_REPLY";
 
     private final NetworkState networkState = new NetworkState();
 
@@ -63,6 +68,37 @@ public abstract class NetworkService extends BaseService {
                     unregisterStateChangeListener(listener);
                 }
                 break;
+            }
+        }
+    }
+
+    @Override
+    public void handleDocument(Envelope envelope) {
+        if(envelope.getRoute() instanceof ExternalRoute) {
+            ExternalRoute er = (ExternalRoute)envelope.getRoute();
+            switch(er.getOperation()) {
+                case OPERATION_PEER_STATUS: {
+                    // A request from a remote peer for this peer's status
+                    NetworkPeerReport report = new NetworkPeerReport();
+                    report.status = "active";
+                    report.activePeers = activePeers.values();
+                    report.knownPeers = knownPeers.values();
+                    report.seedPeers = seedPeers.values();
+                    envelope.addContent(report);
+                    break;
+                }
+                case OPERATION_PEER_STATUS_REPLY: {
+                    NetworkPeerReport report = (NetworkPeerReport)envelope.getContent();
+                    if("active".equals(report.status)) {
+                        for(NetworkPeer remotePeer : report.activePeers){
+                            if(activePeers.size() >= maxActivePeers) {
+                                break;
+                            }
+                            activePeers.putIfAbsent(remotePeer.getId(), remotePeer);
+                        }
+                    }
+                    break;
+                }
             }
         }
     }
