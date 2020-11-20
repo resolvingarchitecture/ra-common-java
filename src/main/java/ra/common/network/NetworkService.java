@@ -171,7 +171,7 @@ public abstract class NetworkService extends BaseService {
             return null;
         }
         if(peers.size()==1) {
-            return (NetworkPeer) new ArrayList(peers.values()).get(1);
+            return (NetworkPeer) new ArrayList(peers.values()).get(0);
         }
         int randomPeer = RandomUtil.nextRandomInteger(0, peers.size()-1);
         return (NetworkPeer) new ArrayList(peers.values()).get(randomPeer);
