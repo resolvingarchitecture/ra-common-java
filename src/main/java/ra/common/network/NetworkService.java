@@ -177,6 +177,12 @@ public abstract class NetworkService extends BaseService {
         return (NetworkPeer) new ArrayList(peers.values()).get(randomPeer);
     }
 
+    public void addPeers(Collection<NetworkPeer> peers) {
+        for(NetworkPeer np : peers) {
+            addPeer(np);
+        }
+    }
+
     public void addPeer(NetworkPeer networkPeer) {
         if(peers.get(networkPeer.getDid().getPublicKey().getFingerprint())==null && peers.size() <= maxPeers) {
              peers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
