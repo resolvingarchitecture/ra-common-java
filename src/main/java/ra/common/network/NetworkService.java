@@ -27,13 +27,9 @@ public abstract class NetworkService extends BaseService {
     protected List<NetworkClientSessionListener> sessionListeners = new ArrayList<>();
     protected List<Tuple2<String,String>> stateChangeListeners = new ArrayList<>();
 
-    protected Map<String,NetworkPeer> seedPeers = new HashMap<>();
-    protected Map<String,NetworkPeer> knownPeers = new HashMap<>();
-    protected Map<String,NetworkPeer> activePeers = new HashMap<>();
+    protected Map<String,NetworkPeer> peers = new HashMap<>();
 
-    protected Integer maxSeedPeers = 20;
-    protected Integer maxKnownPeers = 500;
-    protected Integer maxActivePeers = 100;
+    protected Integer maxPeers = 500;
 
     protected NetworkService(String network) {
         this.networkState.network = network;
@@ -81,20 +77,18 @@ public abstract class NetworkService extends BaseService {
                     // A request from a remote peer for this peer's status
                     NetworkPeerReport report = new NetworkPeerReport();
                     report.status = "active";
-                    report.activePeers = activePeers.values();
-                    report.knownPeers = knownPeers.values();
-                    report.seedPeers = seedPeers.values();
+                    report.peers = peers.values();
                     envelope.addContent(report);
                     break;
                 }
                 case OPERATION_PEER_STATUS_REPLY: {
                     NetworkPeerReport report = (NetworkPeerReport)envelope.getContent();
                     if("active".equals(report.status)) {
-                        for(NetworkPeer remotePeer : report.activePeers){
-                            if(activePeers.size() >= maxActivePeers) {
+                        for(NetworkPeer remotePeer : report.peers){
+                            if(peers.size() >= maxPeers) {
                                 break;
                             }
-                            activePeers.putIfAbsent(remotePeer.getId(), remotePeer);
+                            peers.putIfAbsent(remotePeer.getId(), remotePeer);
                         }
                     }
                     break;
@@ -104,12 +98,8 @@ public abstract class NetworkService extends BaseService {
     }
 
     public NetworkPeer lookupRemotePeer(String id) {
-        if(activePeers.get(id)!=null)
-            return activePeers.get(id);
-        if(knownPeers.get(id)!=null)
-            return knownPeers.get(id);
-        if(seedPeers.get(id)!=null)
-            return seedPeers.get(id);
+        if(peers.get(id)!=null)
+            return peers.get(id);
         else
             return null;
     }
@@ -164,55 +154,32 @@ public abstract class NetworkService extends BaseService {
         return false;
     }
 
-    public Integer getMaxSeedPeers() {
-        return maxSeedPeers;
+    public Integer getMaxPeers() {
+        return maxPeers;
     }
 
-    public Integer getMaxKnownPeers() {
-        return maxKnownPeers;
+    public Integer getNumberPeers() {
+        return peers.size();
     }
 
-    public Integer getMaxActivePeers() {
-        return maxActivePeers;
+    public Collection<NetworkPeer> getPeers() {
+        return peers.values();
     }
 
-    public Integer getNumberKnownPeers() {
-        return knownPeers.size();
-    }
-
-    public Collection<NetworkPeer> getKnownPeers() {
-        return knownPeers.values();
-    }
-
-    public NetworkPeer getRandomKnownPeer() {
-        if(knownPeers==null || knownPeers.size()==0) {
+    public NetworkPeer getRandomPeer() {
+        if(peers==null || peers.size()==0) {
             return null;
         }
-        if(knownPeers.size()==1) {
-            return (NetworkPeer) new ArrayList(knownPeers.values()).get(1);
+        if(peers.size()==1) {
+            return (NetworkPeer) new ArrayList(peers.values()).get(1);
         }
-        int randomPeer = RandomUtil.nextRandomInteger(0, knownPeers.size()-1);
-        return (NetworkPeer) new ArrayList(knownPeers.values()).get(randomPeer);
+        int randomPeer = RandomUtil.nextRandomInteger(0, peers.size()-1);
+        return (NetworkPeer) new ArrayList(peers.values()).get(randomPeer);
     }
 
-    public void addKnownPeer(NetworkPeer networkPeer) {
-        if(seedPeers.get(networkPeer.getDid().getPublicKey().getFingerprint())==null && knownPeers.size() <= maxKnownPeers) {
-            // Not a seed peer so add to known
-            knownPeers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
-        }
-    }
-
-    public void addToKnownPeers(List<NetworkPeer> peers) {
-        for(NetworkPeer np : peers) {
-            if(seedPeers.get(np.getDid().getPublicKey().getFingerprint())==null && knownPeers.size() <= maxKnownPeers) {
-                knownPeers.put(np.getDid().getPublicKey().getFingerprint(), np);
-            }
-        }
-    }
-
-    public void addSeedPeer(NetworkPeer networkPeer) {
-        if(seedPeers.size() <= maxSeedPeers) {
-            seedPeers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
+    public void addPeer(NetworkPeer networkPeer) {
+        if(peers.get(networkPeer.getDid().getPublicKey().getFingerprint())==null && peers.size() <= maxPeers) {
+             peers.put(networkPeer.getDid().getPublicKey().getFingerprint(), networkPeer);
         }
     }
 
