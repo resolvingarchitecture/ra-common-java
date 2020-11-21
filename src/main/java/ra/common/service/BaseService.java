@@ -139,7 +139,7 @@ public abstract class BaseService implements Service {
         return true;
     }
 
-    protected void deadLetter(Envelope envelope) {
+    public void deadLetter(Envelope envelope) {
         LOG.warning("Can't route envelope:"+envelope);
         producer.deadLetter(envelope);
     }
