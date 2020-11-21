@@ -29,12 +29,12 @@ public abstract class NetworkService extends BaseService {
 
     protected Integer maxPeers = 500;
 
-    protected NetworkService(String network) {
+    protected NetworkService(Network network) {
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);
     }
 
-    protected NetworkService(String network, MessageProducer producer, ServiceStatusObserver observer) {
+    protected NetworkService(Network network, MessageProducer producer, ServiceStatusObserver observer) {
         super(producer, observer);
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);

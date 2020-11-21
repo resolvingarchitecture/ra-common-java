@@ -14,14 +14,14 @@ public final class NetworkNode {
     public NetworkNode() {}
 
     public void addNetwork(NetworkState networkState) {
-        networks.put(networkState.network, networkState);
+        networks.put(networkState.network.name(), networkState);
     }
 
-    public NetworkPeer getNetworkPeer(String network) {
-        if(networks.get(network)==null) {
+    public NetworkPeer getNetworkPeer(Network network) {
+        if(networks.get(network.name())==null) {
             return null;
         } else {
-            return networks.get(network).localPeer;
+            return networks.get(network.name()).localPeer;
         }
     }
 

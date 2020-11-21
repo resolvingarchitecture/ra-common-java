@@ -126,11 +126,11 @@ public final class RelayedExternalRoute extends SimpleExternalRoute {
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
         if(m.get("fromPeer") != null) {
-            fromPeer = new NetworkPeer((String)m.get("fromPeer.network"));
+            fromPeer = new NetworkPeer(Network.valueOf((String)m.get("fromPeer.network")));
             fromPeer.fromMap((Map<String, Object>)m.get("fromPeer"));
         }
         if(m.get("toPeer") != null) {
-            toPeer = new NetworkPeer((String)m.get("toPeer.network"));
+            toPeer = new NetworkPeer(Network.valueOf((String)m.get("toPeer.network")));
             toPeer.fromMap(((Map<String, Object>)m.get("toPeer")));
         }
         if(m.get("delayed") != null) delayed = (Boolean)m.get("delayed");
