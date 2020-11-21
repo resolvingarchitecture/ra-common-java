@@ -9,13 +9,13 @@ public class NetworkConnectionReport extends JSON {
     public Long start;
     public Long end;
     public String url;
-    public String network;
+    public Network network;
     public String code;
     public String standardCode;
     public String codeDescription;
     public NetworkStatus resultantStatus;
 
-    public NetworkConnectionReport(Long start, Long end, String url, String network, String code, String standardCode, String codeDescription, NetworkStatus resultantStatus) {
+    public NetworkConnectionReport(Long start, Long end, String url, Network network, String code, String standardCode, String codeDescription, NetworkStatus resultantStatus) {
         this.start = start;
         this.end = end;
         this.url = url;
@@ -32,7 +32,7 @@ public class NetworkConnectionReport extends JSON {
         if(start!=null) m.put("start",start);
         if(end!=null) m.put("end",end);
         if(url!=null) m.put("url",url);
-        if(network!=null) m.put("network",network);
+        if(network!=null) m.put("network",network.name());
         if(code!=null) m.put("code",code);
         if(standardCode!=null) m.put("standardCode",standardCode);
         if(codeDescription!=null) m.put("codeDescription",codeDescription);
@@ -46,7 +46,7 @@ public class NetworkConnectionReport extends JSON {
         if(m.get("start")!=null) start = Long.parseLong((String)m.get("start"));
         if(m.get("end")!=null) end = Long.parseLong((String)m.get("end"));
         if(m.get("url")!=null) url = (String)m.get("url");
-        if(m.get("network")!=null) network = (String)m.get("network");
+        if(m.get("network")!=null) network = Network.valueOf((String)m.get("network"));
         if(m.get("code")!=null) code = (String)m.get("code");
         if(m.get("standardCode")!=null) standardCode = (String)m.get("standardCode");
         if(m.get("codeDescription")!=null) codeDescription = (String)m.get("codeDescription");
