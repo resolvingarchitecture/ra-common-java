@@ -1,6 +1,5 @@
 package ra.common.network;
 
-import ra.common.DLC;
 import ra.common.Envelope;
 import ra.common.Tuple2;
 import ra.common.messaging.CommandMessage;
@@ -11,7 +10,6 @@ import ra.common.service.ServiceStatusObserver;
 import ra.util.RandomUtil;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 public abstract class NetworkService extends BaseService {
@@ -123,13 +121,14 @@ public abstract class NetworkService extends BaseService {
     protected void updateNetworkStatus(NetworkStatus networkStatus) {
         LOG.info("Network Status for Network: "+networkState.network +" - " + networkStatus.name());
         networkState.networkStatus = networkStatus;
-        for(Tuple2<String,String> l : stateChangeListeners) {
-            // Send to Service, Operation
+        // For now, just attempt to send to a Network Manager
+        Tuple2<String,String> l = new Tuple2<>("ra.network.manager.NetworkManagerService", "UPDATE_NETWORK_STATE");
+//        for(Tuple2<String,String> l : stateChangeListeners) {
             Envelope e = Envelope.documentFactory();
-            DLC.addContent(networkStatus, e);
-            DLC.addRoute(l.first, l.second, e);
+            e.addContent(networkStatus);
+            e.addRoute(l.first, l.second);
             send(e);
-        }
+//        }
     }
 
     protected void connectionReport(NetworkConnectionReport report) {
@@ -138,8 +137,8 @@ public abstract class NetworkService extends BaseService {
         for(Tuple2<String,String> l : stateChangeListeners) {
             // Send to Service, Operation
             Envelope e = Envelope.documentFactory();
-            DLC.addContent(report, e);
-            DLC.addRoute(l.first, l.second, e);
+            e.addContent(report);
+            e.addRoute(l.first, l.second);
             send(e);
         }
     }
