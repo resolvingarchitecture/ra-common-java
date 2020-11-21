@@ -9,4 +9,5 @@ import ra.common.Envelope;
 public interface MessageProducer {
     boolean send(Envelope envelope);
     boolean send(Envelope envelope, Client callback);
+    boolean deadLetter(Envelope envelope);
 }

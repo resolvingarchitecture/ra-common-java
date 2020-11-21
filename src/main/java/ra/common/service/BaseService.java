@@ -141,7 +141,7 @@ public abstract class BaseService implements Service {
 
     protected void deadLetter(Envelope envelope) {
         LOG.warning("Can't route envelope:"+envelope);
-        // TODO: Register a dead letter service
+        producer.deadLetter(envelope);
     }
 
     protected final void endRoute(Envelope envelope) {
