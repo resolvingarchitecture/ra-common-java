@@ -148,11 +148,7 @@ public abstract class NetworkService extends BaseService {
         return networkState;
     }
 
-    public abstract Boolean sendOut(Envelope envelope);
-
-    protected Boolean receiveIn(Envelope envelope) {
-        return false;
-    }
+    protected abstract Boolean sendOut(Envelope envelope);
 
     public Integer getMaxPeers() {
         return maxPeers;
