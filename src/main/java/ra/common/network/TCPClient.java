@@ -34,13 +34,13 @@ public abstract class TCPClient implements Runnable {
     }
 
     public boolean connect() throws IOException {
-        socket = new Socket("127.0.0.1", port);
+        socket = new Socket("localhost", port);
         socket.setKeepAlive(keepClientAlive);
         out = new BufferedOutputStream(socket.getOutputStream());
         in = new BufferedInputStream(socket.getInputStream());
         connected = socket.isConnected();
         if(connected) {
-            // Kick of listener
+            // Kick off listener
             new Thread(this).start();
         }
         return connected;
@@ -76,9 +76,11 @@ public abstract class TCPClient implements Runnable {
                 while((i = in.read()) != -1) {
                     sb.append((char)i);
                 }
-                Envelope envelope = Envelope.documentFactory();
-                envelope.fromJSON(sb.toString());
-                receiveMessage(envelope);
+                if(sb.length()>0) {
+                    Envelope envelope = Envelope.documentFactory();
+                    envelope.fromJSON(sb.toString());
+                    receiveMessage(envelope);
+                }
                 if(disconnect) {
                     listening = false;
                 }
