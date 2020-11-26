@@ -1,4 +1,4 @@
-package ra.common;
+package ra.common.network;
 
 public enum ControlCommand {
     InitiateComm,
@@ -16,5 +16,7 @@ public enum ControlCommand {
     Restart,
     Shutdown,
     GracefullyShutdown,
-    CloseClient
+    CloseClient,
+    Ack,
+    EndComm
 }
