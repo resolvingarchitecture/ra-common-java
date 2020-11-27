@@ -567,6 +567,10 @@ public final class Envelope extends JSON {
         return JSONPretty.toPretty(JSONParser.toString(toMap()), 4);
     }
 
+    public String toJSONRaw() {
+        return JSONParser.toString(toMap());
+    }
+
     @Override
     public void fromJSON(String json) {
         fromMap((Map<String, Object>)JSONParser.parse(json));
