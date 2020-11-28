@@ -18,4 +18,16 @@ public final class DocumentMessage extends BaseMessage {
         data.add(new HashMap<>());
     }
 
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String,Object> m = super.toMap();
+        if(data!=null) m.put("data", data);
+        return m;
+    }
+
+    @Override
+    public void fromMap(Map<String, Object> m) {
+        super.fromMap(m);
+        if(m.get("data")!=null) data = (List<Map<String,Object>>)m.get("data");
+    }
 }
