@@ -6,11 +6,14 @@ import ra.util.Wait;
 
 import java.io.*;
 import java.net.*;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class TCPBusClient {
 
     private static final Logger LOG = Logger.getLogger(TCPBusClient.class.getName());
+
+    final UUID id;
 
     private Socket socket = null;
 
@@ -22,7 +25,9 @@ public class TCPBusClient {
     private PrintWriter writeToServer;
     private TCPBusClientSendThread tcpBusClientSendThread;
 
-    public TCPBusClient() {}
+    public TCPBusClient() {
+        id = UUID.randomUUID();
+    }
 
     public void connect(int port) throws IOException {
         socket = new Socket("localhost", port);
@@ -36,26 +41,28 @@ public class TCPBusClient {
         send.start();
     }
 
-    public void sendMessage(String message) {
-        tcpBusClientSendThread.sendMessage(message);
+    public void sendMessage(Envelope message) {
+        message.setClient(id.toString());
+        tcpBusClientSendThread.sendMessage(message.toJSONRaw());
     }
 
     public static void main(String[] args) {
-        TCPBusClient TCPBusClient = new TCPBusClient();
+        TCPBusClient tcpBusClient = new TCPBusClient();
         try {
-            TCPBusClient.connect(2013);
+            tcpBusClient.connect(2013);
         } catch (IOException e) {
             LOG.severe(e.getLocalizedMessage());
             System.exit(-1);
         }
         Envelope envelope = Envelope.documentFactory();
         envelope.setCommandPath(ControlCommand.InitiateComm.name());
-        TCPBusClient.sendMessage(envelope.toJSONRaw());
-        while(!TCPBusClient.initiatedComm) {
+        envelope.addNVP("initAttempt",1);
+        tcpBusClient.sendMessage(envelope);
+        while(!tcpBusClient.initiatedComm) {
             LOG.info("Not initiated. Waiting.");
             Wait.aSec(1);
         }
-        LOG.info("Initiated Comm; acking...");
+        LOG.info("Initiated Comm, running...");
         while(true) {
             Wait.aSec(1);
         }

@@ -2,6 +2,7 @@ package ra.common.client;
 
 import ra.common.Envelope;
 import ra.common.network.ControlCommand;
+import ra.util.Wait;
 
 import java.io.*;
 import java.util.logging.Logger;
@@ -38,17 +39,28 @@ public class TCPBusClientReceiveThread implements Runnable {
                     LOG.info("ControlCommand: "+env.getCommandPath());
                     switch (cc) {
                         case InitiateComm: {
-                            tcpBusClient.initiatedComm = true;
-                            env.setCommandPath(ControlCommand.Ack.name());
-                            env.addNVP("count", 0);
-                            tcpBusClient.sendMessage(env.toJSONRaw());
+                            tcpBusClient.initiatedComm = env.getValue("init")!=null && "true".equals(env.getValue("init"));
+                            if(!tcpBusClient.initiatedComm) {
+                                int initCount = (Integer)env.getValue("initAttempt");
+                                if(initCount>60) {
+                                    LOG.warning("Unable to initiate communications with Bus within 60 seconds, exiting.");
+                                    running = false;
+                                    break;
+                                }
+                                env.addNVP("initAttempt", initCount + 1);
+                                Wait.aSec(1);
+                                tcpBusClient.sendMessage(env);
+                            }
                             break;
                         }
                         case Ack: {
-                            int count = (Integer)env.getContent();
-                            LOG.info("Incoming count: "+count);
-                            env.addContent(count+1);
-                            tcpBusClient.sendMessage(env.toJSONRaw());
+                            String senderId = env.getClient();
+                            if(tcpBusClient.id.toString().equals(senderId)) {
+                                LOG.info("Sent Ack returned Acknowledged.");
+                            } else {
+                                LOG.info("Server requesting ack; returning...");
+                                tcpBusClient.sendMessage(env);
+                            }
                             break;
                         }
                         default: {
