@@ -29,6 +29,10 @@ public abstract class NetworkService extends BaseService {
 
     protected Integer maxPeers = 500;
 
+    protected NetworkService() {
+        super();
+    }
+
     protected NetworkService(Network network) {
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);
@@ -38,6 +42,10 @@ public abstract class NetworkService extends BaseService {
         super(producer, observer);
         this.networkState.network = network;
         this.networkState.localPeer = new NetworkPeer(network);
+    }
+
+    public void setNetwork(Network network) {
+        this.networkState.network = network;
     }
 
     @Override
