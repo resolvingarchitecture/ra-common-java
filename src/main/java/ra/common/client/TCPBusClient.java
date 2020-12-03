@@ -58,6 +58,10 @@ public class TCPBusClient implements Runnable {
         LOG.info("Initiated Comm, running...");
     }
 
+    public boolean isInitiated() {
+        return initiatedComm;
+    }
+
     public void shutdown() {
         // TODO: Once multiple clients are enabled for Service Bus, use this method to signal to TCP Bus Controller to close server socket and threads for this particular client instance
 //        Envelope envelope = Envelope.documentFactory();
