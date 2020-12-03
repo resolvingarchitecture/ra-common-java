@@ -1,5 +1,6 @@
 package ra.common.client;
 
+import ra.common.Client;
 import ra.common.Envelope;
 import ra.common.network.ControlCommand;
 import ra.util.Wait;
@@ -18,6 +19,7 @@ public class TCPBusClient implements Runnable {
     private Socket socket = null;
 
     boolean initiatedComm = false;
+    Client client;
 
     private BufferedReader readFromServer;
     private TCPBusClientReceiveThread tcpBusClientReceiveThread;
@@ -29,6 +31,10 @@ public class TCPBusClient implements Runnable {
 
     public TCPBusClient() {
         id = UUID.randomUUID();
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     @Override

@@ -63,8 +63,13 @@ public class TCPBusClientReceiveThread implements Runnable {
                             }
                             break;
                         }
+                        case EndComm: {
+                            // Server telling client to shutdown
+                            tcpBusClient.shutdown();
+                            break;
+                        }
                         default: {
-                            LOG.warning("ControlCommand not handled: "+cc.name());
+                            tcpBusClient.client.reply(env);
                         }
                     }
                 }
