@@ -2,7 +2,6 @@ package ra.common.network;
 
 public enum ControlCommand {
     InitiateComm,
-    Start,
     RegisterService,
     UnregisterService,
     StartService,
@@ -11,12 +10,14 @@ public enum ControlCommand {
     RestartService,
     StopService,
     GracefullyStopService,
+    Start,
     Pause,
     UnPause,
     Restart,
     Shutdown,
     GracefullyShutdown,
     CloseClient,
+    Send,
     Ack,
     EndComm
 }

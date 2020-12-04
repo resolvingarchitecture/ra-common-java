@@ -55,6 +55,7 @@ public class TCPBusClient implements Runnable {
         }
         Envelope envelope = Envelope.documentFactory();
         envelope.setCommandPath(ControlCommand.InitiateComm.name());
+        envelope.setClient(id.toString());
         envelope.addNVP("initAttempt",1);
         sendMessage(envelope);
         while(!initiatedComm) {
