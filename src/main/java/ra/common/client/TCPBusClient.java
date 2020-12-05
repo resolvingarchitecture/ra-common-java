@@ -14,7 +14,12 @@ public class TCPBusClient implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(TCPBusClient.class.getName());
 
-    final UUID id;
+    private static final Integer MAX_CONNECT_ATTEMPTS = 30;
+
+    private Integer currentConnectAttempts = 0;
+
+    final String clientId;
+    String serverId;
 
     private Socket socket = null;
 
@@ -27,10 +32,11 @@ public class TCPBusClient implements Runnable {
     private PrintWriter writeToServer;
     private TCPBusClientSendThread tcpBusClientSendThread;
 
+    private boolean connected = false;
     private boolean shutdown = false;
 
     public TCPBusClient() {
-        id = UUID.randomUUID();
+        clientId = UUID.randomUUID().toString();
     }
 
     public void setClient(Client client) {
@@ -47,15 +53,25 @@ public class TCPBusClient implements Runnable {
     }
 
     public void init() {
-        try {
-            connect(2013);
-        } catch (IOException e) {
-            LOG.severe(e.getLocalizedMessage());
-            System.exit(-1);
+        connected = false;
+        currentConnectAttempts = 0;
+        while(!connected) {
+            try {
+                connected = connect(2013);
+            } catch (IOException e) {
+                currentConnectAttempts++;
+                if (currentConnectAttempts < MAX_CONNECT_ATTEMPTS) {
+                    LOG.severe(e.getLocalizedMessage() + "; Wait 2 seconds and try again...");
+                    Wait.aSec(2);
+                } else {
+                    LOG.severe(e.getLocalizedMessage() + "; Maximum attempts reached; exiting...");
+                    return;
+                }
+            }
         }
         Envelope envelope = Envelope.documentFactory();
         envelope.setCommandPath(ControlCommand.InitiateComm.name());
-        envelope.setClient(id.toString());
+        envelope.setClient(clientId);
         envelope.addNVP("initAttempt",1);
         sendMessage(envelope);
         while(!initiatedComm) {
@@ -69,16 +85,19 @@ public class TCPBusClient implements Runnable {
         return initiatedComm;
     }
 
-    public void shutdown() {
-        // TODO: Once multiple clients are enabled for Service Bus, use this method to signal to TCP Bus Controller to close server socket and threads for this particular client instance
-//        Envelope envelope = Envelope.documentFactory();
-//        envelope.setCommandPath(ControlCommand.EndComm.name());
-//        sendMessage(envelope);
-        this.shutdown = true;
+    public void shutdown(boolean reconnect) {
+        tcpBusClientSendThread.shutdown();
+        tcpBusClientReceiveThread.shutdown();
+        if(reconnect) {
+            init();
+        } else {
+            this.shutdown = true;
+        }
     }
 
-    public void connect(int port) throws IOException {
-        socket = new Socket("localhost", port);
+    public boolean connect(int port) throws IOException {
+        // Connect to the localhost server socket at supplied port by a client with local address and port picked from randomly available options supporting multiple clients.
+        socket = new Socket("localhost", port, null, 0);
         readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writeToServer = new PrintWriter(socket.getOutputStream(), true);
         tcpBusClientReceiveThread = new TCPBusClientReceiveThread(this, readFromServer);
@@ -87,10 +106,11 @@ public class TCPBusClient implements Runnable {
         Thread send = new Thread(tcpBusClientSendThread);
         receive.start();
         send.start();
+        return true;
     }
 
     public void sendMessage(Envelope message) {
-        message.setClient(id.toString());
+        message.setClient(clientId);
         tcpBusClientSendThread.sendMessage(message.toJSONRaw());
     }
 

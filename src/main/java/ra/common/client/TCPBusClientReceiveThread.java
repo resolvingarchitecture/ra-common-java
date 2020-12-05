@@ -29,48 +29,46 @@ public class TCPBusClientReceiveThread implements Runnable {
         try {
             while(running) {
                 String msg = readFromServer.readLine();
+                if(msg==null) {
+                    LOG.info("Server likely shutdown. Shutting down client with re-connect attempt...");
+                    tcpBusClient.shutdown(true);
+                    continue;
+                }
                 if(msg.equalsIgnoreCase("exit")) {
-                    running = false;
-                } else {
-                    Envelope env = Envelope.documentFactory();
-                    env.fromJSON(msg);
-                    LOG.info("Received Envelope...");
-                    ControlCommand cc = ControlCommand.valueOf(env.getCommandPath());
-                    LOG.info("ControlCommand: "+env.getCommandPath());
-                    switch (cc) {
-                        case InitiateComm: {
-                            tcpBusClient.initiatedComm = env.getValue("init")!=null && "true".equals(env.getValue("init"));
-                            if(!tcpBusClient.initiatedComm) {
-                                int initCount = (Integer)env.getValue("initAttempt");
-                                if(initCount>60) {
-                                    LOG.warning("Unable to initiate communications with Bus within 60 seconds, exiting.");
-                                    running = false;
-                                    break;
-                                }
-                                env.addNVP("initAttempt", initCount + 1);
-                                Wait.aSec(1);
-                                tcpBusClient.sendMessage(env);
+                    LOG.info("Server notifying client of shutdown. Shutting down client...");
+                    tcpBusClient.shutdown(false);
+                    continue;
+                }
+                Envelope env = Envelope.documentFactory();
+                env.fromJSON(msg);
+                LOG.info("Received Envelope...");
+                ControlCommand cc = ControlCommand.valueOf(env.getCommandPath());
+                LOG.info("ControlCommand: "+env.getCommandPath());
+                switch (cc) {
+                    case InitiateComm: {
+                        tcpBusClient.initiatedComm = env.getValue("init")!=null && "true".equals(env.getValue("init"));
+                        if(tcpBusClient.initiatedComm) {
+                            tcpBusClient.serverId = env.getClient();
+                        } else {
+                            int initCount = (Integer)env.getValue("initAttempt");
+                            if(initCount>60) {
+                                LOG.warning("Unable to initiate communications with Bus within 60 seconds, exiting.");
+                                running = false;
+                                break;
                             }
-                            break;
+                            env.addNVP("initAttempt", initCount + 1);
+                            Wait.aSec(1);
+                            tcpBusClient.sendMessage(env);
                         }
-                        case Ack: {
-                            String senderId = env.getClient();
-                            if(tcpBusClient.id.toString().equals(senderId)) {
-                                LOG.info("Sent Ack returned Acknowledged.");
-                            } else {
-                                LOG.info("Server requesting ack; returning...");
-                                tcpBusClient.sendMessage(env);
-                            }
-                            break;
-                        }
-                        case EndComm: {
-                            // Server telling client to shutdown
-                            tcpBusClient.shutdown();
-                            break;
-                        }
-                        default: {
-                            tcpBusClient.client.reply(env);
-                        }
+                        break;
+                    }
+                    case CloseClient: {
+                        // Server telling client to shutdown
+                        tcpBusClient.shutdown(false);
+                        break;
+                    }
+                    default: {
+                        tcpBusClient.client.reply(env);
                     }
                 }
             }
