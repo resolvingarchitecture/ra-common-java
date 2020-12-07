@@ -1,7 +1,9 @@
 package ra.common.client;
 
 import ra.common.Envelope;
+import ra.common.messaging.EventMessage;
 import ra.common.network.ControlCommand;
+import ra.common.notification.ClientSubscription;
 import ra.util.Wait;
 
 import java.io.*;
@@ -39,7 +41,7 @@ public class TCPBusClientReceiveThread implements Runnable {
                     tcpBusClient.shutdown(false);
                     continue;
                 }
-                Envelope env = Envelope.documentFactory();
+                Envelope env = new Envelope();
                 env.fromJSON(msg);
                 LOG.info("Received Envelope...");
                 ControlCommand cc = ControlCommand.valueOf(env.getCommandPath());
@@ -59,6 +61,14 @@ public class TCPBusClientReceiveThread implements Runnable {
                             env.addNVP("initAttempt", initCount + 1);
                             Wait.aSec(1);
                             tcpBusClient.sendMessage(env);
+                        }
+                        break;
+                    }
+                    case Notify: {
+                        EventMessage em = (EventMessage) env.getMessage();
+                        ClientSubscription cs = tcpBusClient.subscriptions.get(em.getType());
+                        if(cs!=null) {
+                            cs.reply(env);
                         }
                         break;
                     }

@@ -17,6 +17,8 @@ public enum ControlCommand {
     Shutdown,
     GracefullyShutdown,
     CloseClient,
+    Subscribe,
+    Notify,
     Send,
     Ack,
     EndComm
