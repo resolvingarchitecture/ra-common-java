@@ -6,6 +6,7 @@ package ra.common.network;
 public enum NetworkStatus {
     // Network Start Up
     NOT_INSTALLED, // Not all networking components are installed (run-time).
+    CLOSED, // Network is closed - default starting state
     ERROR, // Error in Network, unable to start.
     PORT_CONFLICT, // this network was unable to open the supplied port - likely already in use; recommend changing ports
     WAITING,  // This network is waiting on a dependent network's status.
