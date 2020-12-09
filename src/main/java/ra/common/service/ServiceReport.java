@@ -1,6 +1,6 @@
 package ra.common.service;
 
-import ra.common.JSONSerializable;
+import ra.common.content.JSON;
 import ra.util.JSONParser;
 import ra.util.JSONPretty;
 
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceReport implements JSONSerializable {
+public class ServiceReport extends JSON {
 
     public String serviceClassName;
     public ServiceStatus serviceStatus;

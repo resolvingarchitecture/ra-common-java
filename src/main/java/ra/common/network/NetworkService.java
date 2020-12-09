@@ -3,6 +3,7 @@ package ra.common.network;
 import ra.common.Envelope;
 import ra.common.Tuple2;
 import ra.common.messaging.CommandMessage;
+import ra.common.messaging.EventMessage;
 import ra.common.messaging.MessageProducer;
 import ra.common.route.ExternalRoute;
 import ra.common.service.BaseService;
@@ -129,14 +130,11 @@ public abstract class NetworkService extends BaseService {
     protected void updateNetworkStatus(NetworkStatus networkStatus) {
         LOG.info("Network Status for Network: "+networkState.network +" - " + networkStatus.name());
         networkState.networkStatus = networkStatus;
-        // For now, just attempt to send to a Network Manager
-        Tuple2<String,String> l = new Tuple2<>("ra.network.manager.NetworkManagerService", "UPDATE_NETWORK_STATE");
-//        for(Tuple2<String,String> l : stateChangeListeners) {
-            Envelope e = Envelope.documentFactory();
-            e.addContent(networkStatus);
-            e.addRoute(l.first, l.second);
-            send(e);
-//        }
+        Envelope e = Envelope.eventFactory(EventMessage.Type.NETWORK_STATE_UPDATE);
+        EventMessage em = (EventMessage)e.getMessage();
+        em.setMessage(networkState);
+        e.addRoute("ra.networkmanager.NetworkManagerService", "UPDATE_NETWORK_STATE");
+        send(e);
     }
 
     protected void connectionReport(NetworkConnectionReport report) {

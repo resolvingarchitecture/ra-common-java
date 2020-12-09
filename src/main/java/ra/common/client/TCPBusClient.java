@@ -3,10 +3,7 @@ package ra.common.client;
 import ra.common.Client;
 import ra.common.Envelope;
 import ra.common.network.ControlCommand;
-import ra.common.notification.ClientSubscription;
-import ra.common.notification.ServiceSubscription;
 import ra.common.notification.Subscription;
-import ra.common.notification.SubscriptionRequest;
 import ra.util.Wait;
 
 import java.io.*;
@@ -41,7 +38,7 @@ public class TCPBusClient implements Runnable {
     private boolean connected = false;
     private boolean shutdown = false;
 
-    Map<String, ClientSubscription> subscriptions = new HashMap<>();
+    Map<String, Subscription> subscriptions = new HashMap<>();
 
 
     public TCPBusClient() {
@@ -123,19 +120,19 @@ public class TCPBusClient implements Runnable {
         tcpBusClientSendThread.sendMessage(envelope.toJSONRaw());
     }
 
-    public void subscribe(SubscriptionRequest subscriptionRequest) {
-        if(subscriptionRequest.getSubscription() instanceof ClientSubscription) {
-            subscriptions.put(subscriptionRequest.getEventMessageType().name(), (ClientSubscription) subscriptionRequest.getSubscription());
-            // Tell Notification Service to publish notifications to the TCP Client
-            ServiceSubscription ss = new ServiceSubscription("TCPClient","Notify");
-            subscriptionRequest.setSubscription(ss);
-        }
+    public void subscribe(Subscription subscription) {
+        subscriptions.put(subscription.getEventMessageType().name(), subscription);
         Envelope env = Envelope.documentFactory();
         // Tell TCP Server Socket to Send this message into bus
         env.setCommandPath(ControlCommand.Send.name());
-        env.addData(SubscriptionRequest.class, subscriptionRequest.toMap());
+        env.addNVP("EventMessageType", subscription.getEventMessageType().name());
+        env.addNVP("Filter", subscription.getFilter());
+        env.addNVP("ClientId", clientId);
+        env.addNVP("Service", "TCPClient");
+        env.addNVP("Operation", "Notify");
         // Destination is the Notification Service SUBSCRIBE operation
         env.addRoute("ra.notification.NotificationService", "SUBSCRIBE");
+        env.ratchet();
         sendMessage(env);
     }
 

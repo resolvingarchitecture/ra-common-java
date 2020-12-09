@@ -3,7 +3,7 @@ package ra.common.client;
 import ra.common.Envelope;
 import ra.common.messaging.EventMessage;
 import ra.common.network.ControlCommand;
-import ra.common.notification.ClientSubscription;
+import ra.common.notification.Subscription;
 import ra.util.Wait;
 
 import java.io.*;
@@ -41,8 +41,20 @@ public class TCPBusClientReceiveThread implements Runnable {
                     tcpBusClient.shutdown(false);
                     continue;
                 }
-                Envelope env = new Envelope();
-                env.fromJSON(msg);
+                Envelope env = null;
+                if(msg.contains("ra.common.messaging.EventMessage")) {
+                    if(msg.contains("NETWORK_STATE_UPDATE")) {
+                        env = Envelope.eventFactory(EventMessage.Type.NETWORK_STATE_UPDATE);
+                        env.fromJSON(msg);
+                    }
+                } else if(msg.contains("ra.common.messaging.DocumentMessage")) {
+                    env = Envelope.documentFactory();
+                    env.fromJSON(msg);
+                }
+                if(env==null) {
+                    LOG.warning("Unable to determine envelope structure received.");
+                    return;
+                }
                 LOG.info("Received Envelope...");
                 ControlCommand cc = ControlCommand.valueOf(env.getCommandPath());
                 LOG.info("ControlCommand: "+env.getCommandPath());
@@ -66,9 +78,9 @@ public class TCPBusClientReceiveThread implements Runnable {
                     }
                     case Notify: {
                         EventMessage em = (EventMessage) env.getMessage();
-                        ClientSubscription cs = tcpBusClient.subscriptions.get(em.getType());
-                        if(cs!=null) {
-                            cs.reply(env);
+                        Subscription sub = tcpBusClient.subscriptions.get(em.getType());
+                        if(sub!=null && sub.getClient()!=null) {
+                            sub.getClient().reply(env);
                         }
                         break;
                     }
