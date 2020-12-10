@@ -47,6 +47,7 @@ public abstract class NetworkService extends BaseService {
 
     public void setNetwork(Network network) {
         this.networkState.network = network;
+        this.networkState.localPeer = new NetworkPeer(network);
     }
 
     @Override
