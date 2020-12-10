@@ -33,6 +33,8 @@ public final class EventMessage extends BaseMessage {
     private String name;
     private JSON message;
 
+    public EventMessage() {}
+
     public EventMessage(String type) {
         this.type = type;
     }
