@@ -15,8 +15,7 @@ public final class CommandMessage extends BaseMessage {
         Pause,
         Unpause,
         NetState,
-        RegisterStatusListener,
-        UnregisterStatusListener,
+        Report,
         RegisterStateChangeListener,
         UnregisterStateChangeListener
     }

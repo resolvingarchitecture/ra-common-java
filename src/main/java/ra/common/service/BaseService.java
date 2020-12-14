@@ -53,14 +53,6 @@ public abstract class BaseService implements Service {
         return serviceStatus;
     }
 
-    public boolean registerServiceStatusListener(Tuple2<String,String> listener) {
-        return serviceStatusListeners.add(listener);
-    }
-
-    public boolean unregisterServiceStatusListener(Tuple2<String,String> listener) {
-        return serviceStatusListeners.remove(listener);
-    }
-
     public void setRegistered(boolean registered) {
         this.registered = registered;
     }
@@ -69,19 +61,15 @@ public abstract class BaseService implements Service {
         if(this.serviceStatus != serviceStatus) {
             // status has changed
             this.serviceStatus = serviceStatus;
-            if (serviceStatusListeners.size() > 0) {
-                for (Tuple2<String,String> l : serviceStatusListeners) {
-                    Envelope lEnv = Envelope.eventFactory(SERVICE_STATUS);
-                    EventMessage em = (EventMessage)lEnv.getMessage();
-                    em.setMessage(report());
-                    em.setName(this.getClass().getName());
-                    lEnv.addRoute(l.first, l.second);
-                    send(lEnv);
-                }
-            }
             if(observer!=null) {
                 observer.serviceStatusChanged(this.getClass().getName(), serviceStatus);
             }
+            Envelope lEnv = Envelope.eventFactory(SERVICE_STATUS);
+            EventMessage em = (EventMessage)lEnv.getMessage();
+            em.setMessage(report());
+            em.setName(this.getClass().getName());
+            lEnv.addRoute("ra.notification.NotificationService", "PUBLISH");
+            send(lEnv);
         }
     }
 
@@ -177,6 +165,10 @@ public abstract class BaseService implements Service {
                 envelope.addNVP("result", start(config));
                 break;
             }
+            case Report: {
+                envelope.addNVP("report", report());
+                break;
+            }
             case Restart: {
                 envelope.addNVP("result", restart());
                 break;
@@ -196,23 +188,6 @@ public abstract class BaseService implements Service {
             case GracefullyShutdown: {
                 envelope.addNVP("result", gracefulShutdown());
                 break;
-            }
-            case RegisterStatusListener: {
-                if(envelope.getValue("listener")!=null) {
-                    Tuple2<String,String> listener = (Tuple2<String, String>)envelope.getValue("listener");
-                    envelope.addNVP("result", registerServiceStatusListener(listener));
-                } else {
-                    envelope.addErrorMessage("No Listener provided in 'listener' nvp.");
-                }
-                break;
-            }
-            case UnregisterStatusListener: {
-                if(envelope.getValue("listener")!=null) {
-                    Tuple2<String,String> listener = (Tuple2<String, String>)envelope.getValue("listener");
-                    envelope.addNVP("result", unregisterServiceStatusListener(listener));
-                } else {
-                    envelope.addErrorMessage("No Listener provided in 'listener' nvp.");
-                }
             }
         }
     }
