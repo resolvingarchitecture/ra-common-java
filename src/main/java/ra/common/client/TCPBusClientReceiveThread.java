@@ -42,9 +42,21 @@ public class TCPBusClientReceiveThread implements Runnable {
                     continue;
                 }
                 Envelope env = null;
-                if(msg.contains("ra.common.messaging.EventMessage")) {
-                    if(msg.contains("NETWORK_STATE_UPDATE")) {
+                if(msg.contains(EventMessage.class.getName())) {
+                    if(msg.contains(EventMessage.Type.NETWORK_STATE_UPDATE.name())) {
                         env = Envelope.eventFactory(EventMessage.Type.NETWORK_STATE_UPDATE);
+                        env.fromJSON(msg);
+                    } else if(msg.contains(EventMessage.Type.SERVICE_STATUS.name())) {
+                        env = Envelope.eventFactory(EventMessage.Type.SERVICE_STATUS);
+                        env.fromJSON(msg);
+                    } else if(msg.contains(EventMessage.Type.DID_STATUS.name())) {
+                        env = Envelope.eventFactory(EventMessage.Type.DID_STATUS);
+                        env.fromJSON(msg);
+                    } else if(msg.contains(EventMessage.Type.PEER_STATUS.name())) {
+                        env = Envelope.eventFactory(EventMessage.Type.PEER_STATUS);
+                        env.fromJSON(msg);
+                    } else if(msg.contains(EventMessage.Type.BUS_STATUS.name())) {
+                        env = Envelope.eventFactory(EventMessage.Type.BUS_STATUS);
                         env.fromJSON(msg);
                     }
                 } else if(msg.contains("ra.common.messaging.DocumentMessage")) {
