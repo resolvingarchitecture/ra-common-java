@@ -126,7 +126,9 @@ public class TCPBusClient implements Runnable {
         // Tell TCP Server Socket to Send this message into bus
         env.setCommandPath(ControlCommand.Send.name());
         env.addNVP("EventMessageType", subscription.getEventMessageType().name());
-        env.addNVP("Filter", subscription.getFilter());
+        if(subscription.getFilter()!=null) {
+            env.addNVP("Filter", subscription.getFilter());
+        }
         env.addNVP("ClientId", clientId);
         env.addNVP("Service", "TCPClient");
         env.addNVP("Operation", "Notify");
