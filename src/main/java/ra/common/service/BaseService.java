@@ -67,7 +67,6 @@ public abstract class BaseService implements Service {
             Envelope e = Envelope.eventFactory(SERVICE_STATUS);
             EventMessage em = (EventMessage)e.getMessage();
             em.setMessage(report());
-            em.setName(this.getClass().getName());
             e.addRoute("ra.notification.NotificationService", "PUBLISH");
             e.ratchet();
             send(e);
