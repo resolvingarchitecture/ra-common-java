@@ -1,8 +1,6 @@
 package ra.common.service;
 
 import ra.common.content.JSON;
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,25 +32,11 @@ public class ServiceReport extends JSON {
         if(m!=null) {
             if(m.get("serviceClassName")!=null) serviceClassName = (String)m.get("serviceClassName");
             if(m.get("serviceStatus")!=null) serviceStatus = ServiceStatus.valueOf((String)m.get("serviceStatus"));
-            if(m.get("registered")!=null) registered = Boolean.parseBoolean((String)m.get("registered"));
-            if(m.get("running")!=null) running = Boolean.parseBoolean((String)m.get("running"));
+            if(m.get("registered")!=null) registered = (Boolean)m.get("registered");
+            if(m.get("running")!=null) running =(Boolean)m.get("running");
             if(m.get("version")!=null) version = (String)m.get("version");
             if(m.get("servicesDependentUpon")!=null) servicesDependentUpon =  (List<String>)m.get("servicesDependentUpon");
         }
     }
 
-    @Override
-    public String toJSON() {
-        return JSONPretty.toPretty(JSONParser.toString(toMap()), 4);
-    }
-
-    @Override
-    public void fromJSON(String json) {
-        fromMap((Map<String, Object>)JSONParser.parse(json));
-    }
-
-    @Override
-    public String toString() {
-        return toJSON();
-    }
 }
