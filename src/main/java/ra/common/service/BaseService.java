@@ -64,12 +64,13 @@ public abstract class BaseService implements Service {
             if(observer!=null) {
                 observer.serviceStatusChanged(this.getClass().getName(), serviceStatus);
             }
-            Envelope lEnv = Envelope.eventFactory(SERVICE_STATUS);
-            EventMessage em = (EventMessage)lEnv.getMessage();
+            Envelope e = Envelope.eventFactory(SERVICE_STATUS);
+            EventMessage em = (EventMessage)e.getMessage();
             em.setMessage(report());
             em.setName(this.getClass().getName());
-            lEnv.addRoute("ra.notification.NotificationService", "PUBLISH");
-            send(lEnv);
+            e.addRoute("ra.notification.NotificationService", "PUBLISH");
+            e.ratchet();
+            send(e);
         }
     }
 
