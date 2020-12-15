@@ -1,6 +1,7 @@
 package ra.common.network;
 
 public enum Network {
+    Card,
     NFC,
     HTTP,
     Tor,
