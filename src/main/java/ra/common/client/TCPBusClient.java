@@ -122,20 +122,25 @@ public class TCPBusClient implements Runnable {
 
     public void subscribe(Subscription subscription) {
         subscriptions.put(subscription.getEventMessageType().name(), subscription);
-        Envelope env = Envelope.documentFactory();
-        // Tell TCP Server Socket to Send this message into bus
-        env.setCommandPath(ControlCommand.Send.name());
-        env.addNVP("EventMessageType", subscription.getEventMessageType().name());
-        if(subscription.getFilter()!=null) {
-            env.addNVP("Filter", subscription.getFilter());
-        }
-        env.addNVP("ClientId", clientId);
-        env.addNVP("Service", "TCPClient");
-        env.addNVP("Operation", "Notify");
-        // Destination is the Notification Service SUBSCRIBE operation
-        env.addRoute("ra.notification.NotificationService", "SUBSCRIBE");
-        env.ratchet();
-        sendMessage(env);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Envelope env = Envelope.documentFactory();
+                // Tell TCP Server Socket to Send this message into bus
+                env.setCommandPath(ControlCommand.Send.name());
+                env.addNVP("EventMessageType", subscription.getEventMessageType().name());
+                if(subscription.getFilter()!=null) {
+                    env.addNVP("Filter", subscription.getFilter());
+                }
+                env.addNVP("ClientId", clientId);
+                env.addNVP("Service", "TCPClient");
+                env.addNVP("Operation", "Notify");
+                // Destination is the Notification Service SUBSCRIBE operation
+                env.addRoute("ra.notification.NotificationService", "SUBSCRIBE");
+                env.ratchet();
+                sendMessage(env);
+            }
+        }).start();
     }
 
     public static void main(String[] args) {
