@@ -31,7 +31,7 @@ public final class EventMessage extends BaseMessage {
 
     private String type;
     private String name;
-    private JSON message;
+    private JSONSerializable message;
 
     public EventMessage() {}
 
@@ -55,11 +55,11 @@ public final class EventMessage extends BaseMessage {
         return type;
     }
 
-    public void setMessage(JSON message) {
+    public void setMessage(JSONSerializable message) {
         this.message = message;
     }
 
-    public JSON getMessage() {
+    public JSONSerializable getMessage() {
         return message;
     }
 
@@ -75,22 +75,20 @@ public final class EventMessage extends BaseMessage {
     @Override
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
-        if(m.get("type")!=null) type = (String)m.get("type");
-        if(m.get("name")!=null) name = (String)m.get("name");
-        if(m.get("message")!=null) {
-            Map<String,Object> mObj = (Map<String,Object>)m.get("message");
-            Object typeObj = mObj.get("type");
-            if(typeObj instanceof String) {
-                String type = (String)typeObj;
-                try {
-                    Object objMsg = Class.forName(type).getConstructor().newInstance();
-                    if(objMsg instanceof JSON) {
-                        message = (JSON)objMsg;
-                        message.fromMap(mObj);
-                    }
-                } catch (Exception e) {
-                    LOG.warning(e.getLocalizedMessage());
+        type = (String)m.get("type");
+        name = (String)m.get("name");
+        Map<String,Object> mObj = (Map<String,Object>)m.get("message");
+        Object typeObj = mObj.get("type");
+        if(typeObj instanceof String) {
+            String type = (String)typeObj;
+            try {
+                Object objMsg = Class.forName(type).getConstructor().newInstance();
+                if(objMsg instanceof JSONSerializable) {
+                    message = (JSONSerializable) objMsg;
+                    message.fromMap(mObj);
                 }
+            } catch (Exception e) {
+                LOG.warning(e.getLocalizedMessage());
             }
         }
     }

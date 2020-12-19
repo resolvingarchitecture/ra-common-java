@@ -1,13 +1,15 @@
 package ra.common.network;
 
-import ra.common.content.JSON;
+import ra.common.JSONSerializable;
+import ra.util.JSONParser;
+import ra.util.JSONPretty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NetworkState extends JSON {
+public class NetworkState implements JSONSerializable {
 
     public Network network;
     public NetworkPeer localPeer;
@@ -22,7 +24,7 @@ public class NetworkState extends JSON {
 
     @Override
     public Map<String,Object> toMap() {
-        Map<String, Object> m = super.toMap();
+        Map<String, Object> m = new HashMap<>();
         if(network!=null) m.put("network", network.name());
         if(networkStatus!=null) m.put("networkStatus", networkStatus.name());
         if(virtualPort!=null) m.put("virtualPort", virtualPort);
@@ -39,7 +41,6 @@ public class NetworkState extends JSON {
 
     @Override
     public void fromMap(Map<String, Object> m) {
-        super.fromMap(m);
         if(m.get("network")!=null) {
             network = Network.valueOf((String)m.get("network"));
             localPeer = new NetworkPeer(network);
@@ -57,5 +58,18 @@ public class NetworkState extends JSON {
         if(m.get("params")!=null) params = (Map<String,Object>)m.get("params");
     }
 
+    @Override
+    public String toJSON() {
+        return JSONPretty.toPretty(JSONParser.toString(toMap()), 4);
+    }
 
+    @Override
+    public void fromJSON(String json) {
+        fromMap((Map<String, Object>)JSONParser.parse(json));
+    }
+
+    @Override
+    public String toString() {
+        return toJSON();
+    }
 }

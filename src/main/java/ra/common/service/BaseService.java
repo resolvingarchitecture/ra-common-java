@@ -98,6 +98,7 @@ public abstract class BaseService implements Service {
         report.serviceClassName = this.getClass().getName();
         report.serviceStatus = serviceStatus;
         report.servicesDependentUpon = servicesDependentUpon;
+        LOG.info("SERVICE REPORT - "+report.serviceClassName+":"+report.serviceStatus.name());
         return report;
     }
 
