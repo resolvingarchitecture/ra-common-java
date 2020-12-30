@@ -24,7 +24,8 @@ public final class EventMessage extends BaseMessage {
         PEER_STATUS,
         SERVICE_STATUS,
         DID_STATUS,
-        NETWORK_STATE_UPDATE
+        NETWORK_STATE_UPDATE,
+        PRICE_CHANGE
     }
 
     private String id = UUID.randomUUID().toString();
