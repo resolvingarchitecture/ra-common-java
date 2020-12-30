@@ -6,7 +6,7 @@ import ra.common.currency.StoreOfValue;
 public class BTC extends BaseCoin implements StoreOfValue {
 
     @Override
-    public long maxSupply() {
+    public Long maxSupply() {
         return 2100000000000000L;
     }
 }

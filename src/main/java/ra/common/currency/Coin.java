@@ -1,7 +1,9 @@
 package ra.common.currency;
 
-public interface Coin {
+import ra.common.JSONSerializable;
+
+public interface Coin extends JSONSerializable {
     String symbol();
-    long maxSupply();
-    long value();
+    Long maxSupply();
+    Long value();
 }
