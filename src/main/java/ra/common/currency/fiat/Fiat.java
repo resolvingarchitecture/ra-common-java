@@ -4,8 +4,4 @@ import ra.common.currency.BaseCoin;
 
 public abstract class Fiat extends BaseCoin {
 
-    @Override
-    public Long maxSupply() {
-        return -1L;
-    }
 }

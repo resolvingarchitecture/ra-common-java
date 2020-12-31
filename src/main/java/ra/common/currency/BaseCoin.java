@@ -8,11 +8,11 @@ import java.util.Map;
 
 public abstract class BaseCoin implements Coin {
 
-    private Long value = 0L;
+    private Double value = 0.00;
 
     public BaseCoin() {}
 
-    public BaseCoin(long value) {
+    public BaseCoin(Double value) {
         this.value = value;
     }
 
@@ -21,12 +21,12 @@ public abstract class BaseCoin implements Coin {
         return toString();
     }
 
-    public void setValue(Long value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
     @Override
-    public Long value() {
+    public Double value() {
         return value;
     }
 
@@ -45,7 +45,7 @@ public abstract class BaseCoin implements Coin {
     @Override
     public void fromMap(Map<String, Object> m) {
         if(m!=null) {
-            if(m.get("value")!=null) value = (Long)m.get("value");
+            if(m.get("value")!=null) value = (Double)m.get("value");
         }
     }
 

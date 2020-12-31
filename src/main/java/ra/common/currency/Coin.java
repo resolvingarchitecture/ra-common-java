@@ -5,6 +5,5 @@ import ra.common.JSONSerializable;
 public interface Coin extends JSONSerializable {
     String symbol();
     String name();
-    Long maxSupply();
-    Long value();
+    Double value();
 }

@@ -4,31 +4,47 @@ import ra.common.currency.BaseCoin;
 
 public abstract class Crypto extends BaseCoin {
 
-    private long highFee = 0L;
-    private long mediumFee = 0L;
-    private long lowFee = 0L;
+    protected final int precision;
+    protected final double maxSupply;
+    private double highFee = 0.00;
+    private double mediumFee = 0.00;
+    private double lowFee = 0.00;
 
-    public Long getHighFee() {
+    protected Crypto(double maxSupply, int precision) {
+        this.maxSupply = maxSupply;
+        this.precision = precision;
+    }
+
+    public Integer getPrecision() {
+        return precision;
+    }
+
+    public Double getMaxSupply() {
+        return maxSupply;
+    }
+
+    public Double getHighFee() {
         return highFee;
     }
 
-    public void setHighFee(long highFee) {
+    public void setHighFee(Double highFee) {
         this.highFee = highFee;
     }
 
-    public Long getMediumFee() {
+    public Double getMediumFee() {
         return mediumFee;
     }
 
-    public void setMediumFee(long mediumFee) {
+    public void setMediumFee(Double mediumFee) {
         this.mediumFee = mediumFee;
     }
 
-    public Long getLowFee() {
+    public Double getLowFee() {
         return lowFee;
     }
 
-    public void setLowFee(long lowFee) {
+    public void setLowFee(Double lowFee) {
         this.lowFee = lowFee;
     }
+
 }
