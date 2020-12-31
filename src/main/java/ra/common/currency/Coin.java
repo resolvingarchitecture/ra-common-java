@@ -6,4 +6,7 @@ public interface Coin extends JSONSerializable {
     String symbol();
     Long maxSupply();
     Long value();
+    Long getLowFee();
+    Long getMediumFee();
+    Long getHighFee();
 }
