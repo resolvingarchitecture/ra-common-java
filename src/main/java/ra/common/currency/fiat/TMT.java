@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class TMT extends Fiat {
 
-public class TMT  extends Fiat {
+    @Override
+    public String name() {
+        return "Turkmenistani Manat";
+    }
 }

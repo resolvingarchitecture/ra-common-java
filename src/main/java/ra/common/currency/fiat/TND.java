@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class TND extends Fiat {
 
-public class TND  extends Fiat {
+    @Override
+    public String name() {
+        return "Tunisian Dinar";
+    }
 }

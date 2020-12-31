@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class XCD extends Fiat {
 
-public class XCD  extends Fiat {
+    @Override
+    public String name() {
+        return "East Caribbean Dollar";
+    }
 }

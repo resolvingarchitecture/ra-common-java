@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class RUB extends Fiat {
 
-public class RUB  extends Fiat {
+    @Override
+    public String name() {
+        return "Russian Ruble";
+    }
 }

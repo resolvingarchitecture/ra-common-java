@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class SAR extends Fiat {
 
-public class SAR  extends Fiat {
+    @Override
+    public String name() {
+        return "Saudi Riyal";
+    }
 }

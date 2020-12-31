@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
-
 public class CAD  extends Fiat {
+
+    @Override
+    public String name() {
+        return "Canadian Dollar";
+    }
 }

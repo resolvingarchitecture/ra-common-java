@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class EUR extends Fiat {
 
-public class EUR  extends Fiat {
+    @Override
+    public String name() {
+        return "Euro";
+    }
 }

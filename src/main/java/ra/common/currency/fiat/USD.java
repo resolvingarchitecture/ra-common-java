@@ -1,7 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
-
 public class USD extends Fiat {
 
+    @Override
+    public String name() {
+        return "United States Dollar";
+    }
 }

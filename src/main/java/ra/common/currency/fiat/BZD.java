@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
-
 public class BZD extends Fiat {
+
+    @Override
+    public String name() {
+        return "Belize Dollar";
+    }
 }

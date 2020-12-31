@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class ERN extends Fiat {
 
-public class ERN  extends Fiat {
+    @Override
+    public String name() {
+        return "Eritrean Nakfa";
+    }
 }

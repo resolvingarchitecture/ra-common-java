@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class LRD extends Fiat {
 
-public class LRD  extends Fiat {
+    @Override
+    public String name() {
+        return "Liberian Dollar";
+    }
 }

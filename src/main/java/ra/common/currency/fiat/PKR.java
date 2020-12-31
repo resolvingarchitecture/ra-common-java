@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class PKR extends Fiat {
 
-public class PKR  extends Fiat {
+    @Override
+    public String name() {
+        return "Pakistani Rupee";
+    }
 }

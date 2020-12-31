@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class YER extends Fiat {
 
-public class YER  extends Fiat {
+    @Override
+    public String name() {
+        return "Yemeni Rial";
+    }
 }

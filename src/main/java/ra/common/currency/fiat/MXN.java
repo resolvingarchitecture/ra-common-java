@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class MXN extends Fiat {
 
-public class MXN  extends Fiat {
+    @Override
+    public String name() {
+        return "Mexican Peso";
+    }
 }

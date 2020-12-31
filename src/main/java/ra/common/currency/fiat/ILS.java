@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class ILS extends Fiat {
 
-public class ILS  extends Fiat {
+    @Override
+    public String name() {
+        return "Israeli New Shekel";
+    }
 }

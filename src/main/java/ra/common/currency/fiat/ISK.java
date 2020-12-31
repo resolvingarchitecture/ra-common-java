@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class ISK extends Fiat {
 
-public class ISK  extends Fiat {
+    @Override
+    public String name() {
+        return "Icelandic Krona";
+    }
 }

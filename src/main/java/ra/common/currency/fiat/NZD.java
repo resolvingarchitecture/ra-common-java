@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class NZD extends Fiat {
 
-public class NZD  extends Fiat {
+    @Override
+    public String name() {
+        return "New Zealand Dollar";
+    }
 }

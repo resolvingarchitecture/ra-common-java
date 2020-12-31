@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class CUP extends Fiat {
 
-public class CUP  extends Fiat {
+    @Override
+    public String name() {
+        return "Cuban Peso";
+    }
 }

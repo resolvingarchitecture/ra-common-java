@@ -1,6 +1,9 @@
 package ra.common.currency.fiat;
 
-import ra.common.currency.Fiat;
+public class HKD extends Fiat {
 
-public class HKD  extends Fiat {
+    @Override
+    public String name() {
+        return "Hong Kong Dollar";
+    }
 }
