@@ -98,17 +98,17 @@ public abstract class BaseService implements Service {
         report.serviceClassName = this.getClass().getName();
         report.serviceStatus = serviceStatus;
         report.servicesDependentUpon = servicesDependentUpon;
-        LOG.info("SERVICE REPORT - "+report.serviceClassName+":"+report.serviceStatus.name());
+        LOG.fine("SERVICE REPORT - "+report.serviceClassName+":"+report.serviceStatus.name());
         return report;
     }
 
     public boolean send(Envelope envelope) {
-        LOG.info("Sending Envelope to Producer...");
+        LOG.fine("Sending Envelope to Producer...");
         return producer.send(envelope);
     }
 
     public boolean send(Envelope envelope, Client callback) {
-        LOG.info("Sending Envelope to Producer with callback...");
+        LOG.fine("Sending Envelope to Producer with callback...");
         return producer.send(envelope, callback);
     }
 
