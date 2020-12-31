@@ -1,8 +1,6 @@
 package ra.common.currency.crypto;
 
-import ra.common.currency.BaseCoin;
-
-public class LTN extends BaseCoin {
+public class LTN extends Crypto {
     @Override
     public Long maxSupply() {
         return -1L;

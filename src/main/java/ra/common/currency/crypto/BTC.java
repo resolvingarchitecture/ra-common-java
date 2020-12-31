@@ -1,9 +1,8 @@
 package ra.common.currency.crypto;
 
-import ra.common.currency.BaseCoin;
 import ra.common.currency.StoreOfValue;
 
-public class BTC extends BaseCoin implements StoreOfValue {
+public class BTC extends Crypto implements StoreOfValue {
 
     @Override
     public Long maxSupply() {

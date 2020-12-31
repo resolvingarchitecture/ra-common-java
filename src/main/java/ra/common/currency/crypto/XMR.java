@@ -1,8 +1,6 @@
 package ra.common.currency.crypto;
 
-import ra.common.currency.BaseCoin;
-
-public class XMR extends BaseCoin {
+public class XMR extends Crypto {
 
     @Override
     public Long maxSupply() {
