@@ -4,7 +4,7 @@ import ra.common.currency.StoreOfValue;
 
 public class BTC extends Crypto implements StoreOfValue {
 
-    protected BTC() {
+    public BTC() {
         super(21000000.00000000, 8);
     }
 
