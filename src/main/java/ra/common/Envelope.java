@@ -102,6 +102,7 @@ public final class Envelope extends JSON {
         e.setMultipart(envelope.getMultipart());
         e.setMessage(envelope.getMessage());
         e.setServiceLevel(envelope.getServiceLevel());
+        e.setHeaders(envelope.getHeaders());
         return e;
     }
 
