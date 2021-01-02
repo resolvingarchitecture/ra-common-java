@@ -28,13 +28,11 @@ public final class Envelope extends JSON {
     public static final String ENTITY = "ENTITY";
     public static final String EXCEPTIONS = "EXCEPTIONS";
 
+    public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
-
     public static final String HEADER_CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
-
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_CONTENT_TYPE_JSON = "application/json";
-
     public static final String HEADER_USER_AGENT = "User-Agent";
 
     public enum MessageType {DOCUMENT, TEXT, EVENT, COMMAND, NONE}
