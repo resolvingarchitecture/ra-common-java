@@ -334,6 +334,11 @@ public final class Envelope extends JSON {
         return true;
     }
 
+    public boolean addExternalRoute(Class service, String operation) {
+        dynamicRoutingSlip.addRoute(new SimpleExternalRoute(service.getName(), operation));
+        return true;
+    }
+
     public boolean addExternalRoute(Class service, String operation, NetworkPeer origination, NetworkPeer destination) {
         dynamicRoutingSlip.addRoute(new SimpleExternalRoute(service.getName(), operation, origination, destination));
         return true;
