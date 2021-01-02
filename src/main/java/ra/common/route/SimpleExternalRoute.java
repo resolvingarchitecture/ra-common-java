@@ -16,6 +16,7 @@ public class SimpleExternalRoute extends SimpleRoute implements ExternalRoute {
 
     public SimpleExternalRoute(String service, String operation) {
         super(service, operation);
+        sendContentOnly = true;
     }
 
     public SimpleExternalRoute(String service, String operation, NetworkPeer origination, NetworkPeer destination) {
