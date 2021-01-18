@@ -117,7 +117,6 @@ public class TCPBusClient implements Runnable {
 
     public void sendMessage(Envelope envelope) {
         envelope.setClient(clientId);
-        envelope.setCommandPath(ControlCommand.Send.name());
         tcpBusClientSendThread.sendMessage(envelope.toJSONRaw());
     }
 
