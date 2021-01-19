@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface InfoVaultDB extends LifeCycle {
     String DB = "ra.common.db";
-    void setBaseURL(String baseURL);
+    boolean setBaseURL(String baseURL);
     boolean save(InfoVault infoVault);
     InfoVault load(String id);
     boolean reload(InfoVault infoVault);

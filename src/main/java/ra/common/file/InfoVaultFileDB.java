@@ -19,8 +19,9 @@ public class InfoVaultFileDB implements InfoVaultDB {
     private File baseDirectory;
 
     @Override
-    public void setBaseURL(String baseURL) {
+    public boolean setBaseURL(String baseURL) {
         baseDirectory = new File(baseURL);
+        return baseDirectory.exists() || baseDirectory.mkdir();
     }
 
     @Override
