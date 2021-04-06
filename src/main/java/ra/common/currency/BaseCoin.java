@@ -3,16 +3,17 @@ package ra.common.currency;
 import ra.util.JSONParser;
 import ra.util.JSONPretty;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class BaseCoin implements Coin {
 
-    private Double value = 0.00;
+    private BigInteger value;
 
     public BaseCoin() {}
 
-    public BaseCoin(Double value) {
+    public BaseCoin(BigInteger value) {
         this.value = value;
     }
 
@@ -21,12 +22,12 @@ public abstract class BaseCoin implements Coin {
         return toString();
     }
 
-    public void setValue(Double value) {
+    public void setValue(BigInteger value) {
         this.value = value;
     }
 
     @Override
-    public Double value() {
+    public BigInteger value() {
         return value;
     }
 
@@ -45,7 +46,7 @@ public abstract class BaseCoin implements Coin {
     @Override
     public void fromMap(Map<String, Object> m) {
         if(m!=null) {
-            if(m.get("value")!=null) value = (Double)m.get("value");
+            if(m.get("value")!=null) value = (BigInteger)m.get("value");
         }
     }
 
