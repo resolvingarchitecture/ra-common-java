@@ -2,15 +2,21 @@ package ra.common.currency.wallet;
 
 import ra.common.currency.crypto.Crypto;
 
+import java.math.BigInteger;
+
 public class CryptoWallet extends Wallet {
 
-    private String publicKey; // encoded public key
-    private String publicKeyType; // type of public key
-    private String publicKeyEncoding; // encoding of public key
+    protected String publicKey; // encoded public key
+    protected String publicKeyType; // type of public key
+    protected String publicKeyEncoding; // encoding of public key
 
-    private String privateKey; // encoded private key
-    private String privateKeyType; // type of private key
-    private String privateKeyEncoding; // encoding of private key
+    protected String privateKey; // encoded private key
+    protected String privateKeyType; // type of private key
+    protected String privateKeyEncoding; // encoding of private key
+
+    protected Crypto unconfirmedBalance; // the total unconfirmed balance of the wallet
+    protected Crypto immatureBalance; // the total immature balance of the wallet
+    protected Integer txCount; // the total number of transactions in the wallet
 
     public CryptoWallet() {
     }
@@ -69,5 +75,29 @@ public class CryptoWallet extends Wallet {
 
     public void setPrivateKeyEncoding(String privateKeyEncoding) {
         this.privateKeyEncoding = privateKeyEncoding;
+    }
+
+    public Crypto getUnconfirmedBalance() {
+        return unconfirmedBalance;
+    }
+
+    public void setUnconfirmedBalance(Crypto unconfirmedBalance) {
+        this.unconfirmedBalance = unconfirmedBalance;
+    }
+
+    public Crypto getImmatureBalance() {
+        return immatureBalance;
+    }
+
+    public void setImmatureBalance(Crypto immatureBalance) {
+        this.immatureBalance = immatureBalance;
+    }
+
+    public Integer getTxCount() {
+        return txCount;
+    }
+
+    public void setTxCount(Integer txCount) {
+        this.txCount = txCount;
     }
 }

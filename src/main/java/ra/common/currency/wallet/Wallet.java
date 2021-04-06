@@ -11,7 +11,8 @@ import java.util.Map;
 public class Wallet implements JSONSerializable {
 
     protected String name;
-    protected Coin amount;
+    protected Integer version;
+    protected Coin balance;
 
     public Wallet(){}
 
@@ -19,9 +20,9 @@ public class Wallet implements JSONSerializable {
         this.name = name;
     }
 
-    public Wallet(String name, Coin amount) {
+    public Wallet(String name, Coin balance) {
         this.name = name;
-        this.amount = amount;
+        this.balance = balance;
     }
 
     public String getName() {
@@ -32,24 +33,32 @@ public class Wallet implements JSONSerializable {
         this.name = name;
     }
 
-    public Coin getAmount() {
-        return amount;
+    public Integer getVersion() {
+        return version;
     }
 
-    public void setAmount(Coin amount) {
-        this.amount = amount;
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public Coin getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Coin balance) {
+        this.balance = balance;
     }
 
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
-        m.put("amount", amount);
+        m.put("balance", balance);
         return m;
     }
 
     @Override
     public void fromMap(Map<String, Object> m) {
-        amount = (Coin)m.get("amount");
+        balance = (Coin)m.get("balance");
     }
 
     @Override
