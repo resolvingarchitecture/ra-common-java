@@ -30,8 +30,16 @@ public class TCPBusClientReceiveThread implements Runnable {
         running = true;
         try {
             while(running) {
-                String msg = readFromServer.readLine();
-                if(msg==null) {
+                StringBuilder sb = new StringBuilder();
+                String chunk;
+                boolean building = true;
+                while(building) {
+                    chunk = readFromServer.readLine();
+                    if(chunk==null) building = false;
+                    else sb.append(chunk);
+                }
+                String msg = sb.toString();
+                if(msg.isEmpty()) {
                     LOG.info("Server likely shutdown. Shutting down client with re-connect attempt...");
                     tcpBusClient.shutdown(true);
                     continue;
