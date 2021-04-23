@@ -483,7 +483,7 @@ public final class Envelope extends JSON {
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
         if(id!=null) m.put("id", id);
-        if(dynamicRoutingSlip!=null) m.put("dynamicRoutingSlip", dynamicRoutingSlip.toMap());
+        if(dynamicRoutingSlip!=null) m.put(DynamicRoutingSlip.class.getSimpleName(), dynamicRoutingSlip.toMap());
         if(route!=null) m.put("route", route.toMap());
         if(did!=null) m.put("did", did.toMap());
         if(client!=null) m.put("client", client);
