@@ -165,6 +165,9 @@ public final class Envelope extends JSON {
     }
 
     public Route getRoute() {
+        if(route==null && dynamicRoutingSlip!=null) {
+            route = dynamicRoutingSlip.getCurrentRoute();
+        }
         return route;
     }
 
