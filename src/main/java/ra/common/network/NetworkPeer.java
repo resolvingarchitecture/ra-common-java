@@ -6,6 +6,7 @@ import ra.util.JSONParser;
 import ra.util.JSONPretty;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -30,11 +31,13 @@ public final class NetworkPeer implements JSONSerializable {
     public static final String KEY_TYPE = "keyType";
     public static final String ATTRIBUTES = "attributes";
     public static final String PORT = "port";
+    public static final String SERVICES = "services";
 
     private String id;
     private Network network;
     private DID did;
     private Integer port;
+    private List<String> services;
 
     public NetworkPeer(Network network) {
         this(network, null, null);
@@ -79,6 +82,14 @@ public final class NetworkPeer implements JSONSerializable {
         this.port = port;
     }
 
+    public void setServices(List<String> services) {
+        this.services = services;
+    }
+
+    public List<String> getServices() {
+        return services;
+    }
+
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
@@ -90,6 +101,9 @@ public final class NetworkPeer implements JSONSerializable {
             m.put(DID,did.toMap());
         if(port!=null)
             m.put(PORT, port);
+        if(services!=null && services.size()>0) {
+            m.put(SERVICES, services);
+        }
         return m;
     }
 
@@ -105,6 +119,7 @@ public final class NetworkPeer implements JSONSerializable {
                 did.fromMap((Map<String, Object>)m.get(DID));
         }
         if(m.get(PORT)!=null) port = (Integer)m.get(PORT);
+        if(m.get(SERVICES)!=null) services = (List<String>)m.get(SERVICES);
     }
 
     @Override
