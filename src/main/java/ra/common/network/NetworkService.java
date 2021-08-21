@@ -8,7 +8,7 @@ import ra.common.messaging.MessageProducer;
 import ra.common.route.ExternalRoute;
 import ra.common.service.BaseService;
 import ra.common.service.ServiceStatusObserver;
-import ra.util.RandomUtil;
+import ra.common.RandomUtil;
 
 import java.util.*;
 import java.util.logging.Logger;

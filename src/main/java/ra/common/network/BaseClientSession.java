@@ -1,6 +1,6 @@
 package ra.common.network;
 
-import ra.util.RandomUtil;
+import ra.common.RandomUtil;
 
 import java.util.*;
 

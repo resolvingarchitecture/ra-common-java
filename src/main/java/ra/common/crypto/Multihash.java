@@ -1,6 +1,6 @@
 package ra.common.crypto;
 
-import ra.util.Base58;
+import ra.common.Base58;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;

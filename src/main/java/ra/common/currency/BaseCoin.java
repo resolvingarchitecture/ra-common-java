@@ -1,7 +1,7 @@
 package ra.common.currency;
 
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
+import ra.common.JSONParser;
+import ra.common.JSONPretty;
 
 import java.math.BigInteger;
 import java.util.HashMap;

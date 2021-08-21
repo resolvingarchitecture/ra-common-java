@@ -3,8 +3,8 @@ package ra.common.identity;
 import ra.common.JSONSerializable;
 import ra.common.Persistable;
 import ra.common.crypto.Hash;
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
+import ra.common.JSONParser;
+import ra.common.JSONPretty;
 
 import java.util.HashMap;
 import java.util.Map;

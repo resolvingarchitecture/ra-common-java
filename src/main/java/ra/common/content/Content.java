@@ -3,10 +3,10 @@ package ra.common.content;
 import ra.common.crypto.EncryptionAlgorithm;
 import ra.common.crypto.Hash;
 import ra.common.JSONSerializable;
-import ra.util.HashUtil;
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
-import ra.util.RandomUtil;
+import ra.common.HashUtil;
+import ra.common.JSONParser;
+import ra.common.JSONPretty;
+import ra.common.RandomUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;

@@ -2,8 +2,8 @@ package ra.common.identity;
 
 import ra.common.JSONSerializable;
 import ra.common.crypto.Addressable;
-import ra.util.JSONParser;
-import ra.util.JSONPretty;
+import ra.common.JSONParser;
+import ra.common.JSONPretty;
 
 import java.util.ArrayList;
 import java.util.HashMap;

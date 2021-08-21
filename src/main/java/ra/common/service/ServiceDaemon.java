@@ -1,11 +1,8 @@
 package ra.common.service;
 
-import ra.common.service.Service;
-import ra.common.service.ServiceStatus;
-import ra.util.Config;
-import ra.util.Wait;
+import ra.common.Config;
+import ra.common.Wait;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 import static ra.common.service.Service.RA_SERVICE_IMPL;

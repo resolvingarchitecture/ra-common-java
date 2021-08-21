@@ -3,8 +3,8 @@ package ra.common.service;
 import ra.common.*;
 import ra.common.messaging.*;
 import ra.common.route.Route;
-import ra.util.Config;
-import ra.util.SystemSettings;
+import ra.common.Config;
+import ra.common.SystemSettings;
 
 import java.io.File;
 import java.io.IOException;
