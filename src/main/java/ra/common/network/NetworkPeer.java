@@ -136,4 +136,13 @@ public final class NetworkPeer implements JSONSerializable {
     public String toString() {
         return toJSON();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof NetworkPeer)) return false;
+        NetworkPeer npIn = (NetworkPeer) obj;
+        if(npIn.getDid()==null || npIn.getDid().getPublicKey()==null || npIn.getDid().getPublicKey().getFingerprint()==null || npIn.getDid().getPublicKey().getAddress()==null) return false;
+        if(did==null || did.getPublicKey()==null || did.getPublicKey().getFingerprint()==null || did.getPublicKey().getAddress()==null) return false;
+        return did.getPublicKey().getAddress().equals(npIn.getDid().getPublicKey().getAddress()) && did.getPublicKey().getFingerprint().equals(npIn.getDid().getPublicKey().getFingerprint());
+    }
 }

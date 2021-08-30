@@ -27,6 +27,7 @@ public abstract class NetworkService extends BaseService {
     protected List<Tuple2<String,String>> stateChangeListeners = new ArrayList<>();
 
     protected Map<String,NetworkPeer> peers = new HashMap<>();
+    protected NetworkPeer localPeer;
 
     protected Integer maxPeers = 500;
 
@@ -158,6 +159,10 @@ public abstract class NetworkService extends BaseService {
 
     public Integer getMaxPeers() {
         return maxPeers;
+    }
+
+    public NetworkPeer getLocalPeer() {
+        return localPeer;
     }
 
     public Integer getNumberPeers() {
