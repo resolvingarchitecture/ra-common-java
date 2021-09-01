@@ -35,9 +35,7 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
     private volatile Boolean authenticated = false;
     private PublicKey publicKey = new PublicKey();
 
-    public DID() {
-        publicKey = new PublicKey();
-    }
+    public DID() {}
 
     public String getUsername() {
         return username;
