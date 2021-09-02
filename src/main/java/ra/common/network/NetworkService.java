@@ -103,6 +103,11 @@ public abstract class NetworkService extends BaseService {
                     break;
                 }
             }
+            // Send info of from peer to network manager
+            Envelope e = Envelope.documentFactory();
+            e.addRoute("ra.networkmanager.NetworkManagerService","UPDATE_PEER");
+            e.addNVP(NetworkPeer.class.getName(), er.getOrigination());
+            send(e);
         }
     }
 
