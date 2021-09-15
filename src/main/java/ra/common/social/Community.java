@@ -2,6 +2,7 @@ package ra.common.social;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Community extends Group {
 
@@ -24,5 +25,7 @@ public class Community extends Group {
     private final Map<String,Member> membersByPubKeyAddress = new HashMap<>();
 
     private final Map<String,Individual> bannedIndividualsByPubKeyAddress = new HashMap<>();
+
+    private UUID id;
 
 }
