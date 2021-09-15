@@ -5,7 +5,7 @@ import ra.common.identity.DID;
 import java.util.Map;
 
 /**
- * An individual using the network.
+ * An individual entity.
  *
  * @author objectorange
  */
