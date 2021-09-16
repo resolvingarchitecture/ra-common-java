@@ -1,17 +1,29 @@
 package ra.common.network;
 
+import ra.common.JSONSerializable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class NetworkGroup {
+public class NetworkGroup implements JSONSerializable {
 
-    private final UUID id;
+    private UUID id;
     private final Map<String,NetworkPeer> groupPeersById = new HashMap<>();
     private final Map<String,NetworkPeer> groupPeersByPubKeyFingerprint = new HashMap<>();
     private final Map<String,NetworkPeer> groupPeersByPubKeyAddress = new HashMap<>();
 
+    public NetworkGroup() {}
+
     public NetworkGroup(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -35,4 +47,24 @@ public class NetworkGroup {
         return groupPeersByPubKeyAddress.get(address);
     }
 
+
+    @Override
+    public Map<String, Object> toMap() {
+        return null;
+    }
+
+    @Override
+    public void fromMap(Map<String, Object> m) {
+
+    }
+
+    @Override
+    public String toJSON() {
+        return null;
+    }
+
+    @Override
+    public void fromJSON(String json) {
+
+    }
 }
