@@ -8,22 +8,22 @@ import java.util.UUID;
 
 public class NetworkGroup implements JSONSerializable {
 
-    private UUID id;
+    private String id;
     private final Map<String,NetworkPeer> groupPeersById = new HashMap<>();
     private final Map<String,NetworkPeer> groupPeersByPubKeyFingerprint = new HashMap<>();
     private final Map<String,NetworkPeer> groupPeersByPubKeyAddress = new HashMap<>();
 
     public NetworkGroup() {}
 
-    public NetworkGroup(UUID id) {
+    public NetworkGroup(String id) {
         this.id = id;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
