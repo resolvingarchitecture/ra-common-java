@@ -1,6 +1,9 @@
 package ra.common.currency.wallet;
 
 import java.math.BigInteger;
+import java.util.Map;
+
+import static java.util.Objects.nonNull;
 
 public class CryptoWallet extends Wallet {
 
@@ -97,5 +100,22 @@ public class CryptoWallet extends Wallet {
 
     public void setTxCount(BigInteger txCount) {
         this.txCount = txCount;
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String,Object> m = super.toMap();
+        m.put("unconfirmed_balance", unconfirmedBalance);
+        m.put("immature_balance", immatureBalance);
+        m.put("txcount", txCount);
+        return m;
+    }
+
+    @Override
+    public void fromMap(Map<String, Object> m) {
+        super.fromMap(m);
+        if(nonNull(m.get("unconfirmed_balance"))) unconfirmedBalance = (BigInteger) m.get("unconfirmed_balance");
+        if(nonNull(m.get("immature_balance"))) immatureBalance = (BigInteger)m.get("immature_balance");
+        if(nonNull(m.get("txcount"))) txCount = (BigInteger)m.get("txcount");
     }
 }

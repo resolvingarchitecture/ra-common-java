@@ -9,6 +9,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.nonNull;
+
 public abstract class Wallet implements JSONSerializable {
 
     protected String name;
@@ -26,8 +28,10 @@ public abstract class Wallet implements JSONSerializable {
         this.balance = balance;
     }
 
-    public Wallet(String name, Integer version, Integer balance) {
-
+    public Wallet(String name, Integer version, BigInteger balance) {
+        this.name = name;
+        this.version = version;
+        this.balance = balance;
     }
 
     public String getName() {
@@ -57,13 +61,17 @@ public abstract class Wallet implements JSONSerializable {
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
+        m.put("walletname", name);
+        m.put("walletversion", version);
         m.put("balance", balance);
         return m;
     }
 
     @Override
     public void fromMap(Map<String, Object> m) {
-        balance = (BigInteger)m.get("balance");
+        if(nonNull(m.get("walletname"))) name = (String)m.get("walletname");
+        if(nonNull(m.get("walletversion"))) version = (Integer)m.get("walletversion");
+        if(nonNull(m.get("balance"))) balance = (BigInteger)m.get("balance");
     }
 
     @Override
