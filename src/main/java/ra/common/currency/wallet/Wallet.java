@@ -8,11 +8,11 @@ import ra.common.JSONPretty;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Wallet implements JSONSerializable {
+public abstract class Wallet implements JSONSerializable {
 
     protected String name;
     protected Integer version;
-    protected Coin balance;
+    protected Integer balance;
 
     public Wallet(){}
 
@@ -20,9 +20,13 @@ public class Wallet implements JSONSerializable {
         this.name = name;
     }
 
-    public Wallet(String name, Coin balance) {
+    public Wallet(String name, Integer balance) {
         this.name = name;
         this.balance = balance;
+    }
+
+    public Wallet(String name, Integer version, Integer balance) {
+
     }
 
     public String getName() {
@@ -41,11 +45,11 @@ public class Wallet implements JSONSerializable {
         this.version = version;
     }
 
-    public Coin getBalance() {
+    public Integer getBalance() {
         return balance;
     }
 
-    public void setBalance(Coin balance) {
+    public void setBalance(Integer balance) {
         this.balance = balance;
     }
 
@@ -58,7 +62,7 @@ public class Wallet implements JSONSerializable {
 
     @Override
     public void fromMap(Map<String, Object> m) {
-        balance = (Coin)m.get("balance");
+        balance = (Integer)m.get("balance");
     }
 
     @Override

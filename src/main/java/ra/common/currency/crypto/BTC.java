@@ -24,8 +24,7 @@ public class BTC extends Crypto implements StoreOfValue {
             valueInBTC+="0";
         }
         valueInBTC = valueInBTC.replace(".","");
-        long sats = Long.parseLong(valueInBTC);
-        super.setValue(BigInteger.valueOf(sats));
+        super.setValue(new BigInteger(valueInBTC));
     }
 
     public BTC(Double valueInBTC) {
@@ -37,13 +36,12 @@ public class BTC extends Crypto implements StoreOfValue {
             tempValue+="0";
         }
         tempValue = tempValue.replace(".","");
-        long sats = Long.parseLong(tempValue);
-        super.setValue(BigInteger.valueOf(sats));
+        super.setValue(new BigInteger(tempValue));
     }
 
     public BigDecimal valueInBitcoin() {
         if(value()==null || value().equals(BigInteger.ZERO)) return BigDecimal.ZERO;
-        BigDecimal bitcoin = new BigDecimal(value().longValue());
+        BigDecimal bitcoin = new BigDecimal(value());
         BigDecimal sats = new BigDecimal(SATS_PER_BITCOIN);
         return bitcoin.divide(sats);
     }

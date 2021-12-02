@@ -9,7 +9,7 @@ import java.util.Map;
 
 public abstract class BaseCoin implements Coin {
 
-    private BigInteger value;
+    protected BigInteger value;
 
     public BaseCoin() {}
 
