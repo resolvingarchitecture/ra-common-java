@@ -5,6 +5,7 @@ import ra.common.currency.Coin;
 import ra.common.JSONParser;
 import ra.common.JSONPretty;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public abstract class Wallet implements JSONSerializable {
 
     protected String name;
     protected Integer version;
-    protected Integer balance;
+    protected BigInteger balance;
 
     public Wallet(){}
 
@@ -20,7 +21,7 @@ public abstract class Wallet implements JSONSerializable {
         this.name = name;
     }
 
-    public Wallet(String name, Integer balance) {
+    public Wallet(String name, BigInteger balance) {
         this.name = name;
         this.balance = balance;
     }
@@ -45,11 +46,11 @@ public abstract class Wallet implements JSONSerializable {
         this.version = version;
     }
 
-    public Integer getBalance() {
+    public BigInteger getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(BigInteger balance) {
         this.balance = balance;
     }
 
@@ -62,7 +63,7 @@ public abstract class Wallet implements JSONSerializable {
 
     @Override
     public void fromMap(Map<String, Object> m) {
-        balance = (Integer)m.get("balance");
+        balance = (BigInteger)m.get("balance");
     }
 
     @Override

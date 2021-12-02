@@ -2,6 +2,8 @@ package ra.common.currency.wallet;
 
 import ra.common.currency.crypto.Crypto;
 
+import java.math.BigInteger;
+
 public class CryptoWallet extends Wallet {
 
     protected String publicKey; // encoded public key
@@ -23,7 +25,7 @@ public class CryptoWallet extends Wallet {
         super(name);
     }
 
-    public CryptoWallet(String name, Integer amount) {
+    public CryptoWallet(String name, BigInteger amount) {
         super(name, amount);
     }
 
