@@ -16,6 +16,18 @@ public class BTC extends Crypto implements StoreOfValue {
         super(MAX_SUPPLY, PRECISION);
     }
 
+    public BTC(String valueInBTC) {
+        super(MAX_SUPPLY, PRECISION);
+        int numberTrailingZeroes = (valueInBTC.length()-1) - valueInBTC.indexOf(".");
+        int numberToAdd = PRECISION - numberTrailingZeroes;
+        for(int i=0; i<numberToAdd; i++) {
+            valueInBTC+="0";
+        }
+        valueInBTC = valueInBTC.replace(".","");
+        long sats = Long.parseLong(valueInBTC);
+        super.setValue(BigInteger.valueOf(sats));
+    }
+
     public BTC(Double valueInBTC) {
         super(MAX_SUPPLY, PRECISION);
         String tempValue = valueInBTC.toString();
