@@ -5,6 +5,7 @@ import ra.common.currency.StoreOfValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 public class BTC extends Crypto implements StoreOfValue {
 
@@ -30,6 +31,11 @@ public class BTC extends Crypto implements StoreOfValue {
     public BTC(Double valueInBTC) {
         super(MAX_SUPPLY, PRECISION);
         String tempValue = valueInBTC.toString();
+        if(tempValue.contains("E")) {
+            DecimalFormat df = new DecimalFormat("#");
+            df.setMaximumFractionDigits(8);
+            tempValue = df.format(valueInBTC);
+        }
         int numberTrailingZeroes = (tempValue.length()-1) - tempValue.indexOf(".");
         int numberToAdd = PRECISION - numberTrailingZeroes;
         for(int i=0; i<numberToAdd; i++) {
