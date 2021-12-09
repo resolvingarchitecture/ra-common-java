@@ -4,8 +4,12 @@ import ra.common.JSONParser;
 import ra.common.JSONPretty;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 public abstract class BaseCoin implements Coin {
 
@@ -29,6 +33,17 @@ public abstract class BaseCoin implements Coin {
     @Override
     public BigInteger value() {
         return value;
+    }
+
+    @Override
+    public String valueWithCommas() {
+        String valueString = "0";
+        if(nonNull(value)) {
+            DecimalFormat df = new DecimalFormat("#,###");
+            df.setMaximumFractionDigits(0);
+            valueString = df.format(value);
+        }
+        return valueString;
     }
 
     @Override

@@ -8,4 +8,5 @@ public interface Coin extends JSONSerializable {
     String symbol();
     String name();
     BigInteger value();
+    String valueWithCommas();
 }
