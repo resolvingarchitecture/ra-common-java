@@ -23,6 +23,7 @@ import java.util.Map;
 public class DID implements Persistable, PIIClearable, JSONSerializable {
 
     public enum Status {INACTIVE, ACTIVE, SUSPENDED, PRIVATE}
+    public enum Type {CONTACT, IDENTITY, NODE}
 
     private String username = "Anon"; // default
     private volatile String passphrase;
@@ -31,9 +32,9 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
     private Hash.Algorithm passphraseHashAlgorithm = Hash.Algorithm.PBKDF2WithHmacSHA1; // Default
     private String description = "";
     private Status status = Status.INACTIVE;
+    private Type type = Type.IDENTITY;
     private volatile Boolean verified = false;
     private volatile Boolean authenticated = false;
-    private Boolean isNode = false;
     private PublicKey publicKey = new PublicKey();
 
     public DID() {}
@@ -78,6 +79,14 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
         this.status = status;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public boolean getVerified() {
         return verified;
     }
@@ -108,14 +117,6 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
 
     public void setPassphraseHashAlgorithm(Hash.Algorithm passphraseHashAlgorithm) {
         this.passphraseHashAlgorithm = passphraseHashAlgorithm;
-    }
-
-    public Boolean getNode() {
-        return isNode;
-    }
-
-    public void setNode(Boolean node) {
-        isNode = node;
     }
 
     public PublicKey getPublicKey() {
