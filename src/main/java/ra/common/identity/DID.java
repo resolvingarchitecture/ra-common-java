@@ -33,6 +33,7 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
     private Status status = Status.INACTIVE;
     private volatile Boolean verified = false;
     private volatile Boolean authenticated = false;
+    private Boolean isNode = false;
     private PublicKey publicKey = new PublicKey();
 
     public DID() {}
@@ -107,6 +108,14 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
 
     public void setPassphraseHashAlgorithm(Hash.Algorithm passphraseHashAlgorithm) {
         this.passphraseHashAlgorithm = passphraseHashAlgorithm;
+    }
+
+    public Boolean getNode() {
+        return isNode;
+    }
+
+    public void setNode(Boolean node) {
+        isNode = node;
     }
 
     public PublicKey getPublicKey() {
