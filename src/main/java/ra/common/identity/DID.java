@@ -148,6 +148,7 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
         if(passphrase2!=null) m.put("passphrase2",passphrase2);
         if(description!=null) m.put("description",description);
         if(status!=null) m.put("status",status.name());
+        if(type!=null) m.put("type",type.name());
         if(verified!=null) m.put("verified",verified.toString());
         if(authenticated!=null) m.put("authenticated",authenticated.toString());
         if(publicKey !=null) m.put("publicKey", publicKey.toMap());
@@ -163,6 +164,7 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
         if(m.get("passphrase2")!=null) passphrase2 = (String)m.get("passphrase2");
         if(m.get("description")!=null) description = (String)m.get("description");
         if(m.get("status")!=null) status = Status.valueOf((String)m.get("status"));
+        if(m.get("type")!=null) type = Type.valueOf((String)m.get("type"));
         if(m.get("verified")!=null) verified = Boolean.parseBoolean((String)m.get("verified"));
         if(m.get("authenticated")!=null) authenticated = Boolean.parseBoolean((String)m.get("authenticated"));
         if(m.get("publicKey")!=null) {
