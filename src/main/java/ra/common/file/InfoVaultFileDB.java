@@ -42,7 +42,7 @@ public class InfoVaultFileDB implements InfoVaultDB {
         InfoVault iv = null;
         try {
             byte[] fileBytes = FileUtil.readFile(baseDirectory+id);
-            if (fileBytes != null && fileBytes.length > 0) {
+            if (fileBytes.length > 0) {
                 iv = new InfoVault();
                 iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));
             }
