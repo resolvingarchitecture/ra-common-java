@@ -41,7 +41,7 @@ public class InfoVaultFileDB implements InfoVaultDB {
     public InfoVault load(String id) {
         InfoVault iv = null;
         try {
-            byte[] fileBytes = FileUtil.readFile(baseDirectory+id);
+            byte[] fileBytes = FileUtil.readFile(new File(baseDirectory, id).getAbsolutePath());
             if (fileBytes.length > 0) {
                 iv = new InfoVault();
                 iv.content = Content.newInstance((Map<String, Object>) JSONParser.parse(new String(fileBytes)));

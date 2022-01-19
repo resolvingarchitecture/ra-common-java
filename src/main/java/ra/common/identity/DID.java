@@ -23,7 +23,7 @@ import java.util.Map;
 public class DID implements Persistable, PIIClearable, JSONSerializable {
 
     public enum Status {INACTIVE, ACTIVE, SUSPENDED, PRIVATE}
-    public enum Type {CONTACT, IDENTITY, NODE}
+    public enum DIDType {CONTACT, IDENTITY, NODE}
 
     private String username = "Anon"; // default
     private volatile String passphrase;
@@ -32,7 +32,7 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
     private Hash.Algorithm passphraseHashAlgorithm = Hash.Algorithm.PBKDF2WithHmacSHA1; // Default
     private String description = "";
     private Status status = Status.INACTIVE;
-    private Type type = Type.IDENTITY;
+    private DIDType didType = DIDType.IDENTITY;
     private volatile Boolean verified = false;
     private volatile Boolean authenticated = false;
     private PublicKey publicKey = new PublicKey();
@@ -79,12 +79,12 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
         this.status = status;
     }
 
-    public Type getType() {
-        return type;
+    public DIDType getDidType() {
+        return didType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setDidType(DIDType didType) {
+        this.didType = didType;
     }
 
     public boolean getVerified() {
@@ -148,7 +148,7 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
         if(passphrase2!=null) m.put("passphrase2",passphrase2);
         if(description!=null) m.put("description",description);
         if(status!=null) m.put("status",status.name());
-        if(type!=null) m.put("type",type.name());
+        if(didType !=null) m.put("didType", didType.name());
         if(verified!=null) m.put("verified",verified.toString());
         if(authenticated!=null) m.put("authenticated",authenticated.toString());
         if(publicKey !=null) m.put("publicKey", publicKey.toMap());
@@ -164,7 +164,7 @@ public class DID implements Persistable, PIIClearable, JSONSerializable {
         if(m.get("passphrase2")!=null) passphrase2 = (String)m.get("passphrase2");
         if(m.get("description")!=null) description = (String)m.get("description");
         if(m.get("status")!=null) status = Status.valueOf((String)m.get("status"));
-        if(m.get("type")!=null) type = Type.valueOf((String)m.get("type"));
+        if(m.get("didType")!=null) didType = DIDType.valueOf((String)m.get("didType"));
         if(m.get("verified")!=null) verified = Boolean.parseBoolean((String)m.get("verified"));
         if(m.get("authenticated")!=null) authenticated = Boolean.parseBoolean((String)m.get("authenticated"));
         if(m.get("publicKey")!=null) {
