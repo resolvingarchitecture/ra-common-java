@@ -15,6 +15,7 @@ import java.util.Map;
  * Data Location Constants
  *
  */
+@Deprecated
 public final class DLC {
 
     public static final String CONTENT = "CONTENT";
