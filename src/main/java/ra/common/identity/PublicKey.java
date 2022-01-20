@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 /**
  * TODO: Add Description
  *
@@ -26,9 +29,10 @@ public class PublicKey implements Addressable, JSONSerializable {
     private Boolean isBase58Encoded = false;
     private Boolean isPEM = false;
     private Boolean isHex = false;
+    // Name, Value
     private Map<String, Object> attributes = new HashMap<>();
-    // Content signed is in the format of name:value.
-    private Map<String, List<byte[]>> signedAttributes = new HashMap<>();
+    // Name, List of Signatures
+    private Map<String, List<Signature>> signedAttributes = new HashMap<>();
 
     public PublicKey() {}
 
@@ -148,34 +152,41 @@ public class PublicKey implements Addressable, JSONSerializable {
         }
     }
 
-    public Map<String, List<byte[]>> getSignedAttributes() {
+    public Map<String, List<Signature>> getSignedAttributes() {
         return signedAttributes;
     }
 
-    public void setSignedAttributes(Map<String, List<byte[]>> signedAttributes) {
+    public void setSignedAttributes(Map<String, List<Signature>> signedAttributes) {
         this.signedAttributes = signedAttributes;
     }
 
-    public void addSignedAttribute(String name, byte[] signedAttributeNameValue) {
-        if(signedAttributes==null) signedAttributes = new HashMap<>();
-        if(signedAttributes.get(name)==null) signedAttributes.put(name, new ArrayList<>());
-        signedAttributes.get(name).add(signedAttributeNameValue);
+    public void addSignedAttribute(String name, Signature signature) {
+        if(isNull(signedAttributes))
+            signedAttributes = new HashMap<>();
+        if(isNull(signedAttributes.get(name)))
+            signedAttributes.put(name, new ArrayList<>());
+        signedAttributes.get(name).add(signature);
     }
 
-    public void removeSignedAttribute(String name, byte[] signedAttributeNameValue) {
+    public void removeSignedAttribute(String name) {
+        if(nonNull(signedAttributes) && signedAttributes.size() > 0) {
+            signedAttributes.remove(name);
+        }
+    }
+
+    public void removeSignature(String name, Signature signature) {
         if(signedAttributes!=null) {
-            List<byte[]> bytes = signedAttributes.get(name);
-            if(bytes!=null) {
-                int pos = -1;
-                int i=0;
-                for(byte[] b : bytes) {
-                    if(b.equals(signedAttributeNameValue)) {
-                        pos = i;
+            List<Signature> sigs = signedAttributes.get(name);
+            if(sigs!=null) {
+                Signature sigToRemove = null;
+                for(Signature sig : sigs) {
+                    if(sig.getSignedByAddress().equals(signature.getSignedByAddress())) {
+                        sigToRemove = sig;
+                        break;
                     }
-                    i++;
                 }
-                if(pos>-1) {
-                    bytes.remove(pos);
+                if(nonNull(sigToRemove)) {
+                    sigs.remove(sigToRemove);
                 }
             }
         }
@@ -198,7 +209,16 @@ public class PublicKey implements Addressable, JSONSerializable {
             m.put("attributes", attributes);
         }
         if(signedAttributes!=null && signedAttributes.size() > 0) {
-            m.put("signedAttributes", signedAttributes);
+            Map<String,List<Map<String,Object>>> mSigAtts = new HashMap<>();
+            for(String att : signedAttributes.keySet()) {
+                List<Map<String,Object>> sigMaps = new ArrayList<>();
+                mSigAtts.put(att, sigMaps);
+                List<Signature> sigs = signedAttributes.get(att);
+                for(Signature sig : sigs) {
+                    sigMaps.add(sig.toMap());
+                }
+            }
+            m.put("signedAttributes", mSigAtts);
         }
         return m;
     }
@@ -216,7 +236,20 @@ public class PublicKey implements Addressable, JSONSerializable {
         if(m.get("isPEM")!=null) isPEM = (Boolean)m.get("isPEM");
         if(m.get("isHex")!=null) isHex = (Boolean)m.get("isHex");
         if(m.get("attributes")!=null) attributes = (Map<String, Object>)m.get("attributes");
-        if(m.get("signedAttributes")!=null) signedAttributes = (Map<String, List<byte[]>>)m.get("signedAttributes");
+        if(m.get("signedAttributes")!=null) {
+            signedAttributes = new HashMap<>();
+            Map<String, List<Map<String,Object>>> mSigAtts = (Map<String, List<Map<String,Object>>>) m.get("signedAttributes");
+            for(String att : mSigAtts.keySet()) {
+                List<Signature> sigs = new ArrayList<>();
+                signedAttributes.put(att, sigs);
+                List<Map<String,Object>> sigMaps = mSigAtts.get(att);
+                for(Map<String,Object> sigMap : sigMaps) {
+                    Signature sig = new Signature();
+                    sig.fromMap(sigMap);
+                    sigs.add(sig);
+                }
+            }
+        }
     }
 
     @Override
