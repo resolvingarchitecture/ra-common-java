@@ -87,7 +87,7 @@ public class SystemSettings {
         }
         File userDataHome = null;
         if(System.getProperty("XDG_DATA_HOME")!=null) {
-            userDataHome = new File(System.getProperty("XDG_DATA_HOME"));
+            userDataHome = new File(System.getProperty("RA_DATA_HOME"));
         } else {
             File local = new File(getUserHomeDir().getAbsolutePath()+"/.local");
             if(local.exists() || (create && local.mkdir())) {
@@ -113,7 +113,7 @@ public class SystemSettings {
         }
         File userConfigHome = null;
         if(System.getProperty("XDG_CONFIG_HOME")!=null) {
-            userConfigHome = new File(System.getProperty("XDG_CONFIG_HOME"));
+            userConfigHome = new File(System.getProperty("RA_CONFIG_HOME"));
         } else {
             userConfigHome = new File(getUserHomeDir().getAbsolutePath()+"/.config");
         }
@@ -136,7 +136,7 @@ public class SystemSettings {
         }
         File userConfigHome = null;
         if(System.getProperty("XDG_CACHE_HOME")!=null) {
-            userConfigHome = new File(System.getProperty("XDG_CACHE_HOME"));
+            userConfigHome = new File(System.getProperty("RA_CACHE_HOME"));
         } else {
             userConfigHome = new File(getUserHomeDir().getAbsolutePath()+"/.cache");
         }
