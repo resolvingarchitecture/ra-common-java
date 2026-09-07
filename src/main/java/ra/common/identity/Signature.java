@@ -10,6 +10,21 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 
+/**
+ * One signature over an attribute of a {@link PublicKey}.
+ *
+ * A {@code PublicKey} carries {@code Map<String, List<Signature>> signedAttributes}
+ * — attribute name to the signatures asserting it — which is the persistence form
+ * of the web-of-trust / {@code vouch} primitive: one identity signs an attribute
+ * another identity claims.
+ *
+ * <p>{@code toMap()} / {@code fromMap()} were previously empty, so a
+ * {@code Signature} could not round-trip through the InfoVault or JSON and any
+ * vouch was silently lost on persistence. They now serialise every field.
+ * {@code signedDate} is written as epoch milliseconds and read back tolerant of
+ * either an {@code Integer} or a {@code Long} (the bundled JSON parser narrows
+ * small numbers to {@code Integer}).
+ */
 public class Signature implements JSONSerializable {
 
     private String valueSigned;
@@ -82,13 +97,23 @@ public class Signature implements JSONSerializable {
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<>();
-
+        if(valueSigned != null) m.put("valueSigned", valueSigned);
+        if(algorithm != null) m.put("algorithm", algorithm);
+        if(signedDate != null) m.put("signedDate", signedDate.getTime());
+        if(signedByUsername != null) m.put("signedByUsername", signedByUsername);
+        if(signedByFingerprint != null) m.put("signedByFingerprint", signedByFingerprint);
+        if(signedByAddress != null) m.put("signedByAddress", signedByAddress);
         return m;
     }
 
     @Override
     public void fromMap(Map<String, Object> m) {
-
+        if(m.get("valueSigned") != null) valueSigned = (String) m.get("valueSigned");
+        if(m.get("algorithm") != null) algorithm = (String) m.get("algorithm");
+        if(m.get("signedDate") != null) signedDate = new Date(((Number) m.get("signedDate")).longValue());
+        if(m.get("signedByUsername") != null) signedByUsername = (String) m.get("signedByUsername");
+        if(m.get("signedByFingerprint") != null) signedByFingerprint = (String) m.get("signedByFingerprint");
+        if(m.get("signedByAddress") != null) signedByAddress = (String) m.get("signedByAddress");
     }
 
     @Override
