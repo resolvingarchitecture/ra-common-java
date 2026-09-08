@@ -14,6 +14,15 @@
 	<description>Resolving Architecture - Common - Java</description>
 	<inceptionYear>2013</inceptionYear>
 
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>repo</distribution>
+			<comments>See LICENSE.</comments>
+		</license>
+	</licenses>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
