@@ -72,6 +72,6 @@ public abstract class BaseRoute extends JSON implements Route {
         if(m.get("service")!=null) service = (String)m.get("service");
         if(m.get("operation")!=null) operation = (String)m.get("operation");
         if(m.get("routed")!=null) routed = (Boolean)m.get("routed");
-        if(m.get("routedId")!=null) routeId = (Long)m.get("routeId");
+        if(m.get("routeId")!=null) routeId = (Long)m.get("routeId");
     }
 }

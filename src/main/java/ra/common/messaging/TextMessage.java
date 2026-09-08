@@ -2,6 +2,7 @@ package ra.common.messaging;
 
 import ra.common.identity.DID;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -50,11 +51,24 @@ public class TextMessage extends BaseMessage {
 
     @Override
     public Map<String, Object> toMap() {
-        return super.toMap();
+        Map<String, Object> m = super.toMap();
+        if(to!=null) m.put("to", to.toMap());
+        if(from!=null) m.put("from", from.toMap());
+        if(text!=null) m.put("text", text);
+        return m;
     }
 
     @Override
     public void fromMap(Map<String, Object> m) {
         super.fromMap(m);
+        if(m.get("to")!=null) {
+            to = new DID();
+            to.fromMap((Map<String, Object>)m.get("to"));
+        }
+        if(m.get("from")!=null) {
+            from = new DID();
+            from.fromMap((Map<String, Object>)m.get("from"));
+        }
+        if(m.get("text")!=null) text = (String)m.get("text");
     }
 }
