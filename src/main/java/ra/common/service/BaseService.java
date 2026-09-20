@@ -219,11 +219,15 @@ public abstract class BaseService implements Service {
         version = config.getProperty("ra.version");
 
         File servicesFolder = null;
-        try {
-            servicesFolder = SystemSettings.getUserAppHomeDir(".ra", "services", true);
-        } catch (IOException e) {
-            LOG.severe(e.getLocalizedMessage());
-            return false;
+        if(config.containsKey("ra.dir.services")) {
+            servicesFolder = new File(config.getProperty("ra.dir.services"));
+        } else {
+            try {
+                servicesFolder = SystemSettings.getUserAppHomeDir(".ra", "services", true);
+            } catch (IOException e) {
+                LOG.severe(e.getLocalizedMessage());
+                return false;
+            }
         }
         if(!servicesFolder.exists() && !servicesFolder.mkdir()) {
             LOG.severe("Unable to create services directory: " + servicesFolder.getAbsolutePath());
